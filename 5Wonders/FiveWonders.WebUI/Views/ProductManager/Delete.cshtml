@@ -1,0 +1,50 @@
+﻿@model FiveWonders.core.Models.Product
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Product</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.mID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mDesc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mDesc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mPrice)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
