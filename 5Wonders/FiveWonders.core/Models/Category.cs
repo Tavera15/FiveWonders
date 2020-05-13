@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    class Category
+    public class Category
     {
-        public string mID { get; set; }
+        public string mID { get; private set; }
 
         [Required(ErrorMessage = "A category name is required")]
         public string mCategoryName { get; set; }

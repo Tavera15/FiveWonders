@@ -241,10 +241,13 @@
     <Content Include="Views\ProductManager\Index.cshtml" />
     <Content Include="Views\ProductManager\Edit.cshtml" />
     <Content Include="Views\ProductManager\Delete.cshtml" />
+    <Content Include="Views\CategoryManager\Create.cshtml" />
+    <Content Include="Views\CategoryManager\Index.cshtml" />
+    <Content Include="Views\CategoryManager\Edit.cshtml" />
+    <Content Include="Views\CategoryManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\CategoryManager\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
