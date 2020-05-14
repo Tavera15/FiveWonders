@@ -4,17 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 
 namespace FiveWonders.WebUI.Controllers
 {
     public class ProductManagerController : Controller
     {
-        ProductRepository context;
+        IRepository<Product> context;
+        IRepository<Category> productCategories;
 
-        public ProductManagerController()
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext)
         {
-            context = new ProductRepository();
+            context = productContext;
+            productCategories = categoriesContext;
         }
 
         // Should display all products
@@ -28,13 +31,17 @@ namespace FiveWonders.WebUI.Controllers
         // Form to create a new product
         public ActionResult Create()
         {
-            return View(new Product());
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+            viewModel.Product = new Product();
+            viewModel.categories = productCategories.GetCollection();
+
+            return View(viewModel);
         }
 
         // Get form information and store to memory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Product p)
+        public ActionResult Create(ProductManagerViewModel p)
         {
             if(!ModelState.IsValid)
             {
@@ -42,7 +49,7 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             // Store into memory. Later in Database
-            context.Insert(p);
+            context.Insert(p.Product);
             context.Commit();
 
             return RedirectToAction("Index", "ProductManager");
@@ -53,9 +60,13 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product product = context.Find(Id);
-                
-                return View(product);
+                Product productToEdit = context.Find(Id);
+
+                ProductManagerViewModel viewModel = new ProductManagerViewModel();
+                viewModel.Product = productToEdit;
+                viewModel.categories = productCategories.GetCollection();
+
+                return View(viewModel);
             }
             catch(Exception e)
             {
@@ -65,7 +76,7 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Product p, string Id)
+        public ActionResult Edit(ProductManagerViewModel p, string Id)
         {
             try
             {
@@ -74,9 +85,10 @@ namespace FiveWonders.WebUI.Controllers
                 if (!ModelState.IsValid)
                     return View(p);
 
-                target.mName = p.mName;
-                target.mDesc = p.mDesc;
-                target.mPrice = p.mPrice;
+                target.mName = p.Product.mName;
+                target.mDesc = p.Product.mDesc;
+                target.mPrice = p.Product.mPrice;
+                target.mCategory = p.Product.mCategory;
 
                 context.Commit();
 
@@ -99,6 +111,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
         }

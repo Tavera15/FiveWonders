@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace FiveWonders.core.Models
 {
 
-    public class Product
+    public class Product : BaseEntity
     {
-        public string mID { private set; get; }
 
         [Required(ErrorMessage = "A name is required")]
         [Display(Name = "Enter full name")]
@@ -19,14 +18,16 @@ namespace FiveWonders.core.Models
         [Display(Name = "Enter a description")]
         public string mDesc { get; set; }
 
+        [Display(Name = "Category")]
+        public string mCategory { get; set; }
+
         [Required(ErrorMessage = "A price is required")]
         [Display(Name = "Enter a price")]
         public decimal mPrice { get; set; }
 
         public Product()
         {
-            mID = Guid.NewGuid().ToString();
-            System.Diagnostics.Debug.WriteLine("ID: " + mID);
+
         }
     }
 }

@@ -10,11 +10,11 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class CategoryManagerController : Controller
     {
-        CategoryRepository context;
+        IRepository<Category> context;
 
-        public CategoryManagerController()
+        public CategoryManagerController(IRepository<Category> productCategories)
         {
-            context = new CategoryRepository();
+            context = productCategories;
         }
 
         // GET: CategoryManager

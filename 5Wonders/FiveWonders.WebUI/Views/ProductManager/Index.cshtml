@@ -9,10 +9,16 @@
             @Html.DisplayNameFor(model => model.mID)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.mName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.mDesc)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCategory)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.mPrice)
@@ -26,10 +32,16 @@
             @Html.DisplayFor(modelItem => item.mID)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.mTimeEntered)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.mName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.mDesc)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mCategory)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.mPrice)

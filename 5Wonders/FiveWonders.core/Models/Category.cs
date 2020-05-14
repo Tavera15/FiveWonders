@@ -7,16 +7,14 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        public string mID { get; private set; }
 
         [Required(ErrorMessage = "A category name is required")]
         public string mCategoryName { get; set; }
 
         public Category()
         {
-            mID = Guid.NewGuid().ToString();
         }
     }
 }
