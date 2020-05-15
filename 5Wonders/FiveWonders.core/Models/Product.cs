@@ -7,27 +7,28 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-
     public class Product : BaseEntity
     {
-
         [Required(ErrorMessage = "A name is required")]
-        [Display(Name = "Enter full name")]
+        [Display(Name = "Name")]
         public string mName { get; set; }
 
-        [Display(Name = "Enter a description")]
+        [Display(Name = "Description")]
         public string mDesc { get; set; }
 
         [Display(Name = "Category")]
         public string mCategory { get; set; }
 
         [Required(ErrorMessage = "A price is required")]
-        [Display(Name = "Enter a price")]
+        [Display(Name = "Price")]
         public decimal mPrice { get; set; }
+
+        [Display(Name = "Sub-Categories")]
+        public List<string> mSubCategories { get; set; }
 
         public Product()
         {
-
+            mSubCategories = new List<string>();
         }
     }
 }

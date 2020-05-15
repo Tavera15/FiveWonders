@@ -13,11 +13,13 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<Product> context;
         IRepository<Category> productCategories;
+        IRepository<SubCategory> subCateroryContext;
 
-        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext)
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository)
         {
             context = productContext;
             productCategories = categoriesContext;
+            subCateroryContext = subCategoryRepository;
         }
 
         // Should display all products
@@ -34,6 +36,7 @@ namespace FiveWonders.WebUI.Controllers
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
             viewModel.Product = new Product();
             viewModel.categories = productCategories.GetCollection();
+            viewModel.subCategories = subCateroryContext.GetCollection();
 
             return View(viewModel);
         }
@@ -41,11 +44,18 @@ namespace FiveWonders.WebUI.Controllers
         // Get form information and store to memory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductManagerViewModel p)
+        public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories)
         {
             if(!ModelState.IsValid)
             {
                 return View(p);
+            }
+
+            foreach (var subID in selectedCategories)
+            {
+                SubCategory sub = subCateroryContext.Find(subID);
+
+                p.Product.mSubCategories.Add(sub.mSubCategoryName);
             }
 
             // Store into memory. Later in Database
@@ -65,6 +75,7 @@ namespace FiveWonders.WebUI.Controllers
                 ProductManagerViewModel viewModel = new ProductManagerViewModel();
                 viewModel.Product = productToEdit;
                 viewModel.categories = productCategories.GetCollection();
+                viewModel.subCategories = subCateroryContext.GetCollection();
 
                 return View(viewModel);
             }
@@ -75,8 +86,9 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Edit(ProductManagerViewModel p, string Id)
+        public ActionResult Edit(ProductManagerViewModel p, string[] selectedCategories, string Id)
         {
             try
             {
@@ -89,6 +101,14 @@ namespace FiveWonders.WebUI.Controllers
                 target.mDesc = p.Product.mDesc;
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
+                target.mSubCategories.Clear();
+
+                foreach(var subID in selectedCategories)
+                {
+                    SubCategory sub = subCateroryContext.Find(subID);
+                    
+                    target.mSubCategories.Add(sub.mSubCategoryName);
+                }
 
                 context.Commit();
 

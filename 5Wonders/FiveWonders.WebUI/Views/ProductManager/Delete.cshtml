@@ -53,6 +53,18 @@
             @Html.DisplayFor(model => model.mPrice)
         </dd>
 
+        <dt>
+            @Html.DisplayFor(model => model.mSubCategories)
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach (var sub in Model.mSubCategories)
+                {
+                    <li>@Html.DisplayFor(modelItem => sub)</li>
+                }
+            </ul>
+        </dd>
     </dl>
 
     @using (Html.BeginForm()) {

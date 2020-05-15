@@ -21,36 +21,47 @@
             @Html.DisplayNameFor(model => model.mCategory)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.mSubCategories)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.mPrice)
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.mID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mTimeEntered)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mDesc)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mCategory)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mPrice)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.mID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.mID })
-        </td>
-    </tr>
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.mID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.mTimeEntered)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.mName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.mDesc)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.mCategory)
+    </td>
+    <td>
+        <ul>
+            @foreach (var sub in item.mSubCategories)
+            {
+                <li>@Html.DisplayFor(modelItem => sub)</li>
+            }
+        </ul>       
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.mPrice)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = item.mID }) |
+        @Html.ActionLink("Delete", "Delete", new { id = item.mID })
+    </td>
+</tr>
 }
 
 </table>
