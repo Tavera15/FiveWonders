@@ -1,0 +1,60 @@
+﻿@model FiveWonders.core.Models.SizeChart
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SizeChart</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.mChartName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.mChartName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.mChartName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <table id="tblCustomers" class="table table-responsive" cellpadding="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            @for (int i = 0; i < ViewBag.Cols; i++)
+                            {
+                                <th><input name="chartValues[0][@i]"/></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 1; i < ViewBag.Rows; i++)
+                        {
+                        <tr>
+                            @for (int j = 0; j < ViewBag.Cols; j++)
+                            {
+                                <th><input name="chartValues[@i][@j]" /></th>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

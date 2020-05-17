@@ -20,6 +20,7 @@ namespace FiveWonders.core.Models
         public string mCategory { get; set; }
 
         [Required(ErrorMessage = "A price is required")]
+        [Range(0.01, Double.PositiveInfinity, ErrorMessage = "Price must be greater than $0")]
         [Display(Name = "Price")]
         public decimal mPrice { get; set; }
 

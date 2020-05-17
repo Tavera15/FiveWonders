@@ -51,11 +51,14 @@ namespace FiveWonders.WebUI.Controllers
                 return View(p);
             }
 
-            foreach (var subID in selectedCategories)
+            if(selectedCategories != null)
             {
-                SubCategory sub = subCateroryContext.Find(subID);
+                foreach (var subID in selectedCategories)
+                {
+                    SubCategory sub = subCateroryContext.Find(subID);
 
-                p.Product.mSubCategories.Add(sub.mSubCategoryName);
+                    p.Product.mSubCategories.Add(sub.mSubCategoryName);
+                }
             }
 
             // Store into memory. Later in Database
@@ -101,13 +104,20 @@ namespace FiveWonders.WebUI.Controllers
                 target.mDesc = p.Product.mDesc;
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
-                target.mSubCategories.Clear();
 
-                foreach(var subID in selectedCategories)
+                if(target.mSubCategories != null)
                 {
-                    SubCategory sub = subCateroryContext.Find(subID);
+                    target.mSubCategories.Clear();
+                }
+
+                if(selectedCategories != null)
+                {
+                    foreach(var subID in selectedCategories)
+                    {
+                        SubCategory sub = subCateroryContext.Find(subID);
                     
-                    target.mSubCategories.Add(sub.mSubCategoryName);
+                        target.mSubCategories.Add(sub.mSubCategoryName);
+                    }
                 }
 
                 context.Commit();

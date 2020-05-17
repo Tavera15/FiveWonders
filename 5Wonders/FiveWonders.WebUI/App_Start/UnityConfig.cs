@@ -47,6 +47,7 @@ namespace FiveWonders.WebUI
             container.RegisterType<IRepository<Product>, InMemoryRepository<Product>>();
             container.RegisterType<IRepository<Category>, InMemoryRepository<Category>>();
             container.RegisterType<IRepository<SubCategory>, InMemoryRepository<SubCategory>>();
+            container.RegisterType<IRepository<SizeChart>, InMemoryRepository<SizeChart>>();
         }
     }
 }

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<FiveWonders.core.Models.SizeChart>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.mID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mChartName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.mID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mTimeEntered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mChartName)
+        </td>
+        
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>
