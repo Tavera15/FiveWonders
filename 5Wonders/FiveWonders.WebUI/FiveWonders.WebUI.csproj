@@ -273,6 +273,8 @@
     <Content Include="Views\SubCategoryManager\Delete.cshtml" />
     <Content Include="Views\SizeChartManager\Index.cshtml" />
     <Content Include="Views\SizeChartManager\Create.cshtml" />
+    <Content Include="Views\SizeChartManager\Edit.cshtml" />
+    <Content Include="Views\SizeChartManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

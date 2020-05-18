@@ -7,3 +7,4 @@
 * Refactored repository code files into one file and interface. Also implemented a Product Management View Model.
 * Updated Product Manager View Model to include list of Subcategories.
 * Created a Size Chart Manager Controller. Can create a chart and store its values in a multi-array.
+* Remodeled Size Chart Model and Manager Controller to only include an image url and a list of sizes to display.

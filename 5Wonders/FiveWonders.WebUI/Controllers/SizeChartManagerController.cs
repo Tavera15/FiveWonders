@@ -24,48 +24,104 @@ namespace FiveWonders.WebUI.Controllers
             return View(allCharts);
         }
 
-        public ActionResult Create(int newRows = 3, int newCols = 4)
+        public ActionResult Create()
         {
-            SizeChart chart = new SizeChart();
-            
-            for(int i = 0; i < newRows; i++)
-            {
-                if(!chart.mChartEntries.ContainsKey(i))
-                {
-                    var x = new List<string>();
-                    chart.mChartEntries.Add(i, x);
-                }
-
-                for (int j = 0; j < newCols; j++)
-                {
-                    var y = "[" + i + ", " + j + "]";
-                    chart.mChartEntries[i].Add(y);
-                }
-            }
-
-            ViewBag.Rows = newRows;
-            ViewBag.Cols = newCols;
-            return View(chart);
+            return View(new SizeChart());
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(SizeChart chart, string[][] chartValues)
+        public ActionResult Create(SizeChart chart, string[] selectedSizes)
         {
-            foreach(var x in chartValues)
+            if(!ModelState.IsValid)
             {
-                foreach(var y in x)
-                {
-                    System.Diagnostics.Debug.WriteLine(x + ", " + y);
-                }
+                return View(chart);
             }
+
+            chart.mSizesToDisplay = selectedSizes.ToList();
+
+            context.Insert(chart);
+            context.Commit();
 
             return RedirectToAction("Index", "SizeChartManager");
         }
 
-        public ActionResult UpdateRowsAndCols(int rows, int cols)
+        public ActionResult Edit(string Id)
         {
-            return RedirectToAction("Create", "SizeChartManager", new { newRows = rows, newCols = cols });
+            try
+            {
+                SizeChart chartToEdit = context.Find(Id);
+
+                return View(chartToEdit);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
+            }
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Edit(SizeChart newChart, string[] newSelectedSizes, string Id)
+        {
+            if(!ModelState.IsValid || newSelectedSizes == null)
+            {
+                return View();
+            }
+
+            try
+            {
+                SizeChart chartToEdit = context.Find(Id);
+
+                chartToEdit.mChartName = newChart.mChartName;
+                chartToEdit.mImageChartUrl = newChart.mImageChartUrl;
+                chartToEdit.mSizesToDisplay = newSelectedSizes.ToList();
+
+                context.Commit();
+
+                return RedirectToAction("Index", "SizeChartManager");
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
+            }
+        }
+
+        public ActionResult Delete(string Id)
+        {
+            try
+            {
+                SizeChart chartToDelete = context.Find(Id);
+
+                return View(chartToDelete);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
+            }
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult ConfirmDelete(string Id)
+        {
+            try
+            {
+                SizeChart chartToDelete = context.Find(Id);
+
+                context.Delete(chartToDelete);
+                context.Commit();
+
+                return RedirectToAction("Index", "SizeChartManager");
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
+            }
         }
     }
 }

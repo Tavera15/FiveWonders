@@ -38,12 +38,12 @@
                 @foreach (var item in Model.subCategories)
                 {
                     <div class="checkbox">
-                    <label>
-                        <input type="checkbox"
-                               name="selectedCategories"
-                               value=@item.mID
-                        /> 
-                        @item.mSubCategoryName
+                        <label>
+                            <input type="checkbox"
+                                   name="selectedCategories"
+                                   value=@item.mID
+                            /> 
+                            @item.mSubCategoryName
                         </label>
                     </div>
                 }

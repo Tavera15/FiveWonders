@@ -13,12 +13,25 @@ namespace FiveWonders.core.Models
         [Display(Name = "Chart Name")]
         public string mChartName { get; set; }
 
-        [Display(Name = "Sizes")]
-        public Dictionary<int, List<string>> mChartEntries { get; set; }
+        [Required(ErrorMessage = "An image of a size chart is required")]
+        [Display(Name = "Image")]
+        public string mImageChartUrl { get; set; }
+
+        [Required(ErrorMessage = "At Least one size letter is required")]
+        [Display(Name = "Sizes to Display")]
+        public List<string> mSizesToDisplay { get; set; }
+
+
+        public static readonly string[] ALL_AVAILABLE_SIZES = { "XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL" };
 
         public SizeChart()
         {
-            mChartEntries = new Dictionary<int, List<string>>();
+            mSizesToDisplay = new List<string>();
+        }
+
+        public string[] GetAllAvailableSizes()
+        {
+            return ALL_AVAILABLE_SIZES;
         }
     }
 }
