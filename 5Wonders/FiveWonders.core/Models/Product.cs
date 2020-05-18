@@ -27,6 +27,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Sub-Categories")]
         public List<string> mSubCategories { get; set; }
 
+        [Display(Name = "Size Chart")]
+        public string mSizeChart { get; set; }
+
         public Product()
         {
             mSubCategories = new List<string>();

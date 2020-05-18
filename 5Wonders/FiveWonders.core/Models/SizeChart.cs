@@ -34,4 +34,16 @@ namespace FiveWonders.core.Models
             return ALL_AVAILABLE_SIZES;
         }
     }
+
+    public class SimplifiedSizeChart
+    {
+        public string mID { get; set; }
+        public string mChartName { get; set; }
+
+        public SimplifiedSizeChart(string id, string chartName)
+        {
+            mID = id;
+            mChartName = chartName;
+        }
+    }
 }

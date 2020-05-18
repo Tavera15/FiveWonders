@@ -14,12 +14,14 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Product> context;
         IRepository<Category> productCategories;
         IRepository<SubCategory> subCateroryContext;
+        IRepository<SizeChart> sizeChartContext;
 
-        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository)
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories)
         {
             context = productContext;
             productCategories = categoriesContext;
             subCateroryContext = subCategoryRepository;
+            sizeChartContext = sizeChartRepositories;
         }
 
         // Should display all products
@@ -34,9 +36,13 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Create()
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
+            var allSizeCharts = sizeChartContext.GetCollection().Select(x => new SimplifiedSizeChart(x.mID, x.mChartName)).ToList();
+            allSizeCharts.Insert(0, new SimplifiedSizeChart("0", "None"));
+
             viewModel.Product = new Product();
             viewModel.categories = productCategories.GetCollection();
             viewModel.subCategories = subCateroryContext.GetCollection();
+            viewModel.sizeCharts = allSizeCharts;
 
             return View(viewModel);
         }
@@ -75,10 +81,14 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product productToEdit = context.Find(Id);
 
+                var allSizeCharts = sizeChartContext.GetCollection().Select(x => new SimplifiedSizeChart(x.mID, x.mChartName)).ToList();
+                allSizeCharts.Insert(0, new SimplifiedSizeChart("0", "None"));
+
                 ProductManagerViewModel viewModel = new ProductManagerViewModel();
                 viewModel.Product = productToEdit;
                 viewModel.categories = productCategories.GetCollection();
                 viewModel.subCategories = subCateroryContext.GetCollection();
+                viewModel.sizeCharts = allSizeCharts;
 
                 return View(viewModel);
             }
@@ -104,6 +114,7 @@ namespace FiveWonders.WebUI.Controllers
                 target.mDesc = p.Product.mDesc;
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
+                target.mSizeChart = p.Product.mSizeChart;
 
                 if(target.mSubCategories != null)
                 {
