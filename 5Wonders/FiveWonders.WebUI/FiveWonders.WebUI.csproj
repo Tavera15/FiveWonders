@@ -187,13 +187,14 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\CategoryManagerController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ProductManagerController.cs" />
-    <Compile Include="Controllers\SizeChartManagerController.cs" />
-    <Compile Include="Controllers\SubCategoryManagerController.cs" />
+    <Compile Include="Controllers\Managers\AccountController.cs" />
+    <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
+    <Compile Include="Controllers\Managers\HomeController.cs" />
+    <Compile Include="Controllers\Managers\ManageController.cs" />
+    <Compile Include="Controllers\Managers\ProductManagerController.cs" />
+    <Compile Include="Controllers\Managers\SizeChartManagerController.cs" />
+    <Compile Include="Controllers\Managers\SubCategoryManagerController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -275,9 +276,12 @@
     <Content Include="Views\SizeChartManager\Create.cshtml" />
     <Content Include="Views\SizeChartManager\Edit.cshtml" />
     <Content Include="Views\SizeChartManager\Delete.cshtml" />
+    <Content Include="Views\Products\Item.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
