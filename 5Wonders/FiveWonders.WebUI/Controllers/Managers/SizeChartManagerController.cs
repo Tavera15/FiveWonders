@@ -38,7 +38,7 @@ namespace FiveWonders.WebUI.Controllers
                 return View(chart);
             }
 
-            chart.mSizesToDisplay = selectedSizes.ToList();
+            chart.mSizesToDisplay = String.Join(",", selectedSizes);
 
             context.Insert(chart);
             context.Commit();
@@ -76,7 +76,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 chartToEdit.mChartName = newChart.mChartName;
                 chartToEdit.mImageChartUrl = newChart.mImageChartUrl;
-                chartToEdit.mSizesToDisplay = newSelectedSizes.ToList();
+                chartToEdit.mSizesToDisplay = String.Join(",", newSelectedSizes);
 
                 context.Commit();
 

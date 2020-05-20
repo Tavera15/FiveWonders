@@ -21,9 +21,6 @@
             @Html.DisplayNameFor(model => model.mCategory)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.mSubCategories)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.mPrice)
         </th>
         <th></th>
@@ -45,14 +42,6 @@
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.mCategory)
-    </td>
-    <td>
-        <ul>
-            @foreach (var sub in item.mSubCategories)
-            {
-                <li>@Html.DisplayFor(modelItem => sub)</li>
-            }
-        </ul>       
     </td>
     <td>
         @Html.DisplayFor(modelItem => item.mPrice)

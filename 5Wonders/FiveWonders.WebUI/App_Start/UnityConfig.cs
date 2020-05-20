@@ -1,5 +1,6 @@
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.DataAccess.SQL;
 using System;
 
 using Unity;
@@ -44,10 +45,10 @@ namespace FiveWonders.WebUI
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
-            container.RegisterType<IRepository<Product>, InMemoryRepository<Product>>();
-            container.RegisterType<IRepository<Category>, InMemoryRepository<Category>>();
-            container.RegisterType<IRepository<SubCategory>, InMemoryRepository<SubCategory>>();
-            container.RegisterType<IRepository<SizeChart>, InMemoryRepository<SizeChart>>();
+            container.RegisterType<IRepository<Product>, SQLRepository<Product>>();
+            container.RegisterType<IRepository<Category>, SQLRepository<Category>>();
+            container.RegisterType<IRepository<SubCategory>, SQLRepository<SubCategory>>();
+            container.RegisterType<IRepository<SizeChart>, SQLRepository<SizeChart>>();
         }
     }
 }

@@ -215,6 +215,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ConnectionStrings.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -304,6 +305,10 @@
     <ProjectReference Include="..\FiveWonders.DataAccess.InMemory\FiveWonders.DataAccess.InMemory.csproj">
       <Project>{4d040eec-c48d-4e96-830c-35d73c3c8ad0}</Project>
       <Name>FiveWonders.DataAccess.InMemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FiveWonders.DataAccess.SQL\FiveWonders.DataAccess.SQL.csproj">
+      <Project>{735A0BC8-8721-4815-9895-1E1192F476D0}</Project>
+      <Name>FiveWonders.DataAccess.SQL</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

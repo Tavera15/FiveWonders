@@ -42,7 +42,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.mCategory)
+            @ViewBag.CategoryName
         </dd>
 
         <dt>
@@ -50,7 +50,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.mSizeChart)
+            @ViewBag.ChartName
         </dd>
 
         <dt>
@@ -67,7 +67,7 @@
 
         <dd>
             <ul>
-                @foreach (var sub in Model.mSubCategories)
+                @foreach (var sub in ViewBag.SubCategoryNames)
                 {
                     <li>@Html.DisplayFor(modelItem => sub)</li>
                 }

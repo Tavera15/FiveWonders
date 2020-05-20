@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,8 @@ namespace FiveWonders.core.Models
 {
     public abstract class BaseEntity
     {
-        public string mID { get; private set; }
+        [Key]
+        public string mID { get; set; }
         public DateTime mTimeEntered { get; private set; }
 
         public BaseEntity()

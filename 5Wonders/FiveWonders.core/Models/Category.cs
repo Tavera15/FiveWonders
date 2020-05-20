@@ -13,8 +13,6 @@ namespace FiveWonders.core.Models
         [Required(ErrorMessage = "A category name is required")]
         public string mCategoryName { get; set; }
 
-        public List<SubCategory> mSubCategories { get; set; }
-
         public Category()
         {
         }

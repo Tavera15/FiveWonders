@@ -1,5 +1,6 @@
 ﻿@model FiveWonders.core.Models.SizeChart
 
+
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>SizeChart</h4>
@@ -43,7 +44,7 @@
 
         <dd>
             <ul>
-                @foreach (var size in Model.mSizesToDisplay)
+                @foreach (var size in Model.mSizesToDisplay.Split(','))
                 {
                     <li>@Html.DisplayFor(model => size)</li>
                 }

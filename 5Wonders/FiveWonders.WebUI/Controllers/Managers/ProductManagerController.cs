@@ -36,8 +36,8 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Create()
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            var allSizeCharts = sizeChartContext.GetCollection().Select(x => new SimplifiedSizeChart(x.mID, x.mChartName)).ToList();
-            allSizeCharts.Insert(0, new SimplifiedSizeChart("0", "None"));
+            var allSizeCharts = sizeChartContext.GetCollection().ToList();
+            allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
             viewModel.Product = new Product();
             viewModel.categories = productCategories.GetCollection();
@@ -57,15 +57,7 @@ namespace FiveWonders.WebUI.Controllers
                 return View(p);
             }
 
-            if(selectedCategories != null)
-            {
-                foreach (var subID in selectedCategories)
-                {
-                    SubCategory sub = subCateroryContext.Find(subID);
-
-                    p.Product.mSubCategories.Add(sub.mSubCategoryName);
-                }
-            }
+            p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
 
             // Store into memory. Later in Database
             context.Insert(p.Product);
@@ -81,8 +73,8 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product productToEdit = context.Find(Id);
 
-                var allSizeCharts = sizeChartContext.GetCollection().Select(x => new SimplifiedSizeChart(x.mID, x.mChartName)).ToList();
-                allSizeCharts.Insert(0, new SimplifiedSizeChart("0", "None"));
+                var allSizeCharts = sizeChartContext.GetCollection().ToList();
+                allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
                 ProductManagerViewModel viewModel = new ProductManagerViewModel();
                 viewModel.Product = productToEdit;
@@ -115,21 +107,7 @@ namespace FiveWonders.WebUI.Controllers
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
                 target.mSizeChart = p.Product.mSizeChart;
-
-                if(target.mSubCategories != null)
-                {
-                    target.mSubCategories.Clear();
-                }
-
-                if(selectedCategories != null)
-                {
-                    foreach(var subID in selectedCategories)
-                    {
-                        SubCategory sub = subCateroryContext.Find(subID);
-                    
-                        target.mSubCategories.Add(sub.mSubCategoryName);
-                    }
-                }
+                target.mSubCategories = (selectedCategories != null ? String.Join(",", selectedCategories) : "");
 
                 context.Commit();
 
@@ -148,6 +126,25 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product target = context.Find(Id);
 
+                string[] allSubIDs = target.mSubCategories != "" ? target.mSubCategories.Split(',') : new string[] { "None" };
+                List<string> allSubNames = new List<string>();
+
+                if(allSubIDs[0] != "None")
+                {
+                    foreach (var subID in allSubIDs)
+                        allSubNames.Add(subCateroryContext.Find(subID).mSubCategoryName);
+                }
+                else
+                {
+                    allSubNames.Add("None");
+                }
+
+                string mainCategoryName = productCategories.Find(target.mCategory).mCategoryName;
+                string sizeChartName = target.mSizeChart != "0" ? sizeChartContext.Find(target.mSizeChart).mChartName : "None";
+
+                ViewBag.CategoryName = mainCategoryName;
+                ViewBag.SubCategoryNames = allSubNames.ToArray();
+                ViewBag.ChartName = sizeChartName;
                 return View(target);
             }
             catch(Exception e)

@@ -17,16 +17,17 @@ namespace FiveWonders.core.Models
         [Display(Name = "Image")]
         public string mImageChartUrl { get; set; }
 
-        [Required(ErrorMessage = "At Least one size letter is required")]
         [Display(Name = "Sizes to Display")]
-        public List<string> mSizesToDisplay { get; set; }
+        public string mSizesToDisplay { get; set; }
 
 
         public static readonly string[] ALL_AVAILABLE_SIZES = { "XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL" };
 
         public SizeChart()
         {
-            mSizesToDisplay = new List<string>();
+            mChartName = "";
+            mImageChartUrl = "";
+            mSizesToDisplay = "";
         }
 
         public string[] GetAllAvailableSizes()

@@ -1,8 +1,9 @@
 ﻿@model FiveWonders.core.Models.SizeChart
 
-
 @using (Html.BeginForm())
 {
+    var sizesToDisplay = Model.mSizesToDisplay.Split(',');
+
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
@@ -35,7 +36,7 @@
                             <input type="checkbox"
                                    name="newSelectedSizes"
                                    value=@item 
-                                    @if(Model.mSizesToDisplay.Contains(item)) { <text> checked </text>  }
+                                    @if(sizesToDisplay.Contains(item)) { <text> checked </text>  }
                                    />
                             @item
                         </label>
