@@ -11,3 +11,4 @@
 * Updated Product Manager to display all available size charts and select one.
 * Created a Product Order View Model to transfer each product's data to a view.
 * Setup database to insert, edit, and delete data for all current models.
+* Products model is updated to include an array of images associated with each product.

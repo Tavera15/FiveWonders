@@ -19,6 +19,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Category")]
         public string mCategory { get; set; }
 
+        [Display(Name = "Image")]
+        public string mImage { get; set; }
+
         [Required(ErrorMessage = "A price is required")]
         [Range(0.01, Double.PositiveInfinity, ErrorMessage = "Price must be greater than $0")]
         [Display(Name = "Price")]

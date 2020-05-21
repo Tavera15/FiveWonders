@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
+using System.IO;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -50,20 +51,38 @@ namespace FiveWonders.WebUI.Controllers
         // Get form information and store to memory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories)
+        public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories, HttpPostedFileBase[] imageFiles)
         {
-            if(!ModelState.IsValid)
+            if(!ModelState.IsValid || imageFiles[0] == null)
             {
+                var allSizeCharts = sizeChartContext.GetCollection().ToList();
+                allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
+
+                p.categories = productCategories.GetCollection();
+                p.subCategories = subCateroryContext.GetCollection();
+                p.sizeCharts = allSizeCharts;
+
                 return View(p);
             }
 
-            p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
+            try
+            {
+                string newImageURL;
+                AddImages(p.Product.mID, imageFiles, out newImageURL);
 
-            // Store into memory. Later in Database
-            context.Insert(p.Product);
-            context.Commit();
+                p.Product.mImage = newImageURL;
+                p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
 
-            return RedirectToAction("Index", "ProductManager");
+                context.Insert(p.Product);
+                context.Commit();
+       
+                return RedirectToAction("Index", "ProductManager");
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
+            }
         }
 
         // Display a form to edit product
@@ -73,9 +92,11 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product productToEdit = context.Find(Id);
 
+                // Finds the correct Size Chart and inserts a "None" options
                 var allSizeCharts = sizeChartContext.GetCollection().ToList();
                 allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
+                // Popularize the view model with all the lists and product to edit
                 ProductManagerViewModel viewModel = new ProductManagerViewModel();
                 viewModel.Product = productToEdit;
                 viewModel.categories = productCategories.GetCollection();
@@ -93,21 +114,32 @@ namespace FiveWonders.WebUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Edit(ProductManagerViewModel p, string[] selectedCategories, string Id)
+        public ActionResult Edit(ProductManagerViewModel p, string[] selectedCategories, HttpPostedFileBase[] imageFiles, string Id)
         {
             try
             {
+                // Find product to edit
                 Product target = context.Find(Id);
 
-                if (!ModelState.IsValid)
-                    return View(p);
-
+                // Set Target's properties to new values
                 target.mName = p.Product.mName;
                 target.mDesc = p.Product.mDesc;
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
                 target.mSizeChart = p.Product.mSizeChart;
                 target.mSubCategories = (selectedCategories != null ? String.Join(",", selectedCategories) : "");
+
+                // If new images were selected, update Target's Image property 
+                if(imageFiles != null && imageFiles[0] != null)
+                {
+                    var currentImageFiles = target.mImage.Split(',');
+                    string newImageURL;
+
+                    DeleteImages(currentImageFiles);
+                    AddImages(Id, imageFiles, out newImageURL);
+
+                    target.mImage = newImageURL;
+                }
 
                 context.Commit();
 
@@ -116,6 +148,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
+
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -126,24 +159,19 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product target = context.Find(Id);
 
+                // Gets all the Subcategories' IDs
                 string[] allSubIDs = target.mSubCategories != "" ? target.mSubCategories.Split(',') : new string[] { "None" };
-                List<string> allSubNames = new List<string>();
 
-                if(allSubIDs[0] != "None")
-                {
-                    foreach (var subID in allSubIDs)
-                        allSubNames.Add(subCateroryContext.Find(subID).mSubCategoryName);
-                }
-                else
-                {
-                    allSubNames.Add("None");
-                }
-
+                // Gets each Subcategory's name using the ID and stores it in an array
+                string[] allSubCategoryNames = (allSubIDs[0] != "None") ? 
+                    allSubIDs.Select(x => subCateroryContext.Find(x).mSubCategoryName).ToArray() : new string[] { "None" };
+                
+                // Find the Main Category's and Size Chart's names
                 string mainCategoryName = productCategories.Find(target.mCategory).mCategoryName;
                 string sizeChartName = target.mSizeChart != "0" ? sizeChartContext.Find(target.mSizeChart).mChartName : "None";
 
                 ViewBag.CategoryName = mainCategoryName;
-                ViewBag.SubCategoryNames = allSubNames.ToArray();
+                ViewBag.SubCategoryNames = allSubCategoryNames;
                 ViewBag.ChartName = sizeChartName;
                 return View(target);
             }
@@ -161,6 +189,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product target = context.Find(Id);
+                
+                var currentImageFiles = target.mImage.Split(',');
+                DeleteImages(currentImageFiles);
 
                 context.Delete(target);
                 context.Commit();
@@ -172,6 +203,37 @@ namespace FiveWonders.WebUI.Controllers
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
+        }
+
+        private void DeleteImages(string[] currentImageFiles)
+        {
+            foreach (var file in currentImageFiles)
+            {
+                string path = Server.MapPath("//Content//ProductImages//") + file;
+
+                if (System.IO.File.Exists(path))
+                {
+                    System.IO.File.Delete(path);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine(file + " not found");
+                }
+            }
+        }
+
+        private void AddImages(string Id, HttpPostedFileBase[] imageFiles, out string newImageURL)
+        {
+            var allFileNames = new List<string>();
+
+            foreach (var file in imageFiles)
+            {
+                string fileName = Id + file.FileName;
+                file.SaveAs(Server.MapPath("//Content//ProductImages//") + fileName);
+                allFileNames.Add(fileName);
+            }
+
+            newImageURL = String.Join(",", allFileNames);
         }
     }
 }

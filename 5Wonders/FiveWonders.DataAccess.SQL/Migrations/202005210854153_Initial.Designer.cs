@@ -13,7 +13,7 @@ namespace FiveWonders.DataAccess.SQL.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202005200611285_Initial"; }
+            get { return "202005210854153_Initial"; }
         }
         
         string IMigrationMetadata.Source

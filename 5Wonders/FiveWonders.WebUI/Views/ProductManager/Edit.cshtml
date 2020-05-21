@@ -1,7 +1,7 @@
 ﻿@model FiveWonders.core.ViewModels.ProductManagerViewModel
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data"}))
 {
     @Html.AntiForgeryToken()
     
@@ -62,6 +62,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Product.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
             </div>
         </div>
 

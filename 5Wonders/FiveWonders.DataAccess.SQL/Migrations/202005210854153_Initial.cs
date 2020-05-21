@@ -25,6 +25,7 @@ namespace FiveWonders.DataAccess.SQL.Migrations
                         mName = c.String(nullable: false),
                         mDesc = c.String(),
                         mCategory = c.String(),
+                        mImage = c.String(),
                         mPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
                         mSubCategories = c.String(),
                         mSizeChart = c.String(),
