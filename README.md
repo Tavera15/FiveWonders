@@ -13,3 +13,4 @@
 * Setup database to insert, edit, and delete data for all current models.
 * Products model is updated to include an array of images associated with each product.
 * Navigation bar is now dynamic to include custom categories. A route was created to return products from a certain category.
+* Created a route to get a list of products that has a matching category, subcategory, or both.

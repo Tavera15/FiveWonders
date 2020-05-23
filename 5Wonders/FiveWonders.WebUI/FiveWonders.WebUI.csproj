@@ -282,6 +282,8 @@
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\NavBar\Index.cshtml" />
     <Content Include="Views\Products\Category.cshtml" />
+    <Content Include="Views\Products\Subcategory.cshtml" />
+    <Content Include="Views\Products\ListItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

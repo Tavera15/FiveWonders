@@ -17,8 +17,6 @@ namespace FiveWonders.core.Models
         {
             mID = Guid.NewGuid().ToString();
             mTimeEntered = DateTime.Now;
-
-            System.Diagnostics.Debug.WriteLine("ID: " + mID);
         }
     }
 }

@@ -6,13 +6,13 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.mID)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.mTimeEntered)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.mSubCategoryName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.isEventOrTheme)
         </th>
         <th></th>
     </tr>
@@ -20,16 +20,17 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.mID)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.mTimeEntered)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.mSubCategoryName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.mID }) |
+            @Html.DisplayFor(modelItem => item.isEventOrTheme)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.mID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.mID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.mID })
         </td>
     </tr>

@@ -51,6 +51,7 @@ namespace FiveWonders.DataAccess.SQL.Migrations
                     {
                         mID = c.String(nullable: false, maxLength: 128),
                         mSubCategoryName = c.String(nullable: false),
+                        isEventOrTheme = c.Boolean(nullable: false),
                         mTimeEntered = c.DateTime(nullable: false),
                     })
                 .PrimaryKey(t => t.mID);
