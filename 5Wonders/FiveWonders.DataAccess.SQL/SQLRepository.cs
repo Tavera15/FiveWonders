@@ -27,14 +27,12 @@ namespace FiveWonders.DataAccess.SQL
 
         public void Delete(T item)
         {
-            var t = Find(item.mID);
-
-            if(context.Entry(t).State == EntityState.Deleted)
+            if(context.Entry(item).State == EntityState.Deleted)
             {
-                dbSet.Attach(t);
+                dbSet.Attach(item);
             }
 
-            dbSet.Remove(t);
+            dbSet.Remove(item);
         }
 
         public T Find(string ID)

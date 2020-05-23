@@ -6,6 +6,9 @@
 #Connection String
 ConnectionStrings.config
 
+#Images Folder
+5Wonders/FiveWonders.WebUI/Content/ProductImages
+
 # User-specific files
 *.rsuser
 *.suo

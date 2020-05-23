@@ -14,11 +14,15 @@ namespace FiveWonders.WebUI.Controllers
 
         IRepository<Product> productsContext;
         IRepository<SizeChart> sizeChartContext;
+        IRepository<Category> categoryContext;
+        IRepository<SubCategory> subCateroryContext;
 
-        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository)
+        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository)
         {
             productsContext = productsRepository;
             sizeChartContext = sizeChartsRepository;
+            categoryContext = categoryRepository;
+            subCateroryContext = subCategoryRepository;
         }
 
         // GET: Product
@@ -79,6 +83,26 @@ namespace FiveWonders.WebUI.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return RedirectToAction("Index", "Products");
+            }
+        }
+
+        public ActionResult Category(string Id)
+        {
+            try
+            {
+                Category category = categoryContext.GetCollection().FirstOrDefault(x => x.mCategoryName.ToLower() == Id.ToLower());
+
+                if (category == null)
+                    throw new Exception("No products contain the category: " + Id);
+
+                Product[] hhh = productsContext.GetCollection().Where(x => x.mCategory == category.mID).ToArray();
+
+                return View(hhh);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return HttpNotFound();
             }
         }
     }

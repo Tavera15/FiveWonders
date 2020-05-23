@@ -92,7 +92,7 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Product productToEdit = context.Find(Id);
 
-                // Finds the correct Size Chart and inserts a "None" options
+                // Finds the correct Size Chart and inserts a "None" option
                 var allSizeCharts = sizeChartContext.GetCollection().ToList();
                 allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
@@ -162,7 +162,7 @@ namespace FiveWonders.WebUI.Controllers
                 // Gets all the Subcategories' IDs
                 string[] allSubIDs = target.mSubCategories != "" ? target.mSubCategories.Split(',') : new string[] { "None" };
 
-                // Gets each Subcategory's name using the ID and stores it in an array
+                // Gets each Subcategory's name using the ID and stores it in an array...if any
                 string[] allSubCategoryNames = (allSubIDs[0] != "None") ? 
                     allSubIDs.Select(x => subCateroryContext.Find(x).mSubCategoryName).ToArray() : new string[] { "None" };
                 
@@ -170,6 +170,7 @@ namespace FiveWonders.WebUI.Controllers
                 string mainCategoryName = productCategories.Find(target.mCategory).mCategoryName;
                 string sizeChartName = target.mSizeChart != "0" ? sizeChartContext.Find(target.mSizeChart).mChartName : "None";
 
+                // Rather than passing IDs, pass the name property to view
                 ViewBag.CategoryName = mainCategoryName;
                 ViewBag.SubCategoryNames = allSubCategoryNames;
                 ViewBag.ChartName = sizeChartName;
