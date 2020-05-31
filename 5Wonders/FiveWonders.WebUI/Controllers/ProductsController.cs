@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using FiveWonders.core.Contracts;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -15,20 +17,23 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SizeChart> sizeChartContext;
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subCategoryContext;
+        IBasketServices basketServices;
 
-        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository)
+        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IBasketServices basketServices)
         {
             productsContext = productsRepository;
             sizeChartContext = sizeChartsRepository;
             categoryContext = categoryRepository;
             subCategoryContext = subCategoryRepository;
+            this.basketServices = basketServices;
         }
 
         // GET: Product - Displays every products in the store
         public ActionResult Index()
         {
             List<Product> allProducts = productsContext.GetCollection().ToList<Product>();
-            
+            System.Diagnostics.Debug.WriteLine(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
             return View(allProducts);
         }
 
@@ -70,18 +75,15 @@ namespace FiveWonders.WebUI.Controllers
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
 
-                // Add Product Order to Shopping Cart
-
-                System.Diagnostics.Debug.WriteLine("Added: " + item.productOrder.mProductID + ": " + item.product.mName);
-                System.Diagnostics.Debug.WriteLine("Added: " + item.productOrder.mQuantity + " of them at $" + item.product.mPrice + " each");
-                System.Diagnostics.Debug.WriteLine("Size: " + item.productOrder.mSize);
-                System.Diagnostics.Debug.WriteLine("Total: $" + (item.productOrder.mQuantity * item.product.mPrice));
+                // TODO Add Product Order to Shopping Cart
+                basketServices.AddToBasket(this.HttpContext, item.productOrder);
 
                 return RedirectToAction("Index", "Products");
             }
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
+                ViewBag.itemQuantity = 0;
                 return RedirectToAction("Index", "Products");
             }
         }

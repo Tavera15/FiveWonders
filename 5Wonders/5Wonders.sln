@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiveWonders.DataAccess.InMe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiveWonders.DataAccess.SQL", "FiveWonders.DataAccess.SQL\FiveWonders.DataAccess.SQL.csproj", "{735A0BC8-8721-4815-9895-1E1192F476D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiveWonders.Services", "FiveWonders.Services\FiveWonders.Services.csproj", "{7CF70F2E-7F41-46BB-B560-E40699555D47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{735A0BC8-8721-4815-9895-1E1192F476D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{735A0BC8-8721-4815-9895-1E1192F476D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{735A0BC8-8721-4815-9895-1E1192F476D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF70F2E-7F41-46BB-B560-E40699555D47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF70F2E-7F41-46BB-B560-E40699555D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF70F2E-7F41-46BB-B560-E40699555D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF70F2E-7F41-46BB-B560-E40699555D47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

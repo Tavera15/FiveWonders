@@ -53,6 +53,26 @@
     <Compile Include="Migrations\202005230647253_Initial.Designer.cs">
       <DependentUpon>202005230647253_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005252147021_ServiceMessagesAdded.cs" />
+    <Compile Include="Migrations\202005252147021_ServiceMessagesAdded.Designer.cs">
+      <DependentUpon>202005252147021_ServiceMessagesAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005270418014_basketsandcustomers.cs" />
+    <Compile Include="Migrations\202005270418014_basketsandcustomers.Designer.cs">
+      <DependentUpon>202005270418014_basketsandcustomers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005270441241_basketsandcustomerss.cs" />
+    <Compile Include="Migrations\202005270441241_basketsandcustomerss.Designer.cs">
+      <DependentUpon>202005270441241_basketsandcustomerss.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005272214284_AddBasketID.cs" />
+    <Compile Include="Migrations\202005272214284_AddBasketID.Designer.cs">
+      <DependentUpon>202005272214284_AddBasketID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005300703478_AddedBasketModels.cs" />
+    <Compile Include="Migrations\202005300703478_AddedBasketModels.Designer.cs">
+      <DependentUpon>202005300703478_AddedBasketModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -70,6 +90,21 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202005230647253_Initial.resx">
       <DependentUpon>202005230647253_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005252147021_ServiceMessagesAdded.resx">
+      <DependentUpon>202005252147021_ServiceMessagesAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005270418014_basketsandcustomers.resx">
+      <DependentUpon>202005270418014_basketsandcustomers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005270441241_basketsandcustomerss.resx">
+      <DependentUpon>202005270441241_basketsandcustomerss.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005272214284_AddBasketID.resx">
+      <DependentUpon>202005272214284_AddBasketID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005300703478_AddedBasketModels.resx">
+      <DependentUpon>202005300703478_AddedBasketModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

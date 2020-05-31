@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class ProductOrder
+    public class BasketItem : BaseEntity
     {
         public string mProductID { get; set; }
+        public string basketID { get; set; }
 
         [Range(1, Int32.MaxValue)]
         [Display(Name = "Quantity")]
@@ -18,10 +19,15 @@ namespace FiveWonders.core.Models
         [Display(Name = "Size")]
         public string mSize { get; set; }
 
-        public ProductOrder()
+        public BasketItem()
         {
             mQuantity = 1;
             mSize = "";
+        }
+
+        public bool IsSameBasketItem(BasketItem other)
+        {
+            return ((mProductID == other.mProductID) && (mSize == other.mSize));
         }
     }
 }

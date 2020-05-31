@@ -1,0 +1,43 @@
+﻿@model IEnumerable<FiveWonders.core.Models.ServicesMessage>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mSubject)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.mTimeEntered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mCustomerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mSubject)
+        </td>
+        <td>
+            @Html.ActionLink("View Message", "Details", new { id=item.mID })
+        </td>
+    </tr>
+}
+
+</table>

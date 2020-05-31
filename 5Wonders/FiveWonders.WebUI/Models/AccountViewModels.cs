@@ -64,6 +64,10 @@ namespace FiveWonders.WebUI.Models
 
     public class RegisterViewModel
     {
+        [Required(ErrorMessage = "A name is required")]
+        [Display(Name = "Full Name")]
+        public string mFullName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

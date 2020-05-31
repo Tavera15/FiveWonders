@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FiveWonders.WebUI.Models;
+using FiveWonders.core.Models;
+using FiveWonders.DataAccess.InMemory;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -17,15 +19,11 @@ namespace FiveWonders.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IRepository<Customer> customerContext;
 
-        public AccountController()
+        public AccountController(IRepository<Customer> customerRepository)
         {
-        }
-
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            customerContext = customerRepository;
         }
 
         public ApplicationSignInManager SignInManager
@@ -155,6 +153,17 @@ namespace FiveWonders.WebUI.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    // Register customer model
+                    Customer customer = new Customer()
+                    {
+                        mEmail = model.Email,
+                        mFullName = model.mFullName,
+                        mUserID = user.Id,
+                    };
+
+                    customerContext.Insert(customer);
+                    customerContext.Commit();
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
