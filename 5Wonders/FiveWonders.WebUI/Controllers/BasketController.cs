@@ -47,9 +47,6 @@ namespace FiveWonders.WebUI.Controllers
                     model.sizeChart = sizeChart.mSizesToDisplay;
             }
 
-            var x = new ProductOrderViewModel().GetAllQuantites();
-
-            ViewBag.itemQuantity = x;
             return View(allItems);
         }
 
@@ -75,7 +72,11 @@ namespace FiveWonders.WebUI.Controllers
                 if (basketService.IsItemInUserBasket(HttpContext, Id, out basketItem))
                 {
                     Product product = productContext.Find(basketItem.mProductID);
-                    SizeChart sizeChart = sizeChartContext.Find(product.mSizeChart);
+
+                    SizeChart sizeChart = null;
+
+                    if (product.mSizeChart != "0")
+                        sizeChart = sizeChartContext.Find(product.mSizeChart);
 
                     BasketItemViewModel viewModel = new BasketItemViewModel()
                     {
@@ -83,15 +84,12 @@ namespace FiveWonders.WebUI.Controllers
                         productName = product.mName,
                         price = product.mPrice,
                         image = product.mImage,
-                        sizeChart = sizeChart.mSizesToDisplay,
                         basketItemID = Id,
                         quantity = basketItem.mQuantity,
-                        size = basketItem.mSize
+                        size = sizeChart != null ? basketItem.mSize : null,
+                        sizeChart = sizeChart != null ? sizeChart.mSizesToDisplay : "",
                     };
 
-                    var x = new ProductOrderViewModel().GetAllQuantites();
-
-                    ViewBag.itemQuantity = x;
                     return View(viewModel);
                 }
 
@@ -120,6 +118,8 @@ namespace FiveWonders.WebUI.Controllers
                     mID = Id,
                     mQuantity = viewModel.quantity,
                     mSize = viewModel.size,
+                    mProductID = oldBasketItem.mProductID,
+                    basketID = oldBasketItem.basketID
                 };
 
                 basketService.UpdateBasketItem(HttpContext, newBasketItem);
@@ -133,20 +133,5 @@ namespace FiveWonders.WebUI.Controllers
                 return View(oldBasketItem);
             }
         }
-
-        /*public ActionResult UpdateCart(List<BasketItemViewModel> newList)
-        {
-            try
-            {
-                System.Diagnostics.Debug.WriteLine("Fdf " + newList.Count);
-                basketService.UpdateBasket(HttpContext, newList);
-                return RedirectToAction("Index", "Basket");
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Basket");
-            }
-        }*/
     }
 }

@@ -27,7 +27,7 @@ namespace FiveWonders.core.Models
 
         public bool IsSameBasketItem(BasketItem other)
         {
-            return ((mProductID == other.mProductID) && (mSize == other.mSize));
+            return ((mProductID == other.mProductID) && (mSize == other.mSize) && (basketID == other.basketID));
         }
     }
 }

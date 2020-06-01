@@ -30,12 +30,12 @@
                 @Html.DisplayFor(modelItem => item.price)
             </td>
             <td>
-                @Html.DropDownListFor(model => item.quantity, new SelectList(ViewBag.itemQuantity, item.quantity), new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DisplayFor(model => item.quantity)
             </td>
             <td>
                 @if (!String.IsNullOrWhiteSpace(item.sizeChart))
                 {
-                    @Html.DropDownListFor(model => item.size, new SelectList(item.sizeChart.Split(','), item.size), new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.DisplayFor(model => item.size)
                 }
             </td>
             <td>
@@ -46,4 +46,3 @@
     }
 
 </table>
-<a href="@Url.Action("UpdateCart", "Basket", new { newList = Model.ToList()})" class="btn btn-danger">Update</a>

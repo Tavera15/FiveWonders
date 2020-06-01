@@ -75,8 +75,8 @@ namespace FiveWonders.WebUI.Controllers
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
 
-                // TODO Add Product Order to Shopping Cart
-                basketServices.AddToBasket(this.HttpContext, item.productOrder);
+                // Add Product Order to Shopping Cart
+                basketServices.AddToBasket(HttpContext, item.productOrder);
 
                 return RedirectToAction("Index", "Products");
             }

@@ -37,7 +37,8 @@ namespace FiveWonders.Services
                 Basket basket = GetBasket(httpContext, true);
 
                 // Checks if item is already in the basket
-                BasketItem basketItem = basket.mBasket.FirstOrDefault(x => x.IsSameBasketItem(item));
+                BasketItem basketItem = basket.mBasket.
+                    FirstOrDefault(x => x.mProductID == item.mProductID && x.mSize == item.mSize);
 
                 // Update the quantity if item already exists
                 if (basketItem != null)
@@ -94,6 +95,7 @@ namespace FiveWonders.Services
             
             if(basket != null)
             {
+                // Gets Basket Items where the Product ID matches the Product ID that's stored in Basket Item object
                 var items = (from b in basket.mBasket
                              join p in productsContext.GetCollection() on b.mProductID equals p.mID
                              select new BasketItemViewModel()
@@ -115,10 +117,31 @@ namespace FiveWonders.Services
         {
             try
             {
-                BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID);
-                basketItem.mQuantity = newBasketItem.mQuantity;
-                basketItem.mSize = newBasketItem.mSize;
+                // Check if items can be combined and only update the quantity
+                BasketItem similarBasketItem = basketItemsContext.GetCollection()
+                    .FirstOrDefault(x => x.mProductID == newBasketItem.mProductID
+                                    && x.mSize == newBasketItem.mSize
+                                    && x.basketID == newBasketItem.basketID
+                                    && x.mID != newBasketItem.mID);
 
+                if(similarBasketItem != null)
+                {
+                    // Update quantity
+                    similarBasketItem.mQuantity += newBasketItem.mQuantity;
+                    similarBasketItem.mSize = newBasketItem.mSize;
+
+                    // Delete the newest Basket Item entry from DB
+                    BasketItem basketItemToDelete = basketItemsContext.Find(newBasketItem.mID);
+                    basketItemsContext.Delete(basketItemToDelete);
+                }
+                else
+                {
+                    // Update singular Basket Item in DB
+                    BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID);
+                    basketItem.mQuantity = newBasketItem.mQuantity;
+                    basketItem.mSize = newBasketItem.mSize;
+                }
+                
                 basketItemsContext.Commit();
             }
             catch(Exception e)

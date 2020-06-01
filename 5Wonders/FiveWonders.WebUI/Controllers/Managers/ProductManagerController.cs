@@ -38,6 +38,8 @@ namespace FiveWonders.WebUI.Controllers
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
             var allSizeCharts = sizeChartContext.GetCollection().ToList();
+
+            // TODO Fix the "None" option mID
             allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
             viewModel.Product = new Product();
