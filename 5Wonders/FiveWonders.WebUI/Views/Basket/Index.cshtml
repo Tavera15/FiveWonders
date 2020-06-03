@@ -9,13 +9,13 @@
             @Html.DisplayNameFor(model => model.productName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            @Html.DisplayNameFor(model => model.size)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.quantity)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.size)
+            @Html.DisplayNameFor(model => model.price)
         </th>
         <th></th>
     </tr>
@@ -27,22 +27,27 @@
                 @Html.DisplayFor(modelItem => item.productName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.price)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.quantity)
-            </td>
-            <td>
                 @if (!String.IsNullOrWhiteSpace(item.sizeChart))
                 {
                     @Html.DisplayFor(model => item.size)
                 }
             </td>
             <td>
+                @Html.DisplayFor(model => item.quantity)
+            </td>
+            <td>
+                @String.Format("{0:c}", item.price)
+            </td>
+            <td>
                 <a href="@Url.Action("RemoveFromCart", "Basket", new { Id = item.basketItemID })" class="btn btn-danger">Remove Item</a>
-                @Html.ActionLink("View Item", "EditBasketItem", new { id = item.basketItemID })
+                @Html.ActionLink("Edit Item", "EditBasketItem", new { id = item.basketItemID })
             </td>
         </tr>
     }
+
+    <tr>
+        <td colspan="4" style="text-align:right"><strong>Basket Total:</strong></td>
+        <td>@String.Format("({0} items): {1:c}", (from q in Model select q.quantity).Sum(), (from p in Model select p.price * p.quantity).Sum())</td>
+    </tr>
 
 </table>

@@ -16,3 +16,4 @@
 * Created a route to get a list of products that has a matching category, subcategory, or both.
 * Customer and Shopping Basket MVCs were created. Basket Services were implemented too.
 * Polished Shopping Basket UpdateBasket and AddToBasket services to properly combine items inside basket.
+* Display total in basket.
