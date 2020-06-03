@@ -36,7 +36,7 @@ namespace FiveWonders.Services
             {
                 Basket basket = GetBasket(httpContext, true);
 
-                // Checks if item is already in the basket
+                // Checks if a similar item is already in the basket
                 BasketItem basketItem = basket.mBasket.
                     FirstOrDefault(x => x.mProductID == item.mProductID && x.mSize == item.mSize);
 
@@ -91,26 +91,21 @@ namespace FiveWonders.Services
 
         public List<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext)
         {
-            Basket basket = GetBasket(httpContext, false);
-            
-            if(basket != null)
-            {
-                // Gets Basket Items where the Product ID matches the Product ID that's stored in Basket Item object
-                var items = (from b in basket.mBasket
-                             join p in productsContext.GetCollection() on b.mProductID equals p.mID
-                             select new BasketItemViewModel()
-                             {
-                                 basketItemID = b.mID,
-                                 quantity = b.mQuantity,
-                                 size = b.mSize,
-                                 productID = p.mID,
-                             }
-                             ).ToList();
-                
-                return items;
-            }
+            Basket basket = GetBasket(httpContext, true);
 
-            return new List<BasketItemViewModel>();
+            // Gets Basket Items where the Product ID matches the Product ID that's stored in Basket Item object
+            var items = (from b in basket.mBasket
+                            join p in productsContext.GetCollection() on b.mProductID equals p.mID
+                            select new BasketItemViewModel()
+                            {
+                                basketItemID = b.mID,
+                                quantity = b.mQuantity,
+                                size = b.mSize,
+                                productID = p.mID,
+                            }
+                            ).ToList();
+                
+            return items;
         }
 
         public void UpdateBasketItem(HttpContextBase httpContext, BasketItem newBasketItem)
@@ -171,6 +166,26 @@ namespace FiveWonders.Services
             }
         }
 
+        public void ClearBasket(HttpContextBase httpContext)
+        {
+            try
+            {
+                Basket basket = GetBasket(httpContext, false);
+                
+                foreach(var item in basket.mBasket)
+                {
+                    BasketItem basketItemToDelete = basketItemsContext.Find(item.mID);
+                    basketItemsContext.Delete(basketItemToDelete);
+                }
+
+                basketItemsContext.Commit();
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+        }
+
         private Basket GetBasket(HttpContextBase httpContext, bool bCreateIfNull)
         {
             try
@@ -213,35 +228,64 @@ namespace FiveWonders.Services
 
         private string GetBasketID(HttpContextBase httpContext, bool bCreateIfNull)
         {
-            // Search for cookie. User is either logged in or anonymous
-            HttpCookie cookie = httpContext.Request.Cookies[basketCookieName];
-
-            // Extend expiration date, and returns cookie's value if it's a valid basket ID
-            if (cookie != null && IsValidBasketID(cookie.Value))
-            {
-                cookie.Expires = DateTime.Now.AddDays(cookieDuration);
-                httpContext.Response.SetCookie(cookie);
-
-                return cookie.Value;
-            }
-
-            // If user is logged in, get the user ID and find their customer record in DB
             string userID = HttpContext.Current.User.Identity.GetUserId();
+            HttpCookie cookie = httpContext.Request.Cookies[basketCookieName];
             Customer customer;
 
-            // If customer record is found, return the basket ID. Has option to create a new basket if null or return null
-            if (IsUserACustomer(userID, out customer))
+            // Customer is logged in
+            if(!String.IsNullOrWhiteSpace(userID) && IsUserACustomer(userID, out customer))
             {
-                if (customer.mBasketID == null && bCreateIfNull)
+                if (customer.mBasketID != null)
                 {
-                    return CreateNewBasket(httpContext, customer.mID).mID;
+                    return customer.mBasketID;
+                }
+                else if(bCreateIfNull && cookie != null && CanMigrateBasket(customer.mID, cookie.Value))
+                {
+                    // CanMigrateBasket links the customer with the Basket ID that was found in the cookie
+                    return customer.mBasketID;
                 }
 
-                return customer.mBasketID;
+                return bCreateIfNull ? CreateNewBasket(httpContext, customer.mID).mID : null;
             }
+            else
+            {
+                // User is not logged in - Check if cookie contains a basket
+                if (cookie != null && IsValidBasketID(cookie.Value))
+                {
+                    // Check if basket is not owned by anyone else
+                    if(!customerContext.GetCollection().Any(x => x.mBasketID == cookie.Value))
+                    {
+                        cookie.Expires = DateTime.Now.AddDays(cookieDuration);
+                        httpContext.Response.SetCookie(cookie);
 
-            // User is a new anonymous user.
-            return bCreateIfNull ? CreateNewBasket(httpContext).mID : null;
+                        return cookie.Value;
+                    }
+                }
+
+                return bCreateIfNull ? CreateNewBasket(httpContext).mID : null;
+            }
+        }
+
+        private bool CanMigrateBasket(string customerID, string basketID)
+        {
+            try
+            {
+                Customer customer = customerContext.Find(customerID);
+
+                if (customer.mBasketID != null || !IsValidBasketID(basketID) || customerContext.GetCollection().Any(x => x.mBasketID == basketID))
+                    return false;
+
+                Basket basket = basketContext.Find(basketID);
+                customer.mBasketID = basketID;
+                customerContext.Commit();
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return false;
+            }
         }
 
         private bool IsValidBasketID(string basketID)
@@ -261,19 +305,9 @@ namespace FiveWonders.Services
 
         private bool IsUserACustomer(string userID, out Customer customer)
         {
-            try
-            {
-                customer = customerContext.GetCollection().Where(x => x.mUserID == userID).FirstOrDefault();
-
-                return customer != null;
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-
-                customer = null;
-                return false;
-            }
+            customer = customerContext.GetCollection().Where(x => x.mUserID == userID).FirstOrDefault() ?? null;
+            
+            return customer != null;
         }
     }
 }

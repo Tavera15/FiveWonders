@@ -16,5 +16,6 @@ namespace FiveWonders.core.Contracts
         List<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext);
         void UpdateBasketItem(HttpContextBase httpContext, BasketItem newBasketItem);
         bool IsItemInUserBasket(HttpContextBase httpContext, string basketItemID, out BasketItem basketItem);
+        void ClearBasket(HttpContextBase httpContext);
     }
 }

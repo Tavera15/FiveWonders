@@ -49,6 +49,7 @@
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\BasketItem.cs" />
     <Compile Include="Models\ServicesMessage.cs" />

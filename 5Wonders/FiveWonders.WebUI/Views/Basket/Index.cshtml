@@ -46,6 +46,13 @@
     }
 
     <tr>
+        @if(Model.Count() > 0)
+        {
+            <td style="text-align:left">
+                <a class="btn btn-default" href="@Url.Action("ClearBasket", "Basket")">Clear</a>
+            </td>
+        }
+
         <td colspan="4" style="text-align:right"><strong>Basket Total:</strong></td>
         <td>@String.Format("({0} items): {1:c}", (from q in Model select q.quantity).Sum(), (from p in Model select p.price * p.quantity).Sum())</td>
     </tr>

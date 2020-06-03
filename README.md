@@ -17,3 +17,4 @@
 * Customer and Shopping Basket MVCs were created. Basket Services were implemented too.
 * Polished Shopping Basket UpdateBasket and AddToBasket services to properly combine items inside basket.
 * Display total in basket.
+* Updated Shopping Basket service. Logged in users get basket linked to account, anonymous users get basket using cookie value. 

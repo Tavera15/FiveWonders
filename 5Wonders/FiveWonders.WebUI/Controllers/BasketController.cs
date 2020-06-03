@@ -29,10 +29,7 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Index()
         {
             List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
-            if(allItems.Count == 0)
-            {
-                return RedirectToAction("Index", "Products");
-            }
+
 
             foreach(var model in allItems)
             {
@@ -132,6 +129,34 @@ namespace FiveWonders.WebUI.Controllers
 
                 return View(oldBasketItem);
             }
+        }
+
+        public ActionResult ClearBasket()
+        {
+            try
+            {
+                basketService.ClearBasket(HttpContext);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            
+            return RedirectToAction("Index", "Basket");
+        }
+
+        
+        public ActionResult Checkout()
+        {
+            List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
+
+            if (allItems.Count == 0)
+                return RedirectToAction("Index", "Basket");
+
+            // TODO Checkout will be a form to grab user details, contact, and address
+            // After verifying, pay using PayPal API
+
+            return View();
         }
     }
 }
