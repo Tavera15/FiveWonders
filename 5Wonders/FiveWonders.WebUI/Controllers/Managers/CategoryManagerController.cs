@@ -20,7 +20,7 @@ namespace FiveWonders.WebUI.Controllers
         // GET: CategoryManager
         public ActionResult Index()
         {
-            List<Category> categories = context.GetCollection().ToList<Category>();
+            List<Category> categories = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(categories);
         }

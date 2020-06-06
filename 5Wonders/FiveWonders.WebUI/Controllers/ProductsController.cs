@@ -31,8 +31,7 @@ namespace FiveWonders.WebUI.Controllers
         // GET: Product - Displays every products in the store
         public ActionResult Index()
         {
-            List<Product> allProducts = productsContext.GetCollection().ToList<Product>();
-            System.Diagnostics.Debug.WriteLine(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            List<Product> allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(allProducts);
         }

@@ -24,10 +24,5 @@ namespace FiveWonders.core.Models
             mQuantity = 1;
             mSize = "";
         }
-
-        public bool IsSameBasketItem(BasketItem other)
-        {
-            return ((mProductID == other.mProductID) && (mSize == other.mSize) && (basketID == other.basketID));
-        }
     }
 }

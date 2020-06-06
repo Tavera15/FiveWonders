@@ -20,7 +20,7 @@ namespace FiveWonders.WebUI.Controllers
         // GET: SizeChartManager
         public ActionResult Index()
         {
-            List<SizeChart> allCharts = context.GetCollection().ToList<SizeChart>();
+            List<SizeChart> allCharts = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
             return View(allCharts);
         }
 

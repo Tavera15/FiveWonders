@@ -20,7 +20,7 @@ namespace FiveWonders.WebUI.Controllers
 
         public ActionResult Index()
         {
-            List<SubCategory> allSubCategories = context.GetCollection().ToList<SubCategory>();
+            List<SubCategory> allSubCategories = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(allSubCategories);
         }

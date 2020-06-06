@@ -20,7 +20,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         // GET: ServicesManager
         public ActionResult Index()
         {
-            List<ServicesMessage> allServiceMessages = serviceContext.GetCollection().ToList();
+            List<ServicesMessage> allServiceMessages = serviceContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
             
             return View(allServiceMessages);
         }

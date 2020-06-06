@@ -28,7 +28,7 @@ namespace FiveWonders.WebUI.Controllers
         // Should display all products
         public ActionResult Index()
         {
-            List<Product> allProducts = context.GetCollection().ToList<Product>();
+            List<Product> allProducts = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(allProducts);
         }

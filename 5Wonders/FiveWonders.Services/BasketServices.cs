@@ -102,6 +102,10 @@ namespace FiveWonders.Services
                                 quantity = b.mQuantity,
                                 size = b.mSize,
                                 productID = p.mID,
+                                image = p.mImage,
+                                price = p.mPrice,
+                                productName = p.mName,
+                                sizeChart = p.mSizeChart
                             }
                             ).ToList();
                 

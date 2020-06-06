@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class OrderItem
+    public class OrderItem : BaseEntity
     {
         public string mBaseOrderID { get; set; }
         public string mProductID { get; set; }
-        public decimal mPrice { get; set; }
         public string mProductName { get; set; }
+        public decimal mPrice { get; set; }
+        public int mQuantity { get; set; }
+        public string mSize { get; set; }
     }
 }
