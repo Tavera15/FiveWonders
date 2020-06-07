@@ -1,0 +1,8 @@
+﻿@model IEnumerable<FiveWonders.core.Models.InstagramPost>
+
+<div class="container">
+@foreach (var item in Model) {
+        <img src="@item.mImageURL" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="height: 40vh; margin: 0;" alt="@item.mImageURL"/>
+}
+</div>
+

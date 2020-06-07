@@ -188,6 +188,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\BasketController.cs" />
+    <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\Managers\AccountController.cs" />
     <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
     <Compile Include="Controllers\Managers\HomeController.cs" />
@@ -294,6 +295,7 @@
     <Content Include="Views\Basket\Index.cshtml" />
     <Content Include="Views\Basket\EditBasketItem.cshtml" />
     <Content Include="Views\Basket\Checkout.cshtml" />
+    <Content Include="Views\Gallery\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
