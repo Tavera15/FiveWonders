@@ -10,17 +10,19 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class CategoryManagerController : Controller
     {
-        IRepository<Category> context;
+        IRepository<Category> categoryContext;
+        IRepository<Product> productsContext;
 
-        public CategoryManagerController(IRepository<Category> productCategories)
+        public CategoryManagerController(IRepository<Category> categoryRepository, IRepository<Product> productsRepository)
         {
-            context = productCategories;
+            categoryContext = categoryRepository;
+            productsContext = productsRepository;
         }
 
         // GET: CategoryManager
         public ActionResult Index()
         {
-            List<Category> categories = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
+            List<Category> categories = categoryContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(categories);
         }
@@ -43,8 +45,8 @@ namespace FiveWonders.WebUI.Controllers
                 }
 
                 // Save to memory
-                context.Insert(cat);
-                context.Commit();
+                categoryContext.Insert(cat);
+                categoryContext.Commit();
 
                 return RedirectToAction("Index", "CategoryManager");
             }
@@ -59,7 +61,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToEdit = context.Find(Id);
+                Category categoryToEdit = categoryContext.Find(Id);
 
                 return View(categoryToEdit);
             }
@@ -81,10 +83,10 @@ namespace FiveWonders.WebUI.Controllers
                     return View(c);
                 }
 
-                Category categoryToEdit = context.Find(Id);
+                Category categoryToEdit = categoryContext.Find(Id);
                 categoryToEdit.mCategoryName = c.mCategoryName;
 
-                context.Commit();
+                categoryContext.Commit();
 
                 return RedirectToAction("Index", "CategoryManager");
             }
@@ -99,8 +101,10 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToDelete = context.Find(Id);
+                Category categoryToDelete = categoryContext.Find(Id);
+                Product[] productsWithCategory = productsContext.GetCollection().Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
+                ViewBag.productsWithCategory = productsWithCategory;
                 return View(categoryToDelete);
             }
             catch(Exception e)
@@ -116,10 +120,16 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToDelete = context.Find(Id);
+                Category categoryToDelete = categoryContext.Find(Id);
+                Product[] productsWithCategory = productsContext.GetCollection().Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
-                context.Delete(categoryToDelete);
-                context.Commit();
+                if(productsWithCategory.Length != 0)
+                {
+                    return RedirectToAction("Delete", "CategoryManager");
+                }
+
+                categoryContext.Delete(categoryToDelete);
+                categoryContext.Commit();
 
                 return RedirectToAction("Index", "CategoryManager");
             }

@@ -33,7 +33,6 @@ namespace FiveWonders.WebUI.Controllers
 
                     foreach(var x in IGImages)
                     {
-                        
                         if(x.SelectToken("node").SelectToken("edge_sidecar_to_children") != null)
                         {
                             var childImages = x.SelectToken("node").SelectToken("edge_sidecar_to_children").SelectToken("edges");

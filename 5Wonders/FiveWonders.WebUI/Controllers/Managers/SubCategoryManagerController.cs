@@ -10,17 +10,19 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class SubCategoryManagerController : Controller
     {
-        IRepository<SubCategory> context;
+        IRepository<SubCategory> subCategoryContext;
+        IRepository<Product> productContext;
 
         // GET: SubCategoryManager
-        public SubCategoryManagerController(IRepository<SubCategory> repository)
+        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository)
         {
-            context = repository;
+            subCategoryContext = subcategoryRepository;
+            productContext = productRepository;
         }
 
         public ActionResult Index()
         {
-            List<SubCategory> allSubCategories = context.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
+            List<SubCategory> allSubCategories = subCategoryContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
 
             return View(allSubCategories);
         }
@@ -41,8 +43,8 @@ namespace FiveWonders.WebUI.Controllers
                     return View(sub);
                 }
 
-                context.Insert(sub);
-                context.Commit();
+                subCategoryContext.Insert(sub);
+                subCategoryContext.Commit();
 
                 return RedirectToAction("Index", "SubCategoryManager");
             }
@@ -57,7 +59,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToEdit = context.Find(Id);
+                SubCategory subToEdit = subCategoryContext.Find(Id);
 
                 return View(subToEdit);
             }
@@ -79,10 +81,10 @@ namespace FiveWonders.WebUI.Controllers
                     return View(sub);
                 }
 
-                SubCategory subToEdit = context.Find(Id);
+                SubCategory subToEdit = subCategoryContext.Find(Id);
                 subToEdit.mSubCategoryName = sub.mSubCategoryName;
 
-                context.Commit();
+                subCategoryContext.Commit();
 
                 return RedirectToAction("Index", "SubCategoryManager");
             }
@@ -97,8 +99,19 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToDelete = context.Find(Id);
+                SubCategory subToDelete = subCategoryContext.Find(Id);
 
+                List<Product> productsWithSub = new List<Product>();
+
+                foreach(var product in productContext.GetCollection())
+                {
+                    if(product.mSubCategories.Split(',').Contains(subToDelete.mID))
+                    {
+                        productsWithSub.Add(product);
+                    }
+                }
+
+                ViewBag.productsWithSub = productsWithSub.ToArray();
                 return View(subToDelete);
             }
             catch(Exception e)
@@ -114,9 +127,25 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToDelete = context.Find(Id);
-                context.Delete(subToDelete);
-                context.Commit();
+                SubCategory subToDelete = subCategoryContext.Find(Id);
+
+                List<Product> productsWithSub = new List<Product>();
+
+                foreach (var product in productContext.GetCollection())
+                {
+                    if (product.mSubCategories.Split(',').Contains(subToDelete.mID))
+                    {
+                        productsWithSub.Add(product);
+                    }
+                }
+
+                if (productsWithSub.ToArray().Length != 0)
+                {
+                    return RedirectToAction("Delete", "SubCategoryManager");
+                }
+
+                subCategoryContext.Delete(subToDelete);
+                subCategoryContext.Commit();
 
                 return RedirectToAction("Index", "SubCategoryManager");
             }

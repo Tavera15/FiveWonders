@@ -20,3 +20,4 @@
 * Updated Shopping Basket service. Logged in users get basket linked to account, anonymous users get basket using cookie value.
 * Created Order and Order Item models for Checkout.
 * Gallery page was created. Instagram pictures were uploaded to page.
+* Deleting categories, subcategories, and size charts will be disabled if products use them.

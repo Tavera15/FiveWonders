@@ -26,29 +26,29 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Index()
         {
             // Key is the category - Values are subcategories.
-            // Categories will have a dropdown menu of subcategories
             Dictionary<string, HashSet<string>> navLinks = new Dictionary<string, HashSet<string>>();
 
-            foreach (var x in categoryContext.GetCollection())
+            // Create a new hash set for each category key
+            foreach (var x in categoryContext.GetCollection().OrderBy(x => x.mTimeEntered).ToArray())
                 navLinks.Add(x.mCategoryName, new HashSet<string>());
 
-            foreach(var x in productsContext.GetCollection())
+            // Categories will have a dropdown menu popularized of subcategories
+            foreach(var product in productsContext.GetCollection())
             {
-                Category category = categoryContext.Find(x.mCategory);
+                Category category = categoryContext.Find(product.mCategory);
 
-                foreach (var y in x.mSubCategories.Split(','))
+                // If a product of a certain category has subcategories, add the subcategory name into hashset
+                foreach (var subCat in product.mSubCategories.Split(','))
                 {
-                    SubCategory sub = subCategoryContext.Find(y);
+                    SubCategory sub = subCategoryContext.Find(subCat);
 
                     navLinks[category.mCategoryName].Add(sub.mSubCategoryName);
                 }
             }
 
-            var allCategories = categoryContext.GetCollection().Select(x => x.mCategoryName).ToArray();
-
-            string[] subsWithThemes = (from x in subCategoryContext.GetCollection()
-                                            where x.isEventOrTheme
-                                            select x.mSubCategoryName).ToArray();
+            string[] subsWithThemes = (from sub in subCategoryContext.GetCollection().OrderBy(x => x.mSubCategoryName).ToArray()
+                                            where sub.isEventOrTheme
+                                            select sub.mSubCategoryName).ToArray();
 
             ViewBag.SubsWithThemes = subsWithThemes;
             return PartialView(navLinks);

@@ -53,12 +53,32 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+    @if (ViewBag.productsWithSizeChart.Length != 0)
+    {
+        <h2>Products with size chart <strong>@Html.DisplayFor(model => model.mChartName)</strong></h2>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+        <table>
+            @foreach (var product in ViewBag.productsWithSizeChart)
+            {
+                <tr>
+                    <td>
+                        <a href="/ProductManager/Edit/@product.mID">@product.mName</a>
+                    </td>
+                </tr>
+            }
+        </table>
     }
+
+    <div class="form-actions no-color">
+        @if(ViewBag.productsWithSizeChart.Length == 0)
+        {
+            using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="submit" value="Delete" class="btn btn-default" />
+            }
+        }
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>

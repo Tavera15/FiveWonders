@@ -23,12 +23,32 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+    @if(ViewBag.productsWithCategory.Length != 0)
+    {
+        <h2>Products with category <strong>@Html.DisplayFor(model => model.mCategoryName)</strong></h2>
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+        <table>
+            @foreach(var product in ViewBag.productsWithCategory)
+            {
+                <tr>
+                    <td>
+                        <a href="/ProductManager/Edit/@product.mID">@product.mName</a>
+                    </td>
+                </tr>
+            }
+        </table>
     }
+
+    <div class="form-actions no-color">
+        @if(ViewBag.productsWithCategory.Length == 0)
+        {
+            using (Html.BeginForm()) 
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="submit" value="Delete" class="btn btn-default" />
+            }
+        }
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
