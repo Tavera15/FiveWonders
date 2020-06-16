@@ -15,22 +15,23 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.mName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mDesc)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mPrice)
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.mName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mPrice)
+            </td>
 
-        <td>
-            @Html.ActionLink("View Item", "Item", new { id = item.mID }) |
-        </td>
-    </tr>
-}
+            <td>
+                @Html.ActionLink("View Item", "Item", new { id = item.mID }) |
+            </td>
+        </tr>
+    }
 
 </table>

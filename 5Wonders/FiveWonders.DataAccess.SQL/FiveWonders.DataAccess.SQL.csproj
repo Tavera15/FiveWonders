@@ -85,6 +85,14 @@
     <Compile Include="Migrations\202006060037536_OrderUpdate.Designer.cs">
       <DependentUpon>202006060037536_OrderUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006140755424_changeOrderName.cs" />
+    <Compile Include="Migrations\202006140755424_changeOrderName.Designer.cs">
+      <DependentUpon>202006140755424_changeOrderName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006150036118_AddedPaypalRefToOrder.cs" />
+    <Compile Include="Migrations\202006150036118_AddedPaypalRefToOrder.Designer.cs">
+      <DependentUpon>202006150036118_AddedPaypalRefToOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -126,6 +134,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006060037536_OrderUpdate.resx">
       <DependentUpon>202006060037536_OrderUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006140755424_changeOrderName.resx">
+      <DependentUpon>202006140755424_changeOrderName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006150036118_AddedPaypalRefToOrder.resx">
+      <DependentUpon>202006150036118_AddedPaypalRefToOrder.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

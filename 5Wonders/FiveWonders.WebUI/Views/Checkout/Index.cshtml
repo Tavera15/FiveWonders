@@ -1,10 +1,11 @@
-﻿@model FiveWonders.core.Models.Order
+﻿
+@model FiveWonders.core.Models.FWonderOrder
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Order</h4>
         <hr />

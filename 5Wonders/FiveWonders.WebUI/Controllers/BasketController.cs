@@ -2,6 +2,9 @@
 using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.WebUI.Models;
+using Microsoft.AspNet.Identity.Owin;
+using PayPal.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +17,15 @@ namespace FiveWonders.WebUI.Controllers
     {
         IBasketServices basketService;
         IRepository<Product> productContext;
-        IRepository<Customer> customerContext;
         IRepository<SizeChart> sizeChartContext;
         IRepository<BasketItem> basketItemContext;
-        IRepository<Order> orderContext;
 
-        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<Customer> customerRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository, IRepository<Order> orderRepository)
+        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository)
         {
             basketService = services;
             productContext = productsRepository;
-            customerContext = customerRepository;
             sizeChartContext = sizeChartRepository;
             basketItemContext = basketItemRepository;
-            orderContext = orderRepository;
         }
 
         // GET: Basket
@@ -146,80 +145,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             
             return RedirectToAction("Index", "Basket");
-        }
-
-        public ActionResult Checkout()
-        {
-            try
-            {
-                List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
-
-                if (allItems.Count == 0)
-                    throw new Exception("Basket is empty");
-
-                Order order = new Order();
-                string userEmail = HttpContext.User.Identity.Name;
-
-                if(!String.IsNullOrWhiteSpace(userEmail))
-                {
-                    Customer customer = customerContext.GetCollection().FirstOrDefault(x => x.mEmail == userEmail);
-                
-                    if(customer != null)
-                    {
-                        order.mCustomerName = customer.mFullName;
-                        order.mCustomerEmail = userEmail;
-                    }
-                }
-
-                ViewBag.basketItems = allItems;
-                return View(order);
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Basket");
-            }
-        }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public ActionResult Checkout(Order order)
-        {
-            try
-            {
-                List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
-
-                if (!ModelState.IsValid || allItems.Count == 0)
-                    throw new Exception("Order Model State is not valid");
-
-                // TODO PayPal here
-
-                // If successful, save order to DB
-                foreach(var x in allItems)
-                {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.mBaseOrderID = order.mID;
-                    orderItem.mProductID = x.productID;
-                    orderItem.mProductName = x.productName;
-                    orderItem.mQuantity = x.quantity;
-                    orderItem.mPrice = x.price;
-                    orderItem.mSize = x.size;
-
-                    order.mOrderItems.Add(orderItem);
-                }
-
-                orderContext.Insert(order);
-                orderContext.Commit();
-
-                basketService.ClearBasket(HttpContext);
-
-                return RedirectToAction("Index", "Basket");
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return View(order);
-            }
         }
     }
 }

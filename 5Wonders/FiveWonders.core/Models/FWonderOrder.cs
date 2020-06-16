@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class Order : BaseEntity
+    public class FWonderOrder : BaseEntity
     {
         public virtual ICollection<OrderItem> mOrderItems { get; set; }
 
@@ -36,7 +36,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Phone Number")]
         public string mPhoneNumber { get; set; }
 
-        public Order()
+        public string paypalRef { get; set; }
+
+        public FWonderOrder()
         {
             mOrderItems = new List<OrderItem>();
         }

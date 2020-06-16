@@ -50,7 +50,7 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\InstagramPost.cs" />
-    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\FWonderOrder.cs" />
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\BasketItem.cs" />
