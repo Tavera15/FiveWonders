@@ -1,0 +1,66 @@
+﻿@model IEnumerable<FiveWonders.core.Models.FWonderOrder>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCustomerEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mAddress1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mAddress2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mZipCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mPhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.paypalRef)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.mTimeEntered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mCustomerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mCustomerEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mAddress1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mAddress2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mZipCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mPhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.paypalRef)
+        </td>
+
+        <td></td>
+    </tr>
+}
+
+</table>

@@ -20,7 +20,7 @@ namespace FiveWonders.Services
         IRepository<Customer> customerContext;
 
         public const string basketCookieName = "FiveWondersBasket";
-        public const double cookieDuration = 30;
+        public const double cookieDuration = 30;        // In Days ex. 30 days
 
         public BasketServices(IRepository<Product> productsRepository, IRepository<Basket> basketRepository, IRepository<Customer> customerRepository, IRepository<BasketItem> basketItemsRepository)
         {

@@ -22,3 +22,4 @@
 * Gallery page was created. Instagram pictures were uploaded to page.
 * Deleting categories, subcategories, and size charts will be disabled if products use them.
 * Setup Basics for PayPal in Sandbox mode.
+* PayPal Payment is now executed/complete in Thank You page.

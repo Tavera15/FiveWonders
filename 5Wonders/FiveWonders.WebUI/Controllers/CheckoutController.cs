@@ -108,7 +108,6 @@ namespace FiveWonders.WebUI.Controllers
                 orderContext.Insert(order);
                 orderContext.Commit();
 
-                // TODO PayPal here
                 var apiContext = GetApiContext();
 
                 // List of transactions include list of products and total
@@ -126,17 +125,21 @@ namespace FiveWonders.WebUI.Controllers
                     }
                 };
 
+                // Begin putting together the PayPal Payment object using data from above
                 Payment payment = new Payment();
                 payment.experience_profile_id = "";
                 payment.intent = "sale";
                 payment.payer = new Payer() { payment_method = "paypal" };
                 payment.transactions = itemTransactions;
+
+                // TODO Don't send order Id in parameters - Maybe add a bool if transaction is complete - ENCRYPT
                 payment.redirect_urls = new RedirectUrls()
                 {
                     cancel_url = Url.Action("CancelOrder", "Checkout", new { orderId = order.mID}, Request.Url.Scheme),
                     return_url = Url.Action("ThankYou", "Checkout", new { orderId = order.mID }, Request.Url.Scheme)
                 };
 
+                // Creates the Payment object - Ready to redirect to PayPal with data entered
                 Payment createdPayment = payment.Create(apiContext);
 
                 var approvalUrl =
@@ -152,56 +155,87 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
-        [Route("ThankYou/{orderId}")]
-        public ActionResult ThankYou(string orderId, string PaymentId)
+        [Route("ThankYou/{paymentId}/{payerId}/{orderId}")]
+        public ActionResult ThankYou(string paymentId, string payerId, string orderId)
         {
+            FWonderOrder order;
+            Payment executedPayment;
+
             try
             {
-                FWonderOrder order = orderContext.Find(orderId);
-                if(String.IsNullOrWhiteSpace(order.paypalRef) && !String.IsNullOrWhiteSpace(PaymentId))
-                {
-                    order.paypalRef = PaymentId;
-                    orderContext.Commit();
-                    basketService.ClearBasket(HttpContext);
+                order = orderContext.Find(orderId);
 
+                if (order == null)
+                    throw new Exception("Order Not found");
+
+                // If order is already completed, display Thank You page
+                if (!String.IsNullOrWhiteSpace(order.paypalRef) && order.paypalRef == paymentId)
                     return View(order);
-                }
-
-                throw new Exception("Order: " + orderId + " already has a PayPal ID");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("CancelOrder", "Checkout", new { paymentId = paymentId });
             }
+
+            if(!String.IsNullOrWhiteSpace(order.paypalRef) || String.IsNullOrWhiteSpace(paymentId) || String.IsNullOrWhiteSpace(payerId))
+            {
+                return RedirectToAction("CancelOrder", "Checkout");
+            }
+            
+            // Try to execute the payment
+            try
+            {
+                APIContext apiContext = GetApiContext();
+
+                PaymentExecution paymentExecution = new PaymentExecution()
+                {
+                    payer_id = payerId
+                };
+
+                // Identify the payment to execute
+                Payment payment = new Payment()
+                {
+                    id = paymentId
+                };
+
+                // Execute the Payment - Completes transaction
+                executedPayment = payment.Execute(apiContext, paymentExecution);
+
+                if (executedPayment == null)
+                    throw new Exception("Executed payment is null");
+
+                // Save PayPal Payment Id to order that's stored in DB
+                order.paypalRef = executedPayment.id;
+                orderContext.Commit();
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+
+                return RedirectToAction("CancelOrder", "Checkout");
+            }
+
+            // Empty basket if order was successfully completed
+            basketService.ClearBasket(HttpContext);
+            return View(order);
         }
 
-        [Route("CancelOrder/{orderId}")]
         public ActionResult CancelOrder(string orderId)
         {
             try
             {
                 FWonderOrder order = orderContext.Find(orderId);
 
-                if(String.IsNullOrWhiteSpace(order.paypalRef))
-                {
-                    foreach(OrderItem item in order.mOrderItems)
-                    {
-                        OrderItem itemToDelete = orderItemContext.Find(item.mID);
-                        orderItemContext.Delete(itemToDelete);
-                    }
+                if (order == null || !String.IsNullOrWhiteSpace(order.paypalRef))
+                    throw new Exception("Order cannot be deleted");
 
-                    orderItemContext.Commit();
-                    
-                    return View();
-                }
-
-                throw new Exception("Can't delete order");
+                return View();
             }
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Basket");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -213,7 +247,5 @@ namespace FiveWonders.WebUI.Controllers
             var apiContext = new APIContext(accessToken);
             return apiContext;
         }
-
-        
     }
 }
