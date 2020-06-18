@@ -1,8 +1,5 @@
 ﻿@model IEnumerable<FiveWonders.core.Models.FWonderOrder>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <tr>
         <th>
@@ -58,8 +55,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.paypalRef)
         </td>
-
-        <td></td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id=item.mID })
+        </td>
     </tr>
 }
 

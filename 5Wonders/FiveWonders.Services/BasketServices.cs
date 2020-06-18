@@ -18,16 +18,18 @@ namespace FiveWonders.Services
         IRepository<Basket> basketContext;
         IRepository<BasketItem> basketItemsContext;
         IRepository<Customer> customerContext;
+        IRepository<FWonderOrder> orderContext;
 
         public const string basketCookieName = "FiveWondersBasket";
         public const double cookieDuration = 30;        // In Days ex. 30 days
 
-        public BasketServices(IRepository<Product> productsRepository, IRepository<Basket> basketRepository, IRepository<Customer> customerRepository, IRepository<BasketItem> basketItemsRepository)
+        public BasketServices(IRepository<Product> productsRepository, IRepository<Basket> basketRepository, IRepository<Customer> customerRepository, IRepository<BasketItem> basketItemsRepository, IRepository<FWonderOrder> orderRepository)
         {
             productsContext = productsRepository;
             basketContext = basketRepository;
             customerContext = customerRepository;
             basketItemsContext = basketItemsRepository;
+            orderContext = orderRepository;
         }
 
         public void AddToBasket(HttpContextBase httpContext, BasketItem item)

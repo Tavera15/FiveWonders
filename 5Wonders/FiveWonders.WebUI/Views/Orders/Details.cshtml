@@ -1,0 +1,128 @@
+﻿@model FiveWonders.core.Models.FWonderOrder
+
+<div>
+    <h4>FWonderOrder</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mTimeEntered)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomerEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomerEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mAddress1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mAddress1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mAddress2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mAddress2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mPhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mPhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.paypalRef)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.paypalRef)
+        </dd>
+
+    </dl>
+</div>
+
+@if(Model != null)
+{
+    <table class="table">
+
+        <tr>
+            <td>
+                Product Name
+            </td>
+            <td>
+                Product Price
+            </td>
+            <td>
+                Quantity
+            </td>
+            <td>
+                Size
+            </td>
+            <td>
+                Total Price
+            </td>
+        </tr>
+
+        @foreach (var item in Model.mOrderItems)
+        {
+            <tr>
+                <td>
+                    @item.mProductName
+                </td>
+                <td>
+                    @item.mPrice
+                </td>
+                <td>
+                    @item.mQuantity
+                </td>
+                <td>
+                    @item.mSize
+                </td>
+                <td>
+                    @String.Format("{0:c}", (item.mPrice * item.mQuantity))
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <td>
+                @String.Format("Total Paid: ({0} items): {1:c}", (from q in Model.mOrderItems select q.mQuantity).Sum(), (from p in Model.mOrderItems select p.mPrice * p.mQuantity).Sum())
+            </td>
+        </tr>
+
+    </table>
+}
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

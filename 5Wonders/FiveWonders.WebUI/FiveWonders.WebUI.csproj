@@ -204,6 +204,7 @@
     <Compile Include="Controllers\Managers\SizeChartManagerController.cs" />
     <Compile Include="Controllers\Managers\SubCategoryManagerController.cs" />
     <Compile Include="Controllers\NavBarController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\WebExperienceProfilesController.cs" />
@@ -339,7 +340,8 @@
     <Content Include="Views\Checkout\Index.cshtml" />
     <Content Include="Views\Checkout\ThankYou.cshtml" />
     <Content Include="Views\Checkout\CancelOrder.cshtml" />
-    <Content Include="Views\Home\Orders.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -68,47 +68,51 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                decimal total = 0.00m;
-                List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
+                List<BasketItemViewModel> allBasketItems = basketService.GetBasketItems(HttpContext);
 
-                if (!ModelState.IsValid || allItems.Count == 0)
+                if (!ModelState.IsValid || allBasketItems.Count == 0)
                     throw new Exception("Order Model State is not valid");
 
+                // Create variables that will be inserted into PayPal Payment object
                 ItemList paypalItems = new ItemList();
                 paypalItems.items = new List<Item>();
+                
+                decimal total = 0.00m;
 
-                // If successful, save order to DB
-                foreach (var x in allItems)
+                foreach (var basketItem in allBasketItems)
                 {
-                    // Save Info on DB
+                    // Initialize new Order Item per Basket Item, and link them to Order Id
                     OrderItem orderItem = new OrderItem();
                     orderItem.mBaseOrderID = order.mID;
-                    orderItem.mProductID = x.productID;
-                    orderItem.mProductName = x.productName;
-                    orderItem.mQuantity = x.quantity;
-                    orderItem.mPrice = x.price;
-                    orderItem.mSize = x.size;
-                    total += (x.price * x.quantity);
 
+                    // Apply Basket Item's data into Order Item 
+                    orderItem.mProductID = basketItem.productID;
+                    orderItem.mProductName = basketItem.productName;
+                    orderItem.mPrice = basketItem.price;
+                    orderItem.mQuantity = basketItem.quantity;
+                    orderItem.mSize = basketItem.size;
+
+                    // Add the Order Item into the Order's list
                     order.mOrderItems.Add(orderItem);
+
+                    total += (basketItem.price * basketItem.quantity);
 
                     // Create an Item object to add to PayPal's List Items Object
                     Item item = new Item()
                     {
-                        name = x.productName,
-                        description = !String.IsNullOrWhiteSpace(x.size) ? String.Format("Size: {0}", x.size) : "",
+                        name = basketItem.productName,
+                        description = !String.IsNullOrWhiteSpace(basketItem.size) ? String.Format("Size: {0}", basketItem.size) : "",
                         currency = "USD",
-                        price = x.price.ToString(),
-                        quantity = x.quantity.ToString()
+                        price = basketItem.price.ToString(),
+                        quantity = basketItem.quantity.ToString()
                     };
 
                     paypalItems.items.Add(item);
                 }
 
+                // Save Order object to DB - Should not have PayPal ref. yet
                 orderContext.Insert(order);
                 orderContext.Commit();
-
-                var apiContext = GetApiContext();
 
                 // List of transactions include list of products and total
                 var itemTransactions = new List<Transaction>()
@@ -140,6 +144,7 @@ namespace FiveWonders.WebUI.Controllers
                 };
 
                 // Creates the Payment object - Ready to redirect to PayPal with data entered
+                APIContext apiContext = GetApiContext();
                 Payment createdPayment = payment.Create(apiContext);
 
                 var approvalUrl =
@@ -208,6 +213,10 @@ namespace FiveWonders.WebUI.Controllers
                 // Save PayPal Payment Id to order that's stored in DB
                 order.paypalRef = executedPayment.id;
                 orderContext.Commit();
+
+                // Empty basket when order is complete, and display Thank You page
+                basketService.ClearBasket(HttpContext);
+                return View(order);
             }
             catch (Exception e)
             {
@@ -215,10 +224,6 @@ namespace FiveWonders.WebUI.Controllers
 
                 return RedirectToAction("CancelOrder", "Checkout");
             }
-
-            // Empty basket if order was successfully completed
-            basketService.ClearBasket(HttpContext);
-            return View(order);
         }
 
         public ActionResult CancelOrder(string orderId)
