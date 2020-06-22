@@ -1,31 +1,71 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <h1>Five Wonders Party</h1>
+    <p class="lead"></p>
     <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+<div class="section-top-three">
+
+    <h1>Latest Products</h1>
+
+    <div class="top-three-products">
+
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 card-holder">
+            <div class="product-cards">
+                <img class="fw-card-image"
+                    src="https://i.pinimg.com/originals/de/10/81/de108115a8040744a3dd9928062550fc.jpg"
+                     alt="product" />
+                <h2>Products 1</h2>
+                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder">
+            <div class="product-cards">
+                <img class="fw-card-image" 
+                     src="https://scontent-dfw5-2.cdninstagram.com/v/t51.2885-15/e35/p1080x1080/104169144_591252381801199_6198432585745118572_n.jpg?_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_cat=107&_nc_ohc=1CmeHtcoX00AX9SuSX6&oh=f97a8cc528201766c9cd204601d26098&oe=5F18F206"
+                    alt="product" />
+                <h2>Products 2</h2>
+                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder">
+            <div class="product-cards" >
+                <img class="fw-card-image" 
+                     src="https://cdn.shopify.com/s/files/1/2143/3217/products/500_26820e53-d040-49ba-aa7a-de17df4da801_grande.png?v=1591290263"
+                     alt="product" />
+                <h2>Products 3</h2>
+                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+            </div>
+        </div>
+
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+
+    <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+</div>
+
+<div class="section-top-three" id="ig-top-three">
+
+    <h1>Follow our <a href="https://www.instagram.com/5wondersballoons/">Instagram</a></h1>
+
+    <div class="top-three-products">
+
+        @foreach(var post in ViewBag.instagramPosts)
+        {
+            <div class="col-md-4 col-sm-12 col-xs-12 ig-container">
+                <img class="ig-img"
+                     src="@post.mImageURL"
+                     alt="IG" />
+            </div>
+        }
+
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
+    <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Gallery")">View Our Gallery</a>
 </div>

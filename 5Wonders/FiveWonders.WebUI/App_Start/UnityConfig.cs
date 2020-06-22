@@ -58,6 +58,7 @@ namespace FiveWonders.WebUI
             container.RegisterType<IRepository<FWonderOrder>, SQLRepository<FWonderOrder>>();
             container.RegisterType<IRepository<OrderItem>, SQLRepository<OrderItem>>();
             container.RegisterType<IBasketServices, BasketServices>();
+            container.RegisterType<IInstagramService, InstagramService>();
         }
     }
 }

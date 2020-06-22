@@ -24,3 +24,4 @@
 * Setup Basics for PayPal in Sandbox mode.
 * PayPal Payment is now executed/complete in Thank You page.
 * Finalized order transaction on PayPal Sandbox mode. Created Order controller.
+* Home page styles initialized. Instagram API process was converted into a Service.
