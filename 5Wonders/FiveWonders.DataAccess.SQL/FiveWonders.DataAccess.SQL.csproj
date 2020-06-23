@@ -101,6 +101,10 @@
     <Compile Include="Migrations\202006170343276_RemovedSuccessfulOrders.Designer.cs">
       <DependentUpon>202006170343276_RemovedSuccessfulOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006230342470_AddHomeData.cs" />
+    <Compile Include="Migrations\202006230342470_AddHomeData.Designer.cs">
+      <DependentUpon>202006230342470_AddHomeData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -154,6 +158,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006170343276_RemovedSuccessfulOrders.resx">
       <DependentUpon>202006170343276_RemovedSuccessfulOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006230342470_AddHomeData.resx">
+      <DependentUpon>202006230342470_AddHomeData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

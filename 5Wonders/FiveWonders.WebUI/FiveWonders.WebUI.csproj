@@ -198,6 +198,7 @@
     <Compile Include="Controllers\Managers\AccountController.cs" />
     <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
     <Compile Include="Controllers\Managers\HomeController.cs" />
+    <Compile Include="Controllers\Managers\HomeManagerController.cs" />
     <Compile Include="Controllers\Managers\ManageController.cs" />
     <Compile Include="Controllers\Managers\ProductManagerController.cs" />
     <Compile Include="Controllers\Managers\ServicesManagerController.cs" />
@@ -224,6 +225,8 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\FWondersStyles.css" />
+    <Content Include="Content\Home\5 Wonders Balloons  Logo_transparent-01.png" />
+    <Content Include="Content\Home\FWondersDefault.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -344,6 +347,7 @@
     <Content Include="Views\Checkout\CancelOrder.cshtml" />
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\HomeManager\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

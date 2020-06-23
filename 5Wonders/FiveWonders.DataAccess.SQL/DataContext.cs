@@ -22,5 +22,6 @@ namespace FiveWonders.DataAccess.SQL
         public DbSet<Customer> Customers { get; set; }
         public DbSet<FWonderOrder> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<HomePage> HomeData { get; set; }
     }
 }

@@ -1,12 +1,12 @@
-﻿
+﻿@model FiveWonders.core.Models.HomePage
 @{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="jumbotron jumbo-img" style="background-image: url(@Model.mWelcomeImgUrl);">
     <h1>Five Wonders Party</h1>
-    <p class="lead"></p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <p><a href="@Model.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+    <img src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo" />
 </div>
 
 <div class="section-top-three">
@@ -14,37 +14,22 @@
     <h1>Latest Products</h1>
 
     <div class="top-three-products">
-
-        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 card-holder">
-            <div class="product-cards">
-                <img class="fw-card-image"
-                    src="https://i.pinimg.com/originals/de/10/81/de108115a8040744a3dd9928062550fc.jpg"
-                     alt="product" />
-                <h2>Products 1</h2>
-                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+        @for(int i = 0; i < ViewBag.top3Products.Length; i++)
+        {
+            var product = ViewBag.top3Products[i];
+            string classTags = (i == 0) ? "col-lg-4 col-md-12 col-sm-12 col-xs-12 card-holder" 
+                : "col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder";
+        
+            <div class="@classTags">
+                <div class="product-cards">
+                    <img class="fw-card-image"
+                         src="@ViewBag.instagramPosts[i].mImageURL"
+                         alt="@product.mName" />
+                    <h2>@product.mName</h2>
+                    <p><a class="btn btn-default" href="/products/item/@product.mID">Learn more &raquo;</a></p>
+                </div>
             </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder">
-            <div class="product-cards">
-                <img class="fw-card-image" 
-                     src="https://scontent-dfw5-2.cdninstagram.com/v/t51.2885-15/e35/p1080x1080/104169144_591252381801199_6198432585745118572_n.jpg?_nc_ht=scontent-dfw5-2.cdninstagram.com&_nc_cat=107&_nc_ohc=1CmeHtcoX00AX9SuSX6&oh=f97a8cc528201766c9cd204601d26098&oe=5F18F206"
-                    alt="product" />
-                <h2>Products 2</h2>
-                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder">
-            <div class="product-cards" >
-                <img class="fw-card-image" 
-                     src="https://cdn.shopify.com/s/files/1/2143/3217/products/500_26820e53-d040-49ba-aa7a-de17df4da801_grande.png?v=1591290263"
-                     alt="product" />
-                <h2>Products 3</h2>
-                <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-            </div>
-        </div>
-
+        }
     </div>
 
     <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>

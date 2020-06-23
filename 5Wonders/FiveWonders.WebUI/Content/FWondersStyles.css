@@ -1,6 +1,10 @@
-﻿
+﻿body {
+    background-color: #ed8062;
+}
+
 .base-container {
     width: 85vw;
+    background-color: antiquewhite;
 }
 
 .FWonders-navbar-container{
@@ -11,13 +15,29 @@
     background-color: #222;
 }
 
+.jumbo-img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    height: 60vh;
+    color: #59b7a1;
+}
+
+.jumbo-logo{
+    height: 30%;
+    width:auto;
+}
+
 .section-top-three {
     text-align: center;
     margin: 0 0 4vh;
     display: flex;
     flex-direction: column;
     border: 1px solid black;
-    border-radius: 25px
+    border-radius: 25px;
+    padding: 2vh;
+    background-color: blanchedalmond;
 }
 
 .section-top-three h1 {
@@ -25,7 +45,7 @@
 }
 
 .redi-btn {
-    margin: 2vh auto;
+    margin: 0 auto;
 }
 
 .top-three-products{
@@ -43,6 +63,8 @@
     width: 80%;
     margin: 0 auto;
     border: solid 1px black;
+    color: #59b7a1;
+    background-color: darkslategrey;
 }
 
 
@@ -52,7 +74,6 @@
 }
 
 .ig-container{
-    background-color: deeppink;
     border: 1px solid black;
     padding: 0;
 }
@@ -77,6 +98,10 @@
     }
     .fw-card-image {
         height: 65vh;
+    }
+    .ig-container{
+        padding: .5vh 0;
+        border: none;
     }
 }
 

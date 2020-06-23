@@ -25,3 +25,4 @@
 * PayPal Payment is now executed/complete in Thank You page.
 * Finalized order transaction on PayPal Sandbox mode. Created Order controller.
 * Home page styles initialized. Instagram API process was converted into a Service.
+* Home Page styles prototype. Can update Home page's BG picture and btn url. Managed to pass product data.
