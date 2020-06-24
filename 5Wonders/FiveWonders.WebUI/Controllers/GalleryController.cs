@@ -23,9 +23,23 @@ namespace FiveWonders.WebUI.Controllers
         // GET: Gallery
         public async Task<ActionResult> Index()
         {
-            List<InstagramPost> InstagramPosts = await InstagramService.GetIGMediaAsync();
+            try
+            {
+                List<InstagramPost> InstagramPosts = await InstagramService.GetIGMediaAsync();
 
-            return View(InstagramPosts);
+                return View(InstagramPosts);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                List<InstagramPost> errorPost = new List<InstagramPost>();
+                errorPost.Add(new InstagramPost()
+                {
+                    mImageURL = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
+                });
+
+                return View(errorPost);
+            }
         }
     }
 }

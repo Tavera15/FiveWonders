@@ -26,3 +26,4 @@
 * Finalized order transaction on PayPal Sandbox mode. Created Order controller.
 * Home page styles initialized. Instagram API process was converted into a Service.
 * Home Page styles prototype. Can update Home page's BG picture and btn url. Managed to pass product data.
+* Updated Home page's jumbotron. Size is based on logo's size. Home page's other sections responsiveness were updated too.

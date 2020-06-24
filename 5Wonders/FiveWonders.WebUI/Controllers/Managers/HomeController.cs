@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -25,20 +26,41 @@ namespace FiveWonders.WebUI.Controllers
 
         public async Task<ActionResult> Index()
         {
+            HomePageViewModel homeViewModel = new HomePageViewModel();
+
             HomePage homeData = homeContext.GetCollection().FirstOrDefault();
             homeData.mWelcomeBtnUrl = homeData.mWelcomeBtnUrl ?? "/products";
 
             string pic = homeData.mWelcomeImgUrl ?? "FWondersDefault.jpg";
             homeData.mWelcomeImgUrl = "../content/home/" + pic;
 
-            List<InstagramPost> instagramPosts = await InstagramService.GetIGMediaAsync();
-            InstagramPost[] topThreeIGPosts = instagramPosts.Take(3).ToArray();
+            List<Product> top3Products = productsContext.GetCollection().Take(3).ToList();
+            List<InstagramPost> top4IGPosts = new List<InstagramPost>();
 
-            Product[] top3Products = productsContext.GetCollection().Take(3).ToArray();
+            try
+            {
+                List<InstagramPost> IGPostsFromAPI = await InstagramService.GetIGMediaAsync();
+                top4IGPosts = IGPostsFromAPI.Take(4).ToList();
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                top4IGPosts.Clear();
 
-            ViewBag.top3Products = top3Products;
-            ViewBag.instagramPosts = topThreeIGPosts;
-            return View(homeData);
+                for(int i = 0; i < 4; i++)
+                {
+                    top4IGPosts.Add(new InstagramPost()
+                    {
+                        mImageURL = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
+                    });
+                }
+            }
+
+            homeViewModel.homePageData = homeData;
+            homeViewModel.top3Products = top3Products;
+            homeViewModel.top3IGPosts = top4IGPosts;
+
+            return View(homeViewModel);
         }
 
         public ActionResult About()

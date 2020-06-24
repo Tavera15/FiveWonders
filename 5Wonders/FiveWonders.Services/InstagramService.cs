@@ -17,7 +17,7 @@ namespace FiveWonders.Services
         public async Task<List<InstagramPost>> GetIGMediaAsync()
         {
             var InstagramPosts = new List<InstagramPost>();
-
+    
             using (HttpClient client = new HttpClient())
             {
                 // Setup the IG API and grab the JSON data from URL
@@ -48,6 +48,10 @@ namespace FiveWonders.Services
                             foreach (JToken e in childImages as JArray)
                             {
                                 JToken imageURL = e.SelectToken("node").SelectToken("display_url");
+
+                                if (imageURL == null)
+                                    throw new Exception("Instagram Service found no post");
+
                                 InstagramPost post = new InstagramPost();
                                 post.mImageURL = imageURL.ToString();
 

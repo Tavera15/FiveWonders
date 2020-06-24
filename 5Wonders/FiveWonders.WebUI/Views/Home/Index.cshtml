@@ -1,32 +1,37 @@
-﻿@model FiveWonders.core.Models.HomePage
+﻿@model FiveWonders.core.ViewModels.HomePageViewModel
 @{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron jumbo-img" style="background-image: url(@Model.mWelcomeImgUrl);">
-    <h1>Five Wonders Party</h1>
-    <p><a href="@Model.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
-    <img src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo" />
+<div class="jumbotron jumbo-img" style="background-image: url(@Model.homePageData.mWelcomeImgUrl);">
+    <img style="" src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo jumbo-item" />
+
+    <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">Celebrate the Grand Opening</h1>
+    <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">With us!</h1>
+    <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
 </div>
 
 <div class="section-top-three">
 
     <h1>Latest Products</h1>
 
-    <div class="top-three-products">
-        @for(int i = 0; i < ViewBag.top3Products.Length; i++)
+    <div class="top-three-products"> 
+        @for (int i = 0; i < Model.top3Products.Count; i++)
         {
-            var product = ViewBag.top3Products[i];
-            string classTags = (i == 0) ? "col-lg-4 col-md-12 col-sm-12 col-xs-12 card-holder" 
+            
+            var product = Model.top3Products[i];
+            string classTags = (i == 0) ? "col-lg-4 col-lg-offset-0 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 card-holder"
                 : "col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder";
-        
-            <div class="@classTags">
+
+            string topImg = (i == 0) ? "topImg" : " ";
+
+            <div class="@classTags @topImg">
                 <div class="product-cards">
                     <img class="fw-card-image"
-                         src="@ViewBag.instagramPosts[i].mImageURL"
-                         alt="@product.mName" />
+                            src="@Model.top3IGPosts[i].mImageURL"
+                            alt="@product.mName" />
                     <h2>@product.mName</h2>
-                    <p><a class="btn btn-default" href="/products/item/@product.mID">Learn more &raquo;</a></p>
+                    <p><a class="btn btn-default" href="/products/item/@product.mID">View Product &raquo;</a></p>
                 </div>
             </div>
         }
@@ -41,9 +46,14 @@
 
     <div class="top-three-products">
 
-        @foreach(var post in ViewBag.instagramPosts)
+        
+        @for(int i = 0; i < Model.top3IGPosts.Count; i++)
         {
-            <div class="col-md-4 col-sm-12 col-xs-12 ig-container">
+            var post = Model.top3IGPosts[i];
+
+            string IGclassTags = "col-lg-3 col-md-6 col-sm-6 col-xs-12";
+
+            <div class="@IGclassTags ig-container">
                 <img class="ig-img"
                      src="@post.mImageURL"
                      alt="IG" />
