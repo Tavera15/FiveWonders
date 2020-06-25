@@ -31,12 +31,12 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
                 foreach(var cat in categoryContext.GetCollection())
                 {
-                    links.Add(cat.mCategoryName, "/products/ListItems?category=" + cat.mCategoryName);
+                    links.Add(cat.mCategoryName, "/products/?category=" + cat.mCategoryName);
                 }
 
                 foreach (var sub in subcategoryContext.GetCollection())
                 {
-                    links.Add(sub.mSubCategoryName, "/products/ListItems?subcategory=" + sub.mSubCategoryName);
+                    links.Add(sub.mSubCategoryName, "/products/?subcategory=" + sub.mSubCategoryName);
                 }
 
                 ViewBag.links = links;

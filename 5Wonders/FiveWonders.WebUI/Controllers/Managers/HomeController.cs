@@ -24,7 +24,7 @@ namespace FiveWonders.WebUI.Controllers
             productsContext = productsRepository;
         }
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             HomePageViewModel homeViewModel = new HomePageViewModel();
 
@@ -36,24 +36,12 @@ namespace FiveWonders.WebUI.Controllers
 
             List<Product> top3Products = productsContext.GetCollection().Take(3).ToList();
             List<InstagramPost> top4IGPosts = new List<InstagramPost>();
-
-            try
+            for(int i = 0; i < 4; i++)
             {
-                List<InstagramPost> IGPostsFromAPI = await InstagramService.GetIGMediaAsync();
-                top4IGPosts = IGPostsFromAPI.Take(4).ToList();
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                top4IGPosts.Clear();
-
-                for(int i = 0; i < 4; i++)
+                top4IGPosts.Add(new InstagramPost()
                 {
-                    top4IGPosts.Add(new InstagramPost()
-                    {
-                        mImageURL = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
-                    });
-                }
+                    mImageURL = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
+                });
             }
 
             homeViewModel.homePageData = homeData;

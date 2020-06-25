@@ -18,21 +18,28 @@
     <div class="top-three-products"> 
         @for (int i = 0; i < Model.top3Products.Count; i++)
         {
-            
+
             var product = Model.top3Products[i];
-            string classTags = (i == 0) ? "col-lg-4 col-lg-offset-0 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-12 card-holder"
-                : "col-lg-4 col-md-6 col-sm-6 col-xs-12 card-holder";
+
+            string title = product.mName.Length <= 20 ? product.mName
+                    : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
+
+            string classTags = (i == 0) ? "col-lg-4 col-md-4 col-sm-4"
+                : "col-lg-4 col-md-4 col-sm-4";
 
             string topImg = (i == 0) ? "topImg" : " ";
 
-            <div class="@classTags @topImg">
-                <div class="product-cards">
-                    <img class="fw-card-image"
-                            src="@Model.top3IGPosts[i].mImageURL"
-                            alt="@product.mName" />
-                    <h2>@product.mName</h2>
-                    <p><a class="btn btn-default" href="/products/item/@product.mID">View Product &raquo;</a></p>
-                </div>
+            <div class="@classTags @topImg col-xs-12 card-cont">
+                <a class="card-holder" href="/products/item/@product.mID">
+                    <div class="product-cards">
+                        <img class="fw-card-image"
+                                src="@Model.top3IGPosts[i].mImageURL"
+                                alt="@product.mName" />
+                        <div class="fw-card-content">
+                            <h2 class="fw-card-title">@title</h2>
+                        </div>
+                    </div>
+                </a>
             </div>
         }
     </div>
@@ -45,7 +52,6 @@
     <h1>Follow our <a href="https://www.instagram.com/5wondersballoons/">Instagram</a></h1>
 
     <div class="top-three-products">
-
         
         @for(int i = 0; i < Model.top3IGPosts.Count; i++)
         {

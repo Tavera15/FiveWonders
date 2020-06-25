@@ -25,6 +25,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
+                throw new Exception("No");
                 List<InstagramPost> InstagramPosts = await InstagramService.GetIGMediaAsync();
 
                 return View(InstagramPosts);

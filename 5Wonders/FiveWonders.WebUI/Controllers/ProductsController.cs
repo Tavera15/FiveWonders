@@ -29,11 +29,51 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         // GET: Product - Displays every products in the store
-        public ActionResult Index()
+        [Route(Name = "/{category?}{subcategory?}")]
+        public ActionResult Index(string category, string subcategory)
         {
-            List<Product> allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
+            try
+            {
+                if(category == null && subcategory == null)
+                {
+                    Product[] allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
 
-            return View(allProducts);
+                    return View(allProducts);
+                }
+                else if (category != null && subcategory != null)
+                {
+                    Product[] productsWithCat = GetProductsWithCategory(category);
+                    Product[] productsWithSub = GetProductsWithSub(subcategory);
+                    Product[] commonProducts = productsWithCat.Intersect(productsWithSub).ToArray();
+
+                    if (commonProducts.Length == 0)
+                        throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
+
+                    return View(commonProducts);
+                }
+                else if (category != null)
+                {
+                    Product[] productsWithCat = GetProductsWithCategory(category);
+
+                    return View(productsWithCat.ToArray());
+                }
+                else if (subcategory != null)
+                {
+                    Product[] productsWithSub = GetProductsWithSub(subcategory);
+
+                    return View(productsWithSub.ToArray());
+                }
+                else
+                    throw new Exception("Redirecting to Products page");
+
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return RedirectToAction("Index", "Home");
+            }
+
+
         }
 
         // GET: [/Products/Item/Id] - Returns a page with only one item to buy
@@ -83,45 +123,6 @@ namespace FiveWonders.WebUI.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 ViewBag.itemQuantity = 0;
-                return RedirectToAction("Index", "Products");
-            }
-        }
-
-        [Route("ListItems/{category?}{subcategory?}")]
-        public ActionResult ListItems(string category, string subcategory)
-        {
-            try
-            {
-                if (category != null && subcategory != null)
-                {
-                    var productsWithCat = GetProductsWithCategory(category);
-                    var productsWithSub = GetProductsWithSub(subcategory);
-                    var commonProducts = productsWithCat.Intersect(productsWithSub).ToArray();
-
-                    if (commonProducts.Length == 0)
-                        throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
-
-                    return View(commonProducts);
-                }
-                else if (category != null)
-                {
-                    var productsWithCat = GetProductsWithCategory(category);
-
-                    return View(productsWithCat.ToArray());
-                }
-                else if (subcategory != null)
-                {
-                    var productsWithSub = GetProductsWithSub(subcategory);
-
-                    return View(productsWithSub.ToArray());
-                }
-                else
-                    throw new Exception("Redirecting to Products page");
-
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return RedirectToAction("Index", "Products");
             }
         }

@@ -1,37 +1,27 @@
 ﻿@model IEnumerable<FiveWonders.core.Models.Product>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.mName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mDesc)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mPrice)
-        </th>
+<div id="products-page">
 
-        <th></th>
-    </tr>
+    <div class="products_list">
+        @foreach (var product in Model)
+        {
+            string title = product.mName.Length <= 20 ? product.mName
+                : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.mName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.mDesc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.mPrice)
-            </td>
 
-            <td>
-                @Html.ActionLink("View Item", "Item", new { id = item.mID }) |
-            </td>
-        </tr>
-    }
 
-</table>
+            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 card-cont">
+                <a class="card-holder" href="/products/item/@product.mID">
+                    <div class="product-cards">
+                        <img class="fw-card-image"
+                                src="https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
+                                alt="@product.mName" />
+                        <div class="fw-card-content">
+                            <h2 class="fw-card-title">@title</h2>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

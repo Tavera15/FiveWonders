@@ -113,7 +113,7 @@ namespace FiveWonders.WebUI.Controllers
                 // Save Order object to DB - Should not have PayPal ref. yet
                 orderContext.Insert(order);
                 orderContext.Commit();
-
+                
                 // List of transactions include list of products and total
                 var itemTransactions = new List<Transaction>()
                 {
