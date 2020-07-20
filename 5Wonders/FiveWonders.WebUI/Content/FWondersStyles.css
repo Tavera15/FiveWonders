@@ -5,6 +5,8 @@
 .base-container {
     width: 85vw;
     background-color: white;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
 }
 
 .FWonders-navbar-container{
@@ -38,6 +40,7 @@
     margin: .75rem 0;
 }
 
+
 .section-top-three {
     margin: 0 0 4vh;
     display: flex;
@@ -53,29 +56,76 @@
     margin: 0;
 }
 
+.category-display {
+    background-color: white;
+    border: none;
+    padding: 0;
+}
+
+.category-img-cover {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0, .5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform .5s ease;
+}
+
+.category-img-cover:hover{
+    background-color: rgba(0,0,0,.35);
+}
+
+.category-container{
+    background-color: white;
+    padding: 0 2rem;
+}
+
+.category-container a{
+    text-decoration: none;
+}
+
+.single-category {
+    padding: 0;
+    border: solid 1px black;
+    height: 25rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.single-category h2 {
+    color: aliceblue;
+    justify-self: flex-end;
+    font-size: 6rem;
+    padding: 0;
+    margin: 0;
+}
+
 .redi-btn {
     margin: 0 auto;
     font-size: 2vh;
 }
 
 .top-three-products {
-    padding: 2vh 2vw;
+    padding: 2vh 0vw;
 }
 
 .card-cont{
-    border: solid blue 1px;
+    padding: 0;
 }
 
 .card-holder {
+    height: 40rem;
     display: flex;
     align-items: center;
-    height: 45vh;
     margin: 0 auto;
     text-decoration: none !important;
 }
 
 .product-cards {
-    width: 100%;
+    width: 80%;
     margin: 0 auto;
     border: solid 1px black;
     color: #59b7a1;
@@ -91,6 +141,7 @@
     color: aliceblue;
     z-index: 1;
 }
+
 .fw-card-image {
     height: 70%;
     width: 100%;
@@ -105,7 +156,7 @@
 }
 
 .fw-card-title {
-    font-size: 3vh;
+    font-size: 3rem;
     margin: 0;
 }
 
@@ -119,15 +170,17 @@
     width: 100%;
 }
 
-@media(max-width: 1200px){
+@media(max-width: 1400px){
     .card-cont{
         padding: 0;
+    }
+    .product-cards{
+        width: 100%
     }
     .card-holder{
         padding: 0;
         height: 35vh;
     }
-
 }
 
 @media (max-width: 768px) {
@@ -184,29 +237,37 @@
 #products-page{
     display: flex;
     flex-direction: row;
-    border: solid 3px red;
-    justify-content: center;
+    background-color: dimgrey;
+    width:100%;
+    padding: 0;
 }
 
-.products_list {
-    padding: 2rem 0;
+.pp-products-section {
+    background-color: antiquewhite;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-
-    width: 60vw;
+    width: 100%;
 }
 
-.product-list-prod-container{
-    margin-bottom: 1vh;
+.product-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-items: flex-end;
+    padding: 0 0 1rem;
 }
 
-@media (max-width: 768px){
-    .products_list {
-        padding: 0 0;
-        background-color: white;
-    }
-    .product-list-prod-container {
-        padding: 1.5rem 0;
-    }
+.product-container img{
+    width:100%;
+    height: 35rem;
 }
+
+.products-footer{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-evenly;
+}
+
+/*TODO https://s3.envato.com/files/191971440/03Product%20List%20View%20Style-2.png*/

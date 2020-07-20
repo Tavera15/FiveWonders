@@ -4,11 +4,36 @@
 }
 
 <div class="jumbotron jumbo-img" style="background-image: url(@Model.homePageData.mWelcomeImgUrl);">
-    <img style="" src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo jumbo-item" />
+    <img src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo jumbo-item" />
 
     <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">Celebrate the Grand Opening</h1>
     <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">With us!</h1>
     <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+</div>
+
+<div class="section-top-three category-display">
+    <div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 category-container">
+            <a href="/products/?category=balloons">
+                <div class="single-category" style="background-image: url(https://i.ytimg.com/vi/iELjLUVtjLw/maxresdefault.jpg);">
+                    <div class="category-img-cover">
+                        <h2>Balloons</h2>
+                        <p class="btn btn-lg btn-default">Shop Balloons</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 category-container">
+            <a href="/products/?category=clothing">
+                <div class="single-category" style="background-image: url(https://wpcdn.us-east-1.vip.tn-cloud.net/www.channel3000.com/content/uploads/2019/12/variety-of-clothes-hanging-on-rack_1509457933825_9166901_ver1-0-1024x576.jpg);">
+                    <div class="category-img-cover">
+                        <h2>Clothing</h2>
+                        <p class="btn btn-lg btn-default">Shop Clothing</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>
 
 <div class="section-top-three">
@@ -18,18 +43,14 @@
     <div class="top-three-products"> 
         @for (int i = 0; i < Model.top3Products.Count; i++)
         {
-
             var product = Model.top3Products[i];
 
             string title = product.mName.Length <= 20 ? product.mName
                     : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
 
-            string classTags = (i == 0) ? "col-lg-4 col-md-4 col-sm-4"
-                : "col-lg-4 col-md-4 col-sm-4";
+            string classTags = "col-lg-4 col-md-4 col-sm-6";
 
-            string topImg = (i == 0) ? "topImg" : " ";
-
-            <div class="@classTags @topImg col-xs-12 card-cont">
+            <div class="@classTags col-xs-12 card-cont">
                 <a class="card-holder" href="/products/item/@product.mID">
                     <div class="product-cards">
                         <img class="fw-card-image"
@@ -43,7 +64,6 @@
             </div>
         }
     </div>
-
     <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
 </div>
 

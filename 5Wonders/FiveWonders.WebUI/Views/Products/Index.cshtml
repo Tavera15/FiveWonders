@@ -1,27 +1,32 @@
 ﻿@model IEnumerable<FiveWonders.core.Models.Product>
 
 <div id="products-page">
+    <div class="col-lg-push-4 col-lg-8" style="padding: 0;">
+        <div class="pp-products-section">
+            @{Random m = new Random(); }
+        
+            @foreach (var product in Model)
+            {
+                string title = product.mName.Length <= 20 ? product.mName
+                    : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
+            
+                int rndImgIdx = m.Next(0, 2);
+                string rndImg = rndImgIdx == 0 ? "https://scontent-dfw5-2.xx.fbcdn.net/v/t1.0-9/83794160_248660089892883_7783688601119752192_n.jpg?_nc_cat=100&_nc_sid=8bfeb9&_nc_ohc=oB-PetdMKAYAX--G7z8&_nc_ht=scontent-dfw5-2.xx&oh=3d7e620001ecc6ccc2f7202684a78584&oe=5F1A7096" 
+                    : "https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/96760441_234356917989867_5232928479170789376_o.jpg?_nc_cat=109&_nc_sid=a26aad&_nc_ohc=9isWxxi_LcUAX-Xs9lL&_nc_ht=scontent-dfw5-1.xx&oh=a22a1c64af13253dc1f07d9c24886f4e&oe=5F19E302";
+            
+                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="padding:0; border: solid 1px black;">
+                    <div class="product-container">
+                        <img src="@rndImg"/>
 
-    <div class="products_list">
-        @foreach (var product in Model)
-        {
-            string title = product.mName.Length <= 20 ? product.mName
-                : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
+                        <h2>@title</h2>
 
-
-
-            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 card-cont">
-                <a class="card-holder" href="/products/item/@product.mID">
-                    <div class="product-cards">
-                        <img class="fw-card-image"
-                                src="https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
-                                alt="@product.mName" />
-                        <div class="fw-card-content">
-                            <h2 class="fw-card-title">@title</h2>
+                        <div class="products-footer">
+                            <p>@product.mPrice</p>
+                            <a class="btn btn-primary">View Product</a>
                         </div>
                     </div>
-                </a>
-            </div>
-        }
+                </div>
+            }
+        </div>
     </div>
 </div>
