@@ -49,6 +49,9 @@
     padding: 2vh;
     background-color: blanchedalmond;
     text-align: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .section-top-three h1 {
@@ -109,54 +112,60 @@
 
 .top-three-products {
     margin: 2vh 0;
+    padding: 0 10rem;
 }
 
-.card-cont{
-    padding: 0;
+.fw-card-a:hover {
+    text-decoration: none;
 }
 
-.card-holder {
-    height: 35vh;
-    display: flex;
-    align-items: center;
-    margin: 0 auto;
-    text-decoration: none !important;
+.fw-product-container {
+    background-color: white;
 }
 
-.product-cards {
-    width: 65%;
-    margin: 0 auto;
-    color: #59b7a1;
-    background-color: darkslategrey;
-    text-align: center;
-    height: 100%;
-    transition: transform .5s ease;
-    border: 1px solid black;
-}
-.product-cards:hover {
-    transform: scale(1.05);
-    background-color: #ed8062;
-    cursor: pointer;
-    color: aliceblue;
-    z-index: 1;
-}
-
-.fw-card-image {
-    height: 70%;
+.fw-card {
+    border: solid black 3px;
     width: 100%;
+    box-shadow: rgba(0,0,0,.4) 4px 4px;
 }
 
-.fw-card-content{
-    height: 30%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+.fw-card:hover{
+    box-shadow: none;
 }
 
 .fw-card-title {
-    font-size: 3rem;
     margin: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 1rem;
+    font-size: 2.5vh;
+    background-color: #59b7a1;
+    color: white;
+}
+
+.fw-card-img {
+    width: 100%;
+    height: 32vh;
+    object-fit: cover;
+    border-top: solid 3px black;
+    border-bottom: solid 3px black;
+}
+
+.fw-card-price{
+    margin: 1rem 0;
+    color: black;
+    font-size: 2vh;
+}
+
+.fw-card-btn {
+    width: 100%;
+    border-radius: 0;
+}
+
+#ig-top-three {
+    background-color: aliceblue;
 }
 
 .ig-container {
@@ -170,32 +179,19 @@
 }
 
 @media(max-width: 1400px){
-    .card-cont{
+    .top-three-products{
         padding: 0;
     }
-    .product-cards{
-        width: 100%
-    }
-    .card-holder{
-        padding: 0;
-        height: 40vh;
-    }
+    
 }
 
 @media (max-height: 1024px) and (orientation:landscape) {
-    .card-holder {
-        height: 40vh;
-    }
+
 }
 
 @media (max-width: 1024px) and (orientation:portrait) {
 
-    .card-holder {
-        height: 25vh;
-    }
-    .ig-img {
-        height: 20vh;
-    }
+
 }
 
 @media (max-width: 768px) {
@@ -206,11 +202,16 @@
     .FWonders-navbar-container{
         width: 95vw;
     }
- 
-    .card-holder{
-        height: 45vh;
-        margin: 5px 0;
+
+    .top-three-products{
+        display:flex;
+        flex-direction: row;
     }
+
+    .fw-card-a {
+        width: 100%;
+    }
+    
     .ig-container {
         padding: .5vh;
         border: none;
@@ -222,24 +223,21 @@
 
 @media (max-width: 768px) and (orientation:portrait) {
 
-    .card-holder {
-        height: 35vh;
+    .fw-card-container {
+        margin: 1vh 0;
+        padding: 0;
     }
-
+    .top-three-products {
+        display: inline;
+    }
 }
 
 @media (max-height: 444px) and (orientation:landscape) {
 
-    .card-cont {
+    .fw-card-a {
         width: calc(100%/3);
     }
-    .card-holder {
-        height: 85vh;
-        margin: 0;
-    }
-    .fw-card-title {
-        font-size: 6vh;
-    }
+
     .redi-btn {
         font-size: 2vw;
     }
@@ -261,7 +259,7 @@
         width: 20vw;
     }
     .ig-img {
-        height: 40vh;
+        height: 50vh;
     }
 }
 

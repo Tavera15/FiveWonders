@@ -45,19 +45,19 @@
         {
             var product = Model.top3Products[i];
 
-            string title = product.mName.Length <= 20 ? product.mName
-                    : product.mName.Substring(0, Math.Min(product.mName.Length, 20)) + "...";
-
             string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12";
 
-            <div class="@classTags card-cont">
-                <a class="card-holder" href="/products/item/@product.mID">
-                    <div class="product-cards">
-                        <img class="fw-card-image"
-                                src="@Model.top3IGPosts[i].mImageURL"
-                                alt="@product.mName" />
-                        <div class="fw-card-content">
-                            <h2 class="fw-card-title">@title</h2>
+            <div class="@classTags fw-card-container">
+                <a href="/products/item/@product.mID" class="fw-card-a">
+                    <div class="fw-product-container">
+                        <div class="fw-card">
+                            <h3 class="fw-card-title">@product.mName</h3>
+                            <img 
+                                src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
+                                class="fw-card-img"
+                            />
+                            <p class="fw-card-price">$@product.mPrice</p>
+                            <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
                         </div>
                     </div>
                 </a>
