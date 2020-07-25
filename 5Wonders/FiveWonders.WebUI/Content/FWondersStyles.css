@@ -153,10 +153,12 @@
     border-bottom: solid 3px black;
 }
 
-.fw-card-price{
-    margin: 1rem 0;
+.fw-card-price {
+    padding: 3vh 0;
+    margin: 0;
     color: black;
     font-size: 2vh;
+    border: 1px solid red;
 }
 
 .fw-card-btn {
@@ -174,8 +176,9 @@
 }
 
 .ig-img {
-    height: 30vh;
+    height: 32vh;
     width: 100%;
+    object-fit: cover;
 }
 
 @media(max-width: 1400px){
@@ -186,11 +189,24 @@
 }
 
 @media (max-height: 1024px) and (orientation:landscape) {
-
+    .fw-card-price{
+        padding: 1rem 0;
+    }
+    .fw-card-img {
+        height: 30vh;
+    }
 }
 
 @media (max-width: 1024px) and (orientation:portrait) {
-
+    .fw-card-img {
+        height: 15vh;
+    }
+    .fw-card-price {
+        padding: 1rem 0;
+    }
+    .ig-img{
+        height: 15vh;
+    }
 
 }
 
@@ -216,8 +232,11 @@
         padding: .5vh;
         border: none;
     }
+    .ig-img {
+        height: 20vh;
+    }
     .jumbo-btn {
-        align-self:center;
+        align-self: center;
     }
 }
 
@@ -226,6 +245,12 @@
     .fw-card-container {
         margin: 1vh 0;
         padding: 0;
+    }
+    .fw-card-img{
+        height: 32vh;
+    }
+    .ig-img {
+        height: 32vh;
     }
     .top-three-products {
         display: inline;
