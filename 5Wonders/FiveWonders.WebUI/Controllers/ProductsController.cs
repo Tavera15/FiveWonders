@@ -38,6 +38,7 @@ namespace FiveWonders.WebUI.Controllers
                 {
                     Product[] allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
 
+                    ViewBag.pageName = "Welcome to 5Wonders!";
                     return View(allProducts);
                 }
                 else if (category != null && subcategory != null)
@@ -49,18 +50,21 @@ namespace FiveWonders.WebUI.Controllers
                     if (commonProducts.Length == 0)
                         throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
 
+                    ViewBag.pageName = category + "/" + subcategory;
                     return View(commonProducts);
                 }
                 else if (category != null)
                 {
                     Product[] productsWithCat = GetProductsWithCategory(category);
 
+                    ViewBag.pageName = category;
                     return View(productsWithCat.ToArray());
                 }
                 else if (subcategory != null)
                 {
                     Product[] productsWithSub = GetProductsWithSub(subcategory);
 
+                    ViewBag.pageName = subcategory;
                     return View(productsWithSub.ToArray());
                 }
                 else

@@ -158,7 +158,6 @@
     margin: 0;
     color: black;
     font-size: 2vh;
-    border: 1px solid red;
 }
 
 .fw-card-btn {
@@ -171,7 +170,7 @@
 }
 
 .ig-container {
-    border: 1px solid black;
+    border: 3px solid black;
     padding: 0;
 }
 
@@ -185,7 +184,6 @@
     .top-three-products{
         padding: 0;
     }
-    
 }
 
 @media (max-height: 1024px) and (orientation:landscape) {
@@ -288,41 +286,50 @@
     }
 }
 
-/*Todo create long cards instead*/
-#products-page{
-    display: flex;
-    flex-direction: row;
-    background-color: dimgrey;
-    width:100%;
+/*---------------------------Products Page---------------------------*/
+
+#products-page {
+    background-color: antiquewhite;
+    padding: 2vh;
+    margin: 0;
+}
+.pp-title-container {
+    border: solid red 1px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-origin: border-box;
+    margin: 0 0vh 4vh;
     padding: 0;
 }
+.pp-title-dark-layer {
+    background-color: rgba(0,0,0, .54);
+    height: 100%;
+    padding: 12.5vh 0;
+}
+.pp-title-text {
+    margin-top: 0;
+    text-align: center;
+    color: white;
+    font-size: 9vh;
+}
 
+.pp-t {
+    text-align: left;
+    text-decoration: underline;
+}
 .pp-products-section {
-    background-color: antiquewhite;
+    text-align: center;
+    border: 1px solid red;
+    margin: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 100%;
 }
 
-.product-container {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-items: flex-end;
-    padding: 0 0 1rem;
-}
-
-.product-container img{
-    width:100%;
-    height: 35rem;
-}
-
-.products-footer{
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-evenly;
+.pp-card-container {
+    margin: 0 0 1vh;
+    border: 1px solid blue;
 }
 
 /*TODO https://s3.envato.com/files/191971440/03Product%20List%20View%20Style-2.png*/

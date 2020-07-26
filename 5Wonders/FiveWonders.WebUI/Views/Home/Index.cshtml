@@ -41,11 +41,11 @@
     <h1>Latest Products</h1>
 
     <div class="top-three-products"> 
+        @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
+
         @for (int i = 0; i < Model.top3Products.Count; i++)
         {
             var product = Model.top3Products[i];
-
-            string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12";
 
             <div class="@classTags fw-card-container">
                 <a href="/products/item/@product.mID" class="fw-card-a">
