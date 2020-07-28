@@ -170,7 +170,7 @@
 }
 
 .ig-container {
-    border: 3px solid black;
+    border: 1.5px solid black;
     padding: 0;
 }
 
@@ -197,13 +197,13 @@
 
 @media (max-width: 1024px) and (orientation:portrait) {
     .fw-card-img {
-        height: 15vh;
+        height: 18vh;
     }
     .fw-card-price {
         padding: 1rem 0;
     }
-    .ig-img{
-        height: 15vh;
+    .ig-img {
+        height: 18vh;
     }
 
 }
@@ -222,17 +222,6 @@
         flex-direction: row;
     }
 
-    .fw-card-a {
-        width: 100%;
-    }
-    
-    .ig-container {
-        padding: .5vh;
-        border: none;
-    }
-    .ig-img {
-        height: 20vh;
-    }
     .jumbo-btn {
         align-self: center;
     }
@@ -245,22 +234,23 @@
         padding: 0;
     }
     .fw-card-img{
-        height: 32vh;
+        height: 25rem;
     }
     .ig-img {
-        height: 32vh;
+        height: 25vh;
     }
     .top-three-products {
         display: inline;
     }
 }
 
-@media (max-height: 444px) and (orientation:landscape) {
-
-    .fw-card-a {
-        width: calc(100%/3);
+@media (max-width: 768px) and (orientation:landscape){
+    .fw-card-img {
+        height: 50vh;
     }
+}
 
+@media (max-height: 444px) and (orientation:landscape) {
     .redi-btn {
         font-size: 2vw;
     }
@@ -273,13 +263,12 @@
     .section-top-three h1{
         font-size: 4rem;
     }
-    .ig-img {
-        height: 100vh;
-    }
-
     .jumbo-logo {
         height: auto;
         width: 20vw;
+    }
+    .fw-card-img {
+        height: 40vh;
     }
     .ig-img {
         height: 50vh;
@@ -294,7 +283,6 @@
     margin: 0;
 }
 .pp-title-container {
-    border: solid red 1px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -315,21 +303,46 @@
 }
 
 .pp-t {
-    text-align: left;
+    text-align: right;
     text-decoration: underline;
+    margin-right: 6rem;
 }
 .pp-products-section {
     text-align: center;
-    border: 1px solid red;
     margin: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    padding: 0 6rem;
 }
 
 .pp-card-container {
     margin: 0 0 1vh;
-    border: 1px solid blue;
 }
+
+@media(max-width: 1400px) {
+    .pp-products-section {
+        padding: 0;
+    }
+}
+
+@media (max-width: 1024px) and (orientation:portrait){
+    .pp-fw-card-img {
+        height: 15vh;
+    }
+}
+
+@media (max-width: 768px) and (orientation:landscape) {
+    .pp-card-container{
+        width: calc(100%/3);
+    }
+}
+
+@media (max-width: 768px) and (orientation:portrait){
+    .pp-fw-card-img {
+        height: 20vh;
+    }
+}
+
 
 /*TODO https://s3.envato.com/files/191971440/03Product%20List%20View%20Style-2.png*/

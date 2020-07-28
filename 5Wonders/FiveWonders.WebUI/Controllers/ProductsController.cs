@@ -50,7 +50,7 @@ namespace FiveWonders.WebUI.Controllers
                     if (commonProducts.Length == 0)
                         throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
 
-                    ViewBag.pageName = category + "/" + subcategory;
+                    ViewBag.pageName = category + " - " + subcategory;
                     return View(commonProducts);
                 }
                 else if (category != null)
