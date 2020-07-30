@@ -1,60 +1,56 @@
 ﻿@model FiveWonders.core.ViewModels.ProductOrderViewModel
 
-<dl class="dl-horizontal">
-    <dt>
-        @Html.DisplayNameFor(model => model.product.mName)
-    </dt>
-    <dd>
-        @Html.DisplayFor(model => model.product.mName)
-    </dd>
+<div id="item-page">
 
-    <dt>
-        @Html.DisplayNameFor(model => model.product.mDesc)
-    </dt>
-    <dd>
-        @Html.DisplayFor(model => model.product.mDesc)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.product.mPrice)
-    </dt>
-    <dd>
-        @Html.DisplayFor(model => model.product.mPrice)
-    </dd>
-
-</dl>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.productOrder.mQuantity, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @step = "1", @value = "1" } })
-                @Html.ValidationMessageFor(model => model.productOrder.mQuantity, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @if(Model.sizeChart != null)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.productOrder.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Add to Cart" class="btn btn-primary" />
-            </div>
-        </div>
-
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ip-product-img-container">
+        <img class="ip-product-img" src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F" alt="@Model.product.mImage"/>
     </div>
-}
 
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 item-data-container">
+        
+        <div class="item-data">
+            <h1 class="item-data-name">@Model.product.mName</h1>
+            <h3>$@Model.product.mPrice</h3>
+
+            <div class="item-data-desc-container">
+                <h4 class="item-data-desc">@Model.product.mDesc</h4>
+            </div>
+
+            <div class="item-data-form">
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.productOrder.mQuantity, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1" } })
+                        @Html.ValidationMessageFor(model => model.productOrder.mQuantity, "", new { @class = "text-danger" })
+                    </div>
+
+                    if (Model.sizeChart != null)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.productOrder.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new {  } })
+                            @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
+                        </div>
+                    }
+
+                    <input type="submit" value="Add to Cart" class="btn btn-primary" />
+
+                }
+
+            </div>
+        </div>
+        
+    </div>
+
+    @if (Model.sizeChart != null)
+    {
+        <div class="col-12 sizechart-container">
+            <img class="ip-sizechart" src="https://cdn.shopify.com/s/files/1/1402/3573/files/size-chart_new_both_centered.jpg?v=1566939590" />
+        </div>
+    }
+
+</div>
