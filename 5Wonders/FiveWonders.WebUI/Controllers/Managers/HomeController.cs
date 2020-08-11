@@ -66,3 +66,5 @@ namespace FiveWonders.WebUI.Controllers
         }
     }
 }
+
+//https://www.practicalecommerce.com/4-Simple-Product-Page-Layouts-That-Work
