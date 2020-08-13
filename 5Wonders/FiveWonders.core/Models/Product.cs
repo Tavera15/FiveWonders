@@ -33,6 +33,12 @@ namespace FiveWonders.core.Models
         [Display(Name = "Size Chart")]
         public string mSizeChart { get; set; }
 
+        [Display(Name = "Is Customizable?")]
+        public bool isCustomizable { get; set; }
+
+        [Display(Name = "Product Text")]
+        public string mMessage { get; set; }
+
         public Product()
         {
         }

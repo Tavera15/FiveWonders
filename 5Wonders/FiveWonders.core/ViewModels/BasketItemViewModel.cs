@@ -25,6 +25,9 @@ namespace FiveWonders.core.ViewModels
         [Display(Name = "Size")]
         public string size { get; set; }
 
+        [Display(Name = "Product Recipient")]
+        public string productText { get; set; }
+
         public string image { get; set; }
         
         public string sizeChart { get; set; }

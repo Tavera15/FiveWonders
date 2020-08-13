@@ -76,8 +76,6 @@ namespace FiveWonders.WebUI.Controllers
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return RedirectToAction("Index", "Home");
             }
-
-
         }
 
         // GET: [/Products/Item/Id] - Returns a page with only one item to buy
@@ -117,7 +115,7 @@ namespace FiveWonders.WebUI.Controllers
                 Product productToBuy = productsContext.Find(Id);
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
-
+                
                 // Add Product Order to Shopping Cart
                 basketServices.AddToBasket(HttpContext, item.productOrder);
 

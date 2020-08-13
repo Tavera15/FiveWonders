@@ -19,10 +19,14 @@ namespace FiveWonders.core.Models
         [Display(Name = "Size")]
         public string mSize { get; set; }
 
+        [Display(Name = "Product Text")]
+        public string mProductText { get; set; }
+
         public BasketItem()
         {
             mQuantity = 1;
             mSize = "";
+            mProductText = "";
         }
     }
 }

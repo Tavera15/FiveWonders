@@ -40,7 +40,7 @@ namespace FiveWonders.Services
 
                 // Checks if a similar item is already in the basket
                 BasketItem basketItem = basket.mBasket.
-                    FirstOrDefault(x => x.mProductID == item.mProductID && x.mSize == item.mSize);
+                    FirstOrDefault(x => x.mProductID == item.mProductID && x.mSize == item.mSize && x.mProductText == item.mProductText);
 
                 // Update the quantity if item already exists
                 if (basketItem != null)
