@@ -104,7 +104,7 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Item(ProductOrderViewModel item, string Id)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || item.productOrder.mQuantity <= 0)
             {
                 return View(item);
             }

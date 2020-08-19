@@ -1,10 +1,12 @@
 ﻿body {
     background-color: #ed8062;
+    background-color: white;
 }
 
 .base-container {
     width: 85vw;
     background-color: white;
+
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
 }
@@ -357,11 +359,16 @@
 
 /*---------------------------Item page---------------------------*/
 #item-page {
-    background-color: white;
+    background-color: aliceblue;
     display: flex;
     flex-direction: row;
     padding: 2vh;
     flex-wrap: wrap;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    margin-top: 2vh;
 }
 
 .ip-product-img-container {
@@ -390,19 +397,16 @@
 }
 
 .item-data {
-    text-align: center;
+    text-align: left;
     padding: 0 2rem;
-    border: 1px solid black;
 }
 
 .item-data-name {
     margin: 2rem 0;
-    text-align: center;
 }
 
 .item-data-price {
-    margin: 2rem 0;
-    text-align: center;
+    margin: 2rem auto;
 }
 
 .item-data-form {
@@ -410,7 +414,6 @@
 }
 
 .ip-add-to-cart-btn-container{
-    text-align: center;
 }
 
 .ip-add-to-cart-btn {
@@ -438,9 +441,9 @@
     object-fit: cover;
 }
 
-.ip-customization-container{
-    border-top: solid 1px black;
-    border-bottom: solid 1px black;
+.ip-customization-container {
+    border-top: solid 1px rgba(0,0,0,.1);
+    border-bottom: solid 1px rgba(0,0,0,.1);
     padding: 2rem;
     margin: 0 -2rem 2rem;
 }
@@ -476,6 +479,9 @@
     .item-data-container {
         padding: 0;
     }
+    .item-data{
+        text-align: center;
+    }
 }
 
     
@@ -486,12 +492,16 @@
 }
 
 @media (max-width: 768px){
+    #item-page{
+        margin: 0;
+    }
     .ip-product-img-container {
         height: 35rem;
     }
 
     .item-data-container {
         padding: 0;
+        border: 1px solid black;
     }
 
     .item-data {
@@ -499,7 +509,6 @@
     }
 
     .item-data-name{
-        margin-top: 0;
     }
 
     .item-data-desc-container {
@@ -513,12 +522,12 @@
     }
 }
 
- 
-
 @media (max-width: 550px){
-    .item-data{
+    .item-data-container {
     }
 }
 
 /*TODO https://s3.envato.com/files/191971440/03Product%20List%20View%20Style-2.png*/
 /*https://www.google.com/imgres?imgurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fwp-content%2Fuploads%2F2016%2F09%2Fproduct-default.jpg&imgrefurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fproduct-default%2F&tbnid=eGE87abmB3HkGM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&docid=StRypfbuqMVnWM&w=893&h=865&itg=1&q=product%20page%20css&ved=0CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw#h=865&imgdii=sRVEtxoaG9r1YM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&w=893*/
+/*TODO Maybe put logo in items page*/
+/*https://getbootstrap.com/docs/3.4/components/#thumbnails*/

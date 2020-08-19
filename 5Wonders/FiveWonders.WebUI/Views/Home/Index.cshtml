@@ -40,22 +40,21 @@
 
     <h1>Latest Products</h1>
 
-    <div class="top-three-products"> 
+    <div class="top-three-products">
         @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
 
         @for (int i = 0; i < Model.top3Products.Count; i++)
         {
             var product = Model.top3Products[i];
+ 
 
             <div class="@classTags fw-card-container">
                 <a href="/products/item/@product.mID" class="fw-card-a">
                     <div class="fw-product-container">
                         <div class="fw-card">
                             <h3 class="fw-card-title">@product.mName</h3>
-                            <img 
-                                src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
-                                class="fw-card-img"
-                            />
+                            <img src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
+                                 class="fw-card-img" />
                             <p class="fw-card-price">$@product.mPrice</p>
                             <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
                         </div>
@@ -72,8 +71,8 @@
     <h1>Follow our <a style="color: black; text-decoration: underline;" href="https://www.instagram.com/5wondersballoons/">Instagram</a></h1>
 
     <div class="top-three-products">
-        
-        @for(int i = 0; i < Model.top3IGPosts.Count; i++)
+
+        @for (int i = 0; i < Model.top3IGPosts.Count; i++)
         {
             var post = Model.top3IGPosts[i];
 
@@ -90,3 +89,4 @@
 
     <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Gallery")">View Our Gallery</a>
 </div>
+

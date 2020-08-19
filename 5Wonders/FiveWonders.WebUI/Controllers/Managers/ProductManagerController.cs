@@ -92,6 +92,11 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
+                if(String.IsNullOrWhiteSpace(Id))
+                {
+                    throw new Exception("No item Id");
+                }
+
                 Product productToEdit = context.Find(Id);
 
                 // Finds the correct Size Chart and inserts a "None" option
