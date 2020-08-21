@@ -11,18 +11,22 @@
     <h3 class="pp-t">@Model.Count().ToString() Products</h3>
 
     <div class="pp-products-section">
-        @{Random m = new Random(); }
         @{string classTags = "col-lg-3 col-md-4 col-sm-4 col-xs-6";}
 
         @foreach (var product in Model)
         {
+            string[] currentImageFiles = product.mImage.Split(',');
+            string firstImage = currentImageFiles[0];
+
             <div class="@classTags fw-card-container pp-card-container">
                 <a href="/products/item/@product.mID" class="fw-card-a" >
                     <div class="fw-product-container">
                         <div class="fw-card" style="box-shadow: none;">
                             <h4 class="fw-card-title">@product.mName</h4>
-                            <img src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
-                                    class="fw-card-img pp-fw-card-img" />
+                            <img
+                                 src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                 alt="@product.mName"
+                                 class="fw-card-img pp-fw-card-img" />
                             <p class="fw-card-price">$@product.mPrice</p>
                             <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
                         </div>

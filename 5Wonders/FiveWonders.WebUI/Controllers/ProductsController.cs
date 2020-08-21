@@ -84,6 +84,11 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product p = productsContext.Find(Id);
+                if(p == null)
+                {
+                    throw new Exception("Product not found");
+                }
+
                 SizeChart chart = sizeChartContext.Find(p.mSizeChart);
 
                 ProductOrderViewModel viewModel = new ProductOrderViewModel();

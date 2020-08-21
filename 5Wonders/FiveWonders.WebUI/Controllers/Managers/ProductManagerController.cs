@@ -141,7 +141,7 @@ namespace FiveWonders.WebUI.Controllers
                 // If new images were selected, update Target's Image property 
                 if(imageFiles != null && imageFiles[0] != null)
                 {
-                    var currentImageFiles = target.mImage.Split(',');
+                    string[] currentImageFiles = target.mImage.Split(',');
                     string newImageURL;
 
                     DeleteImages(currentImageFiles);

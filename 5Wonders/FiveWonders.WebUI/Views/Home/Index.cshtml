@@ -46,14 +46,17 @@
         @for (int i = 0; i < Model.top3Products.Count; i++)
         {
             var product = Model.top3Products[i];
- 
+            string[] currentImageFiles = product.mImage.Split(',');
+            string firstImage = currentImageFiles[0];
 
             <div class="@classTags fw-card-container">
                 <a href="/products/item/@product.mID" class="fw-card-a">
                     <div class="fw-product-container">
                         <div class="fw-card">
                             <h3 class="fw-card-title">@product.mName</h3>
-                            <img src="https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
+                            <img 
+                                 alt="@product.mName"
+                                 src="@Url.Content("~/Content/ProductImages/" + firstImage)"
                                  class="fw-card-img" />
                             <p class="fw-card-price">$@product.mPrice</p>
                             <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
@@ -80,7 +83,7 @@
 
             <div class="@IGclassTags ig-container">
                 <img class="ig-img"
-                     src="@post.mImageURL"
+                     src="https://cdn.cms.prod.nypr.digital/images/ballons102119.2e16d0ba.fill-661x496.jpg"
                      alt="IG" />
             </div>
         }
