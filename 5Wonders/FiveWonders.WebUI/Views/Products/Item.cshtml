@@ -1,73 +1,106 @@
 ﻿@model FiveWonders.core.ViewModels.ProductOrderViewModel
 
-    <div id="item-page">
+ @{
+     string[] imageFiles = Model.product.mImage.Split(',');
+     string firstImage = imageFiles[0];
+ }
 
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ip-product-img-container">
-            <img class="ip-product-img" 
-                 src="~/Content/ProductImages/@Model.product.mImage"
-                 alt="@Model.product.mName" />
+<div id="item-page">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel" style="border: solid black 1px;">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < imageFiles.Length; i++)
+                {
+                    string liClassTag = i == 0 ? "active" : "";
+
+                    <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
+                }
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                @for(int i = 0; i < imageFiles.Length; i++)
+                {
+                    string itemClassTag = i == 0 ? "item active" : "item";
+
+                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]))"></div>
+
+                   
+                }
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
         </div>
+    </div>
 
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 item-data-container">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 item-data-container">
 
-            <div class="item-data">
-                <h1 class="item-data-name">@Model.product.mName</h1>
-                <h3 class="item-data-price">$@Model.product.mPrice</h3>
+        <div class="item-data">
+            <h1 class="item-data-name">@Model.product.mName</h1>
+            <h3 class="item-data-price">$@Model.product.mPrice</h3>
 
-                <div class="item-data-form">
+            <div class="item-data-form">
 
-                    @using (Html.BeginForm())
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+
+                    if (Model.sizeChart != null)
                     {
-                        @Html.AntiForgeryToken()
-
-
-                        if (Model.sizeChart != null)
-                        {
-                            <div class="form-group">
-                                @Html.LabelFor(model => model.productOrder.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
-                                @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new { } })
-                                @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
-                            </div>
-                        }
-
-                        if (Model.product.isCustomizable)
-                        {
-                            <div class="ip-customization-container">
-                                <h3 class="ip-customization-label">Customizable Product Text:</h3>
-                                <h4 class="ip-customization-perma-text">@Model.product.mMessage</h4>
-                                @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
-                            </div>
-                        }
-
                         <div class="form-group">
-                            @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
-                            @Html.EditorFor(model => model.productOrder.mQuantity, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1" } })
-                            @Html.ValidationMessageFor(model => model.productOrder.mQuantity, "", new { @class = "text-danger" })
-                        </div>
-
-                        <div class="ip-add-to-cart-btn-container">
-                            <input type="submit" value="Add to Cart" class="btn btn-primary ip-add-to-cart-btn" />
+                            @Html.LabelFor(model => model.productOrder.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new { } })
+                            @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
                         </div>
                     }
 
-                </div>
+                    if (Model.product.isCustomizable)
+                    {
+                        <div class="ip-customization-container">
+                            <h3 class="ip-customization-label">Customizable Product Text:</h3>
+                            <h4 class="ip-customization-perma-text">@Model.product.mMessage</h4>
+                            @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
+                        </div>
+                    }
 
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.EditorFor(model => model.productOrder.mQuantity, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1" } })
+                        @Html.ValidationMessageFor(model => model.productOrder.mQuantity, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="ip-add-to-cart-btn-container">
+                        <input type="submit" value="Add to Cart" class="btn btn-primary ip-add-to-cart-btn" />
+                    </div>
+                }
 
             </div>
 
-        </div>
 
-        <div class="col-12 item-data-desc-container">
-            <h3 style="font-weight: bold;">Description</h3>
-            <h4>@Model.product.mDesc</h4>
         </div>
-
-        @if (Model.sizeChart != null)
-        {
-            <div class="col-12 sizechart-container">
-                <img class="ip-sizechart" src="https://cdn.shopify.com/s/files/1/1402/3573/files/size-chart_new_both_centered.jpg?v=1566939590" />
-            </div>
-        }
 
     </div>
 
+    <div class="col-12 item-data-desc-container">
+        <h3 style="font-weight: bold;">Description</h3>
+        <h4>@Model.product.mDesc</h4>
+    </div>
+
+    @if (Model.sizeChart != null)
+    {
+        <div class="col-12 sizechart-container">
+            <img class="ip-sizechart" src="https://cdn.shopify.com/s/files/1/1402/3573/files/size-chart_new_both_centered.jpg?v=1566939590" />
+        </div>
+    }
+
+</div>

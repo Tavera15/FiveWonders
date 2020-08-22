@@ -371,22 +371,16 @@
     margin-top: 2vh;
 }
 
-.ip-product-img-container {
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: nowrap;
+.carousel-inner{
     height: 50vh;
 }
 
-.ip-product-img {
-    object-fit: cover;
-    padding: 0;
-    display: block;
-    margin: 0 auto;
-    width: 70%;
+.img-test {
     height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .item-data-container{
