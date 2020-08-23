@@ -1,13 +1,13 @@
 ﻿@model FiveWonders.core.ViewModels.ProductOrderViewModel
 
- @{
-     string[] imageFiles = Model.product.mImage.Split(',');
-     string firstImage = imageFiles[0];
- }
+@{
+    string[] imageFiles = Model.product.mImage.Split(',');
+    string firstImage = imageFiles[0];
+}
 
 <div id="item-page">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" style="border: solid black 1px;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
                 @for (int i = 0; i < imageFiles.Length; i++)
@@ -20,13 +20,13 @@
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-                @for(int i = 0; i < imageFiles.Length; i++)
+                @for (int i = 0; i < imageFiles.Length; i++)
                 {
                     string itemClassTag = i == 0 ? "item active" : "item";
 
                     <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]))"></div>
 
-                   
+
                 }
             </div>
 
