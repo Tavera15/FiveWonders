@@ -32,8 +32,12 @@ namespace FiveWonders.WebUI.Controllers
         [Route(Name = "/{category?}{subcategory?}")]
         public ActionResult Index(string category, string subcategory)
         {
+            string fixedCategory = GetProductsListPageTitle(category);
+            string fixedSubcategory = GetProductsListPageTitle(subcategory);
+            
             try
             {
+                
                 if(category == null && subcategory == null)
                 {
                     Product[] allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
@@ -50,21 +54,21 @@ namespace FiveWonders.WebUI.Controllers
                     if (commonProducts.Length == 0)
                         throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
 
-                    ViewBag.pageName = category + " - " + subcategory;
+                    ViewBag.pageName = fixedCategory + " - " + fixedSubcategory;
                     return View(commonProducts);
                 }
                 else if (category != null)
                 {
                     Product[] productsWithCat = GetProductsWithCategory(category);
 
-                    ViewBag.pageName = category;
+                    ViewBag.pageName = fixedCategory;
                     return View(productsWithCat.ToArray());
                 }
                 else if (subcategory != null)
                 {
                     Product[] productsWithSub = GetProductsWithSub(subcategory);
 
-                    ViewBag.pageName = subcategory;
+                    ViewBag.pageName = fixedSubcategory;
                     return View(productsWithSub.ToArray());
                 }
                 else
@@ -164,6 +168,24 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             return productsWithSub.ToArray();
+        }
+
+        private string GetProductsListPageTitle(string input)
+        {
+            if (String.IsNullOrWhiteSpace(input)) { return ""; }
+            
+            string fixedTitle = "";
+            string[] words = input.Split(' ');
+            
+            for(int i = 0; i < words.Length; i++)
+            {
+                string word = words[i];
+
+                fixedTitle += (Char.ToUpper(word[0]) + word.Substring(1).ToLower());
+                fixedTitle += (i + 1) == words.Length ? "" : " ";
+            }
+
+            return fixedTitle;
         }
     }
 }
