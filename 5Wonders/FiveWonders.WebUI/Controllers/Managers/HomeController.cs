@@ -34,8 +34,11 @@ namespace FiveWonders.WebUI.Controllers
             string pic = homeData.mWelcomeImgUrl ?? "FWondersDefault.jpg";
             homeData.mWelcomeImgUrl = "../content/home/" + pic;
 
-            List<Product> top3Products = productsContext.GetCollection().Take(3).ToList();
+            Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
+            List<Product> top3Products = allProductsSorted.Take(3).ToList();
+
             List<InstagramPost> top4IGPosts = new List<InstagramPost>();
+            
             for(int i = 0; i < 4; i++)
             {
                 top4IGPosts.Add(new InstagramPost()

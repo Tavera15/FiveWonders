@@ -134,8 +134,9 @@ namespace FiveWonders.WebUI.Controllers
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
                 target.mSizeChart = p.Product.mSizeChart;
-                target.isCustomizable = p.Product.isCustomizable;
-                target.mMessage = p.Product.mMessage;
+                target.isTextCustomizable = p.Product.isTextCustomizable;
+                target.mCustomText = p.Product.mCustomText;
+                target.isNumberCustomizable = p.Product.isNumberCustomizable;
                 target.mSubCategories = (selectedCategories != null ? String.Join(",", selectedCategories) : "");
 
                 // If new images were selected, update Target's Image property 

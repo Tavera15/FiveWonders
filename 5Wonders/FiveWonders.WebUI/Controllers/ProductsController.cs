@@ -34,51 +34,63 @@ namespace FiveWonders.WebUI.Controllers
         {
             string fixedCategory = GetProductsListPageTitle(category);
             string fixedSubcategory = GetProductsListPageTitle(subcategory);
+
+            string pageTitle = "Welcome to 5Wonders!";
+
+            if (!String.IsNullOrWhiteSpace(fixedCategory) && !String.IsNullOrWhiteSpace(fixedSubcategory))
+            {
+                pageTitle = fixedCategory + " - " + fixedSubcategory;
+            }
+            else if(!String.IsNullOrWhiteSpace(fixedCategory))
+            {
+                pageTitle = fixedCategory;
+            }
+            else if(!String.IsNullOrWhiteSpace(fixedSubcategory))
+            {
+                pageTitle = fixedSubcategory;
+            }
+
+            ViewBag.pageName = pageTitle;
             
             try
             {
-                
                 if(category == null && subcategory == null)
                 {
                     Product[] allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
 
-                    ViewBag.pageName = "Welcome to 5Wonders!";
                     return View(allProducts);
                 }
-                else if (category != null && subcategory != null)
-                {
-                    Product[] productsWithCat = GetProductsWithCategory(category);
-                    Product[] productsWithSub = GetProductsWithSub(subcategory);
-                    Product[] commonProducts = productsWithCat.Intersect(productsWithSub).ToArray();
-
-                    if (commonProducts.Length == 0)
-                        throw new Exception("Products with category [" + category + "] and subcategory [" + subcategory + "] don't exist.");
-
-                    ViewBag.pageName = fixedCategory + " - " + fixedSubcategory;
-                    return View(commonProducts);
-                }
-                else if (category != null)
-                {
-                    Product[] productsWithCat = GetProductsWithCategory(category);
-
-                    ViewBag.pageName = fixedCategory;
-                    return View(productsWithCat.ToArray());
-                }
-                else if (subcategory != null)
-                {
-                    Product[] productsWithSub = GetProductsWithSub(subcategory);
-
-                    ViewBag.pageName = fixedSubcategory;
-                    return View(productsWithSub.ToArray());
-                }
                 else
-                    throw new Exception("Redirecting to Products page");
+                {
+                    Product[] catProd = !String.IsNullOrEmpty(category)
+                                    ? GetProductsWithCategory(category)
+                                    : new Product[] { };
 
+                    Product[] subProd = !String.IsNullOrEmpty(subcategory)
+                                    ? GetProductsWithSub(subcategory)
+                                    : new Product[] { };
+
+                    Product[] products = catProd.Union(subProd)
+                            .OrderByDescending(p => p.mTimeEntered).ToArray();
+
+                    if(!String.IsNullOrEmpty(category) && !String.IsNullOrEmpty(subcategory))
+                    {
+                        products = catProd.Intersect(subProd)
+                            .OrderByDescending(p => p.mTimeEntered).ToArray();
+                    }
+                    else
+                    {
+                        products = catProd.Union(subProd)
+                            .OrderByDescending(p => p.mTimeEntered).ToArray();
+                    }
+
+                    return View(products);
+                }
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Products");
             }
         }
 
@@ -113,11 +125,6 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Item(ProductOrderViewModel item, string Id)
         {
-            if (!ModelState.IsValid || item.productOrder.mQuantity <= 0)
-            {
-                return View(item);
-            }
-
             try
             {
                 // Gets the product that the customer wants to buy - along with size and quantity
@@ -125,6 +132,13 @@ namespace FiveWonders.WebUI.Controllers
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
                 
+                int tempCustom;
+
+                if (!ModelState.IsValid || item.productOrder.mQuantity <= 0 || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
+                {
+                    return View(item);
+                }
+
                 // Add Product Order to Shopping Cart
                 basketServices.AddToBasket(HttpContext, item.productOrder);
 
@@ -138,36 +152,40 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
-        public Product[] GetProductsWithCategory(string categoryName)
+        private Product[] GetProductsWithCategory(string categoryName)
         {
-            Category category = categoryContext.GetCollection().FirstOrDefault(x => x.mCategoryName.ToLower() == categoryName.ToLower());
+            Category category = categoryContext.GetCollection()
+                .FirstOrDefault(x => x.mCategoryName.ToLower() == categoryName.ToLower());
 
             if (category == null)
+            {
                 throw new Exception("No products contain the category: " + categoryName);
+            }
 
-            Product[] productsWithCategory = productsContext.GetCollection().Where(x => x.mCategory == category.mID).ToArray();
+            Product[] productsWithCategory = productsContext.GetCollection()
+                .Where(x => x.mCategory == category.mID)
+                .OrderByDescending(w => w.mTimeEntered)
+                .ToArray();
 
             return productsWithCategory;
         }
 
-        public Product[] GetProductsWithSub(string subName)
+        private Product[] GetProductsWithSub(string subName)
         {
-            SubCategory sub = subCategoryContext.GetCollection().FirstOrDefault(x => x.mSubCategoryName.ToLower() == subName.ToLower());
+            SubCategory sub = subCategoryContext.GetCollection()
+                .FirstOrDefault(x => x.mSubCategoryName.ToLower() == subName.ToLower());
 
             if (sub == null)
-                throw new Exception("No products contain the subcategory: " + subName);
-
-            List<Product> productsWithSub = new List<Product>();
-
-            foreach (var product in productsContext.GetCollection())
             {
-                if(product.mSubCategories.Split(',').Contains(sub.mID))
-                {
-                    productsWithSub.Add(product);
-                }
+                throw new Exception("No products contain the subcategory: " + subName);
             }
 
-            return productsWithSub.ToArray();
+            Product[] productsWithSub = productsContext.GetCollection()
+                .Where(prod => prod.mSubCategories.Contains(sub.mID))
+                .OrderByDescending(p => p.mTimeEntered)
+                .ToArray();
+
+            return productsWithSub;
         }
 
         private string GetProductsListPageTitle(string input)

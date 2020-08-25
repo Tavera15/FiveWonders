@@ -22,11 +22,17 @@ namespace FiveWonders.core.Models
         [Display(Name = "Product Text")]
         public string mProductText { get; set; }
 
+        [Display(Name = "Custom Number")]
+        [MaxLength(99)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Number must be numeric")]
+        public string mCustomNum { get; set; }
+
         public BasketItem()
         {
             mQuantity = 1;
             mSize = "";
             mProductText = "";
+            mCustomNum = "";
         }
     }
 }

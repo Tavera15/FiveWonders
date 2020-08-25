@@ -64,14 +64,30 @@
                         </div>
                     }
 
-                    if (Model.product.isCustomizable)
+                    if(Model.product.isTextCustomizable || Model.product.isNumberCustomizable)
                     {
                         <div class="ip-customization-container">
-                            <h3 class="ip-customization-label">Customizable Product Text:</h3>
-                            <h4 class="ip-customization-perma-text">@Model.product.mMessage</h4>
-                            @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
+                            <h3 class="ip-customization-label">Customizable Product</h3>
+
+                            @if (Model.product.isTextCustomizable)
+                            {
+                                <div>
+                                    <h4 class="ip-customization-perma-text">@Model.product.mCustomText</h4>
+                                    @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
+                                </div>
+                            }
+
+                            @if (Model.product.isNumberCustomizable)
+                            {
+                        <div>
+                            <h4 class="ip-customization-perma-text">Customizable Number:</h4>
+                            @Html.EditorFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
+                            @Html.ValidationMessageFor(model => model.productOrder.mCustomNum, "", new { @class = "text-danger" })
+                        </div>
+                            }
                         </div>
                     }
+                    
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
