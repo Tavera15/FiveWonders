@@ -100,6 +100,7 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product p = productsContext.Find(Id);
+
                 if(p == null)
                 {
                     throw new Exception("Product not found");

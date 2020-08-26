@@ -1,110 +1,174 @@
 ﻿@model FiveWonders.core.ViewModels.ProductManagerViewModel
 
-@using (Html.BeginForm("Edit", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data"}))
-{
-    @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>Product</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mDesc, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.mDesc, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Product.mDesc, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName", Model.Product.mCategory), new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @foreach (var item in Model.subCategories)
-            {
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"
-                               name="selectedCategories"
-                               value=@item.mID
-                               @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
-                        @item.mSubCategoryName
-                    </label>
-                </div>
-            }
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName", Model.Product.mSizeChart), new { htmlAttributes = new { @class = "form-control" } })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-offset-2 col-md-10">
-            <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-            @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { } })
-            @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { } })
-            @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
+@{
+    string[] imageFiles = Model.Product.mImage.Split(',');
+    string firstImage = imageFiles[0];
 }
 
-<div>
+<div id="product-man-edit">
+
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12 product-man-edit-carousel" style="padding: 0;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < imageFiles.Length; i++)
+                {
+                    string liClassTag = i == 0 ? "active" : "";
+
+                    <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
+                }
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                @for (int i = 0; i < imageFiles.Length; i++)
+                {
+                    string itemClassTag = i == 0 ? "item active" : "item";
+
+                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]))">
+
+                    </div>
+                }
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        @using (Html.BeginForm("Edit", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>@Model.Product.mName</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mDesc, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.mDesc, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Product.mDesc, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName", Model.Product.mCategory), new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @foreach (var item in Model.subCategories)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="selectedCategories"
+                                       value=@item.mID
+                                       @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                @item.mSubCategoryName
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName", Model.Product.mSizeChart), new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class = "control-label col-md-2" style="font-weight: bold;">Existing Images</label>
+                <div class="col-md-10">
+                    @foreach (string image in imageFiles)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="existingImages"
+                                       value=@image
+                                       @{<text> checked </text>} />
+                                @image
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { } })
+                    @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { } })
+                    @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<div class="col-lg-12">
     @Html.ActionLink("Back to List", "Index")
 </div>
 

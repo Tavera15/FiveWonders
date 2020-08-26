@@ -25,8 +25,6 @@
                     string itemClassTag = i == 0 ? "item active" : "item";
 
                     <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]))"></div>
-
-
                 }
             </div>
 
@@ -88,7 +86,6 @@
                         </div>
                     }
                     
-
                     <div class="form-group">
                         @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
                         @Html.EditorFor(model => model.productOrder.mQuantity, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1" } })
@@ -101,10 +98,7 @@
                 }
 
             </div>
-
-
         </div>
-
     </div>
 
     <div class="col-12 item-data-desc-container">

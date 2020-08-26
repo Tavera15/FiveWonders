@@ -533,3 +533,18 @@
 /*https://www.google.com/imgres?imgurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fwp-content%2Fuploads%2F2016%2F09%2Fproduct-default.jpg&imgrefurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fproduct-default%2F&tbnid=eGE87abmB3HkGM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&docid=StRypfbuqMVnWM&w=893&h=865&itg=1&q=product%20page%20css&ved=0CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw#h=865&imgdii=sRVEtxoaG9r1YM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&w=893*/
 /*TODO Maybe put logo in items page*/
 /*https://getbootstrap.com/docs/3.4/components/#thumbnails*/
+
+#product-man-edit{
+    display: flex;
+    flex-direction: row;
+}
+
+.product-man-edit-carousel {
+    
+}
+
+@media (max-width: 1024px) {
+    #product-man-edit {
+        flex-direction: column;
+    }
+}

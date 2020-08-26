@@ -38,11 +38,15 @@ namespace FiveWonders.WebUI.Controllers
                 Category category = categoryContext.Find(product.mCategory);
 
                 // If a product of a certain category has subcategories, add the subcategory name into hashset
-                foreach (var subCat in product.mSubCategories.Split(','))
+                
+                if(!String.IsNullOrWhiteSpace(product.mSubCategories))
                 {
-                    SubCategory sub = subCategoryContext.Find(subCat);
+                    foreach (var subCat in product.mSubCategories.Split(','))
+                    {
+                        SubCategory sub = subCategoryContext.Find(subCat);
 
-                    navLinks[category.mCategoryName].Add(sub.mSubCategoryName);
+                        navLinks[category.mCategoryName].Add(sub.mSubCategoryName);
+                    }
                 }
             }
 
