@@ -33,17 +33,11 @@ namespace FiveWonders.WebUI.Controllers
         {
             List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
 
-            foreach(var model in allItems)
+            foreach(BasketItemViewModel model in allItems)
             {
                 Product product = productContext.Find(model.productID);
-                SizeChart sizeChart = sizeChartContext.Find(product.mSizeChart);
                 model.productID = product.mID;
-                model.productName = product.mName;
-                model.image = product.mImage;
-                model.price = product.mPrice;
-
-                if (sizeChart != null)
-                    model.sizeChart = sizeChart.mSizesToDisplay;
+                model.product = product;
             }
 
             return View(allItems);
@@ -80,13 +74,10 @@ namespace FiveWonders.WebUI.Controllers
                     BasketItemViewModel viewModel = new BasketItemViewModel()
                     {
                         productID = product.mID,
-                        productName = product.mName,
-                        price = product.mPrice,
-                        image = product.mImage,
+                        product = product,
+                        basketItem = basketItem,
                         basketItemID = Id,
-                        quantity = basketItem.mQuantity,
-                        size = sizeChart != null ? basketItem.mSize : null,
-                        sizeChart = sizeChart != null ? sizeChart.mSizesToDisplay : "",
+                        sizeChart = sizeChart
                     };
 
                     return View(viewModel);
@@ -115,10 +106,12 @@ namespace FiveWonders.WebUI.Controllers
                 BasketItem newBasketItem = new BasketItem()
                 {
                     mID = Id,
-                    mQuantity = viewModel.quantity,
-                    mSize = viewModel.size,
+                    mQuantity = viewModel.basketItem.mQuantity,
+                    mSize = viewModel.basketItem.mSize,
+                    mCustomNum = viewModel.basketItem.mCustomNum,
+                    mProductText = viewModel.basketItem.mProductText,
                     mProductID = oldBasketItem.mProductID,
-                    basketID = oldBasketItem.basketID
+                    basketID = oldBasketItem.basketID,
                 };
 
                 basketService.UpdateBasketItem(HttpContext, newBasketItem);

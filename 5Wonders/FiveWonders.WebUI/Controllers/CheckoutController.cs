@@ -79,7 +79,7 @@ namespace FiveWonders.WebUI.Controllers
                 
                 decimal total = 0.00m;
 
-                foreach (var basketItem in allBasketItems)
+                foreach (BasketItemViewModel basketItem in allBasketItems)
                 {
                     // Initialize new Order Item per Basket Item, and link them to Order Id
                     OrderItem orderItem = new OrderItem();
@@ -87,24 +87,24 @@ namespace FiveWonders.WebUI.Controllers
 
                     // Apply Basket Item's data into Order Item 
                     orderItem.mProductID = basketItem.productID;
-                    orderItem.mProductName = basketItem.productName;
-                    orderItem.mPrice = basketItem.price;
-                    orderItem.mQuantity = basketItem.quantity;
-                    orderItem.mSize = basketItem.size;
+                    orderItem.mProductName = basketItem.product.mName;
+                    orderItem.mPrice = basketItem.product.mPrice;
+                    orderItem.mQuantity = basketItem.basketItem.mQuantity;
+                    orderItem.mSize = basketItem.basketItem.mSize;
 
                     // Add the Order Item into the Order's list
                     order.mOrderItems.Add(orderItem);
 
-                    total += (basketItem.price * basketItem.quantity);
+                    total += (basketItem.product.mPrice * basketItem.basketItem.mQuantity);
 
                     // Create an Item object to add to PayPal's List Items Object
                     Item item = new Item()
                     {
-                        name = basketItem.productName,
-                        description = !String.IsNullOrWhiteSpace(basketItem.size) ? String.Format("Size: {0}", basketItem.size) : "",
+                        name = basketItem.product.mName,
                         currency = "USD",
-                        price = basketItem.price.ToString(),
-                        quantity = basketItem.quantity.ToString()
+                        price = basketItem.product.mPrice.ToString(),
+                        quantity = basketItem.basketItem.mQuantity.ToString(),
+                        description = !String.IsNullOrWhiteSpace(basketItem.basketItem.mSize) ? String.Format("Size: {0}", basketItem.basketItem.mSize) : "",
                     };
 
                     paypalItems.items.Add(item);

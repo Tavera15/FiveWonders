@@ -14,5 +14,7 @@ namespace FiveWonders.core.Models
         public decimal mPrice { get; set; }
         public int mQuantity { get; set; }
         public string mSize { get; set; }
+        public string mCustomText { get; set; }
+        public string mCustomNumber { get; set; }
     }
 }

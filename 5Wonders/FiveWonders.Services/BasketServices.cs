@@ -104,13 +104,9 @@ namespace FiveWonders.Services
                             select new BasketItemViewModel()
                             {
                                 basketItemID = b.mID,
-                                quantity = b.mQuantity,
-                                size = b.mSize,
-                                productID = p.mID,
-                                image = p.mImage,
-                                price = p.mPrice,
-                                productName = p.mName,
-                                sizeChart = p.mSizeChart
+                                product = p,
+                                basketItem = b,
+                                productID = p.mID
                             }
                             ).ToList();
                 
@@ -126,7 +122,9 @@ namespace FiveWonders.Services
                     .FirstOrDefault(x => x.mProductID == newBasketItem.mProductID
                                     && x.mSize == newBasketItem.mSize
                                     && x.basketID == newBasketItem.basketID
-                                    && x.mID != newBasketItem.mID);
+                                    && x.mID != newBasketItem.mID
+                                    && x.mProductText == newBasketItem.mProductText
+                                    && x.mCustomNum == newBasketItem.mCustomNum);
 
                 if(similarBasketItem != null)
                 {
@@ -144,6 +142,8 @@ namespace FiveWonders.Services
                     BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID);
                     basketItem.mQuantity = newBasketItem.mQuantity;
                     basketItem.mSize = newBasketItem.mSize;
+                    basketItem.mProductText = newBasketItem.mProductText;
+                    basketItem.mCustomNum = newBasketItem.mCustomNum;
                 }
                 
                 basketItemsContext.Commit();
@@ -317,6 +317,32 @@ namespace FiveWonders.Services
             customer = customerContext.GetCollection().Where(x => x.mUserID == userID).FirstOrDefault() ?? null;
             
             return customer != null;
+        }
+
+        public void RemoveItemFromAllBaskets(string productId)
+        {
+            try
+            {
+                Basket[] baskets = basketContext.GetCollection()
+                    .Where(x => x.mBasket.Any(i => i.mProductID == productId)).ToArray();
+
+                foreach(Basket basket in baskets)
+                {
+                    BasketItem[] basketItems = basket.mBasket
+                        .Where(x => x.mProductID == productId).ToArray();
+                    
+                    foreach(BasketItem basketItem in basketItems)
+                    {
+                        basket.mBasket.Remove(basketItem);
+                    }
+                }
+
+                basketContext.Commit();
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
         }
     }
 }

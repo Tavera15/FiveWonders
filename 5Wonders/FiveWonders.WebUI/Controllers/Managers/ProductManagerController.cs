@@ -7,6 +7,7 @@ using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using System.IO;
+using FiveWonders.core.Contracts;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -16,13 +17,15 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Category> productCategories;
         IRepository<SubCategory> subCateroryContext;
         IRepository<SizeChart> sizeChartContext;
+        IBasketServices basketService;
 
-        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories)
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories, IRepository<Basket> basketRepository, IBasketServices basketServices)
         {
             context = productContext;
             productCategories = categoriesContext;
             subCateroryContext = subCategoryRepository;
             sizeChartContext = sizeChartRepositories;
+            basketService = basketServices;
         }
 
         // Should display all products
@@ -121,6 +124,14 @@ namespace FiveWonders.WebUI.Controllers
 
                 // Find product to edit
                 Product target = context.Find(Id);
+                bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
+                                           || target.isNumberCustomizable != p.Product.isNumberCustomizable
+                                           || target.isTextCustomizable != p.Product.isTextCustomizable);
+
+                if(shouldUpdateBaskets)
+                {
+                    basketService.RemoveItemFromAllBaskets(Id);
+                }
 
                 // Set Target's properties to new values
                 target.mName = p.Product.mName;
@@ -148,6 +159,9 @@ namespace FiveWonders.WebUI.Controllers
                 }
 
                 context.Commit();
+
+                // TODO Update customer baskets by removing 
+                // updated item if size chart and/or custom opts updated
 
                 return RedirectToAction("Index", "ProductManager");
             }
@@ -197,8 +211,10 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product target = context.Find(Id);
-                
-                var currentImageFiles = target.mImage.Split(',');
+
+                basketService.RemoveItemFromAllBaskets(Id);
+
+                string[] currentImageFiles = target.mImage.Split(',');
                 DeleteImages(currentImageFiles);
 
                 context.Delete(target);

@@ -3,16 +3,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.productName)
+            @Html.DisplayNameFor(model => model.product.mName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.size)
+            @Html.DisplayNameFor(model => model.basketItem.mSize)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.quantity)
+            @Html.DisplayNameFor(model => model.basketItem.mQuantity)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.price)
+            @Html.DisplayNameFor(model => model.product.mPrice)
         </th>
         <th></th>
     </tr>
@@ -21,19 +21,19 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.productName)
+                @Html.DisplayFor(modelItem => item.product.mName)
             </td>
             <td>
-                @if (!String.IsNullOrWhiteSpace(item.sizeChart))
+                @if (!String.IsNullOrWhiteSpace(item.product.mSizeChart))
                 {
-                    @Html.DisplayFor(model => item.size)
+                    @Html.DisplayFor(model => item.basketItem.mSize)
                 }
             </td>
             <td>
-                @Html.DisplayFor(model => item.quantity)
+                @Html.DisplayFor(model => item.basketItem.mQuantity)
             </td>
             <td>
-                @String.Format("{0:c}", item.price)
+                @String.Format("{0:c}", item.product.mPrice)
             </td>
             <td>
                 <a href="@Url.Action("RemoveFromCart", "Basket", new { Id = item.basketItemID })" class="btn btn-danger">Remove Item</a>
@@ -54,7 +54,7 @@
         }
 
         <td colspan="4" style="text-align:right"><strong>Basket Total:</strong></td>
-        <td>@String.Format("({0} items): {1:c}", (from q in Model select q.quantity).Sum(), (from p in Model select p.price * p.quantity).Sum())</td>
+        <td>@String.Format("({0} items): {1:c}", (from q in Model select q.basketItem.mQuantity).Sum(), (from p in Model select p.product.mPrice * p.basketItem.mQuantity).Sum())</td>
     </tr>
 
 </table>
