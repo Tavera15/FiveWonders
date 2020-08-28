@@ -97,6 +97,12 @@ namespace FiveWonders.WebUI.Controllers
 
                     total += (basketItem.product.mPrice * basketItem.basketItem.mQuantity);
 
+                    string paypalDesc = String.Format("{0}{1}{2}",
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mSize) ? "Size: " + basketItem.basketItem.mSize + " | " : ""),
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mProductText) ? "Text: " + basketItem.basketItem.mProductText + " | " : ""),
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomNum) ? "Custom Number: " + basketItem.basketItem.mCustomNum : "")
+                    );
+
                     // Create an Item object to add to PayPal's List Items Object
                     Item item = new Item()
                     {
@@ -104,7 +110,7 @@ namespace FiveWonders.WebUI.Controllers
                         currency = "USD",
                         price = basketItem.product.mPrice.ToString(),
                         quantity = basketItem.basketItem.mQuantity.ToString(),
-                        description = !String.IsNullOrWhiteSpace(basketItem.basketItem.mSize) ? String.Format("Size: {0}", basketItem.basketItem.mSize) : "",
+                        description = paypalDesc,
                     };
 
                     paypalItems.items.Add(item);
@@ -131,7 +137,6 @@ namespace FiveWonders.WebUI.Controllers
 
                 // Begin putting together the PayPal Payment object using data from above
                 Payment payment = new Payment();
-                payment.experience_profile_id = "";
                 payment.intent = "sale";
                 payment.payer = new Payer() { payment_method = "paypal" };
                 payment.transactions = itemTransactions;
