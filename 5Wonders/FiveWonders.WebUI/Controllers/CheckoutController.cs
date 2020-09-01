@@ -136,16 +136,18 @@ namespace FiveWonders.WebUI.Controllers
                 };
 
                 // Begin putting together the PayPal Payment object using data from above
-                Payment payment = new Payment();
-                payment.intent = "sale";
-                payment.payer = new Payer() { payment_method = "paypal" };
-                payment.transactions = itemTransactions;
-
-                // TODO Don't send order Id in parameters - Maybe add a bool if transaction is complete - ENCRYPT
-                payment.redirect_urls = new RedirectUrls()
+                Payment payment = new Payment
                 {
-                    cancel_url = Url.Action("CancelOrder", "Checkout", new { orderId = order.mID}, Request.Url.Scheme),
-                    return_url = Url.Action("ThankYou", "Checkout", new { orderId = order.mID }, Request.Url.Scheme)
+                    intent = "sale",
+                    payer = new Payer() { payment_method = "paypal" },
+                    transactions = itemTransactions,
+                    
+                    // TODO Don't send order Id in parameters - Maybe add a bool if transaction is complete - ENCRYPT
+                    redirect_urls = new RedirectUrls()
+                    {
+                        cancel_url = Url.Action("CancelOrder", "Checkout", new { orderId = order.mID }, Request.Url.Scheme),
+                        return_url = Url.Action("ThankYou", "Checkout", new { orderId = order.mID }, Request.Url.Scheme)
+                    }
                 };
 
                 // Creates the Payment object - Ready to redirect to PayPal with data entered

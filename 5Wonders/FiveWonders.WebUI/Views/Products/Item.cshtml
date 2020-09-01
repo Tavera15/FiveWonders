@@ -6,8 +6,8 @@
 }
 
 <div id="item-page">
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 0;">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel" >
             <!-- Indicators -->
             <ol class="carousel-indicators">
                 @for (int i = 0; i < imageFiles.Length; i++)
@@ -24,7 +24,7 @@
                 {
                     string itemClassTag = i == 0 ? "item active" : "item";
 
-                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]))"></div>
+                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]));"></div>
                 }
             </div>
 
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 item-data-container">
+    <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
 
         <div class="item-data">
             <h1 class="item-data-name">@Model.product.mName</h1>
@@ -65,22 +65,20 @@
                     if(Model.product.isTextCustomizable || Model.product.isNumberCustomizable)
                     {
                         <div class="ip-customization-container">
-                            <h3 class="ip-customization-label">Customizable Product</h3>
 
                             @if (Model.product.isTextCustomizable)
                             {
-                                <div>
-                                    <h4 class="ip-customization-perma-text">@Model.product.mCustomText</h4>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">@Model.product.mCustomText</label>
                                     @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
                                 </div>
                             }
 
                             @if (Model.product.isNumberCustomizable)
                             {
-                                <div>
-                                    <h4 class="ip-customization-perma-text">Customizable Number:</h4>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Custom Number:</label>
                                     @Html.EditorFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
-                                    @Html.ValidationMessageFor(model => model.productOrder.mCustomNum, "", new { @class = "text-danger" })
                                 </div>
                             }
                         </div>
