@@ -19,8 +19,9 @@ body {
     background: rgb(255,255,255);
     background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 44%, rgba(255,255,255,1) 100%);
     background: rgb(255,255,255);
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(219,255,245,1) 51%, rgba(255,255,255,1) 100%);
+    background: rgb(255,255,255);
     background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 43%, rgba(255,223,223,1) 62%, rgba(255,255,255,1) 100%);
-    background-color: white;
 }
 
 .base-container {
@@ -79,6 +80,7 @@ body {
 }
 
 .top-p {
+
     background-repeat: no-repeat;
     background-size: cover;
     color: black;
@@ -472,12 +474,21 @@ body {
 
 .sizechart-container{
     margin: 2vh 0 0;
-    padding:  0 10%;
+    padding:  0;
 }
 
 .ip-sizechart{
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    height: 30vh;
+}
+
+.test-sizechart{
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 40vh;
+    width: 100%;
+    background-position: center;
 }
 
 .ip-customization-container {
