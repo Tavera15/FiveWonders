@@ -1,14 +1,35 @@
-﻿body {
+﻿
+@font-face {
+    font-family: oswald;
+    src: url(/Content/Fonts/Oswald/Oswald-Regular.ttf)
+}
+
+body {
+    font-family: oswald;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: #878683;
     background-color: #ed8062;
+    background-color: white;
+    background: rgb(223,223,223);
+    background: linear-gradient(45deg, rgba(223,223,223,1) 0%, rgba(77,77,77,1) 55%, rgba(255,255,255,1) 55%);
+    background: rgb(237,128,98);
+    background: linear-gradient(45deg, rgba(237,128,98,1) 0%, rgba(159,255,230,1) 52%, rgba(237,128,98,1) 95%);
+    background: rgb(255,255,255);
+    background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 44%, rgba(255,255,255,1) 100%);
+    background: rgb(255,255,255);
+    background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 43%, rgba(255,223,223,1) 62%, rgba(255,255,255,1) 100%);
     background-color: white;
 }
 
 .base-container {
     width: 85vw;
-    background-color: white;
-
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
+
 }
 
 .FWonders-navbar-container{
@@ -26,7 +47,7 @@
     position: relative;
     height: auto;
     color: #59b7a1;
-
+    
     display: flex;
     flex-direction: column;
 }
@@ -48,8 +69,8 @@
     flex-direction: column;
     border: 1px solid black;
     border-radius: 25px;
-    padding: 2vh;
     background-color: blanchedalmond;
+    background-color: rgba(255,255,255,1);
     background-color: aliceblue;
     text-align: center;
     background-position: center;
@@ -57,13 +78,24 @@
     background-size: cover;
 }
 
+.top-p {
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: black;
+}
+.thing-cover {
+    border-radius: 25px;
+    height: 100%;
+    width: 100%;
+    padding: 2vh;
+}
 .section-top-three h1 {
     margin: 0;
     font-size: 5vh;
 }
 
 .category-display {
-    background-color: white;
+    background-color: inherit;
     padding: 0;
     border: none;
 }
@@ -109,7 +141,7 @@
 }
 
 .redi-btn {
-    margin: 0 auto;
+    margin: 2vh auto 0;
     font-size: 2vh;
 }
 
@@ -171,6 +203,11 @@
 
 #ig-top-three {
     background-color: aliceblue;
+    padding: 2vh;
+}
+
+#ig-top-three .redi-btn{
+    margin: 0 auto;
 }
 
 .ig-container {
@@ -223,9 +260,11 @@
     .FWonders-navbar-container{
         width: 95vw;
     }
-
-    .top-three-products{
-        display:flex;
+    .single-category h2{
+        font-size: 4vh;
+    }
+    .top-three-products {
+        display: flex;
         flex-direction: row;
     }
 
@@ -248,6 +287,9 @@
     }
     .top-three-products {
         display: inline;
+    }
+    .category-container{
+        padding: 0 1rem;
     }
 }
 
@@ -290,6 +332,8 @@
 #products-page {
     background-color: antiquewhite;
     background-color: white;
+    background-color: inherit;
+    background-color: rgba(255,255,255,.4);
     padding: 2vh;
     margin: 0;
 }
@@ -360,16 +404,13 @@
 /*---------------------------Item page---------------------------*/
 /*TODO Group carousel with data and have them next to each other, put desc below it. flex dir in id should be column*/
 #item-page {
-    background-color: white;
+    background-color: rgba(255,255,255,0);
+    background-color: rgba(255,255,255,.45);
     display: flex;
     flex-direction: row;
     padding: 2vh;
     padding: 0;
     flex-wrap: wrap;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 25px;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
     margin-top: 2vh;
 }
 
@@ -388,7 +429,7 @@
     background-color: inherit;
 }
 
-.item-data-container{
+.item-data-container {
     margin: 0;
 }
 
@@ -527,7 +568,7 @@
     .item-data-desc-container {
         text-align: left;
         margin: 0;
-        padding: 2rem 4rem;
+        padding: 2rem 2rem;
         border-bottom: solid 1px black;
     }
 
@@ -551,6 +592,10 @@
 /*https://www.google.com/imgres?imgurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fwp-content%2Fuploads%2F2016%2F09%2Fproduct-default.jpg&imgrefurl=https%3A%2F%2Fflatsome3.uxthemes.com%2Fproduct-default%2F&tbnid=eGE87abmB3HkGM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&docid=StRypfbuqMVnWM&w=893&h=865&itg=1&q=product%20page%20css&ved=0CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw#h=865&imgdii=sRVEtxoaG9r1YM&vet=10CAMQxiAoAGoXChMIuPqh4OWR6wIVAAAAAB0AAAAAEEw..i&w=893*/
 /*TODO Maybe put logo in items page*/
 /*https://getbootstrap.com/docs/3.4/components/#thumbnails*/
+/*https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-content%2Fuploads%2F2012%2F11%2FScreen-Shot-2016-03-16-at-13.07.12.png&imgrefurl=https%3A%2F%2Fdocs.woocommerce.com%2Fdocument%2Fcustomizing-woocommerce-best-practices%2F&tbnid=aXsxXSmMm77rFM&vet=12ahUKEwjxy7fc_MnrAhUGE6wKHWQgC40QMygIegUIARC3AQ..i&docid=WtHyAdT9fHMBXM&w=1273&h=689&q=products%20page%20css&ved=2ahUKEwjxy7fc_MnrAhUGE6wKHWQgC40QMygIegUIARC3AQ#imgrc=aXsxXSmMm77rFM&imgdii=edhKdy41hSOZuM
+https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-content%2Fuploads%2F2012%2F11%2FScreen-Shot-2016-03-16-at-13.07.12.png&imgrefurl=https%3A%2F%2Fdocs.woocommerce.com%2Fdocument%2Fcustomizing-woocommerce-best-practices%2F&tbnid=aXsxXSmMm77rFM&vet=12ahUKEwjxy7fc_MnrAhUGE6wKHWQgC40QMygIegUIARC3AQ..i&docid=WtHyAdT9fHMBXM&w=1273&h=689&q=products%20page%20css&ved=2ahUKEwjxy7fc_MnrAhUGE6wKHWQgC40QMygIegUIARC3AQ#imgrc=edhKdy41hSOZuM&imgdii=iop7rFtavfcWiM
+
+*/
 
 #product-man-edit {
     display: flex;

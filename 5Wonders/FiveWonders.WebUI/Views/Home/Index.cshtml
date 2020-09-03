@@ -13,7 +13,7 @@
 
 <div class="section-top-three category-display">
     <div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 category-container">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
             <a href="/products/?category=balloons">
                 <div class="single-category" style="background-image: url(https://i.ytimg.com/vi/iELjLUVtjLw/maxresdefault.jpg);">
                     <div class="category-img-cover">
@@ -23,7 +23,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 category-container">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
             <a href="/products/?category=clothing">
                 <div class="single-category" style="background-image: url(https://wpcdn.us-east-1.vip.tn-cloud.net/www.channel3000.com/content/uploads/2019/12/variety-of-clothes-hanging-on-rack_1509457933825_9166901_ver1-0-1024x576.jpg);">
                     <div class="category-img-cover">
@@ -36,37 +36,50 @@
     </div>
 </div>
 
-<div class="section-top-three">
+<div class="section-top-three top-p ">
+    <div class="thing-cover">
 
-    <h1>Latest Products</h1>
+        <h1>Latest Products</h1>
 
-    <div class="top-three-products">
-        @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
+        <div class="top-three-products">
+            @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
 
-        @for (int i = 0; i < Model.top3Products.Count; i++)
-        {
-            var product = Model.top3Products[i];
-            string[] currentImageFiles = product.mImage.Split(',');
-            string firstImage = currentImageFiles[0];
+            @for (int i = 0; i < Model.top3Products.Count; i++)
+            {
+                var product = Model.top3Products[i];
+                string[] currentImageFiles = product.mImage.Split(',');
+                string firstImage = currentImageFiles[0];
 
-            <div class="@classTags fw-card-container">
-                <a href="/products/item/@product.mID" class="fw-card-a">
-                    <div class="fw-product-container">
-                        <div class="fw-card">
-                            <h3 class="fw-card-title">@product.mName</h3>
-                            <img 
-                                 alt="@product.mName"
-                                 src="@Url.Content("~/Content/ProductImages/" + firstImage)"
-                                 class="fw-card-img" />
-                            <p class="fw-card-price">$@product.mPrice</p>
-                            <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                <div class="@classTags fw-card-container">
+                    <a href="/products/item/@product.mID" class="fw-card-a">
+                        <div class="fw-product-container">
+                            <div class="fw-card">
+                                <h3 class="fw-card-title">@product.mName</h3>
+                                <img 
+                                     alt="@product.mName"
+                                     src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                     class="fw-card-img" />
+                                <p class="fw-card-price">$@product.mPrice</p>
+                                <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-        }
+                    </a>
+                </div>
+            }
+        </div>
+        <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
     </div>
-    <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+</div>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container" style="margin-bottom: 4vh;">
+    <a href="/products/?category=clothing">
+        <div class="single-category" style="background-image: url(https://wpcdn.us-east-1.vip.tn-cloud.net/www.channel3000.com/content/uploads/2019/12/variety-of-clothes-hanging-on-rack_1509457933825_9166901_ver1-0-1024x576.jpg);">
+            <div class="category-img-cover">
+                <h2>Customize with us!</h2>
+                <p class="btn btn-lg btn-default redi-btn">Contact</p>
+            </div>
+        </div>
+    </a>
 </div>
 
 <div class="section-top-three" id="ig-top-three">

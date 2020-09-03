@@ -248,7 +248,9 @@ namespace FiveWonders.WebUI.Controllers
 
             foreach (HttpPostedFileBase file in imageFiles)
             {
-                string fileName = Id + file.FileName;
+                string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
+
+                string fileName = Id + fileNameWithoutSpaces;
                 file.SaveAs(Server.MapPath("//Content//ProductImages//") + fileName);
                 allFileNames.Add(fileName);
             }
@@ -278,7 +280,9 @@ namespace FiveWonders.WebUI.Controllers
             {
                 foreach (HttpPostedFileBase file in newImageFiles)
                 {
-                    string fileName = Id + file.FileName;
+                    string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
+
+                    string fileName = Id + fileNameWithoutSpaces;
                     file.SaveAs(Server.MapPath("//Content//ProductImages//") + fileName);
                     allFileNames.Add(fileName);
                 }
