@@ -137,6 +137,10 @@
     <Compile Include="Migrations\202008270203446_basketItemCustomOpts.Designer.cs">
       <DependentUpon>202008270203446_basketItemCustomOpts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009040046400_sizeChartImageNotReq.cs" />
+    <Compile Include="Migrations\202009040046400_sizeChartImageNotReq.Designer.cs">
+      <DependentUpon>202009040046400_sizeChartImageNotReq.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -217,6 +221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202008270203446_basketItemCustomOpts.resx">
       <DependentUpon>202008270203446_basketItemCustomOpts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009040046400_sizeChartImageNotReq.resx">
+      <DependentUpon>202009040046400_sizeChartImageNotReq.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

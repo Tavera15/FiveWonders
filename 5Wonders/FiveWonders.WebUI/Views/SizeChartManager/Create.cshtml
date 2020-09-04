@@ -1,53 +1,53 @@
 ﻿@model FiveWonders.core.Models.SizeChart
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "SizeChartManager", FormMethod.Post, new { encType = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>SizeChart</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.mChartName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mChartName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.mChartName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mImageChartUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mImageChartUrl)
-                @Html.ValidationMessageFor(model => model.mImageChartUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mSizesToDisplay, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @foreach (var item in Model.GetAllAvailableSizes())
-                {
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox"
-                                   name="selectedSizes"
-                                   value=@item />
-                            @item
-                        </label>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+<div class="form-horizontal">
+    <h4>SizeChart</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.mChartName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.mChartName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.mChartName, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.mSizesToDisplay, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @foreach (var item in Model.GetAllAvailableSizes())
+            {
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"
+                               name="selectedSizes"
+                               value=@item />
+                        @item
+                    </label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.mImageChartUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-offset-2 col-md-10">
+            <input type="file" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+            @Html.ValidationMessageFor(model => model.mImageChartUrl, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>

@@ -13,13 +13,11 @@ namespace FiveWonders.core.Models
         [Display(Name = "Chart Name")]
         public string mChartName { get; set; }
 
-        [Required(ErrorMessage = "An image of a size chart is required")]
         [Display(Name = "Image")]
         public string mImageChartUrl { get; set; }
 
         [Display(Name = "Sizes to Display")]
         public string mSizesToDisplay { get; set; }
-
 
         public static readonly string[] ALL_AVAILABLE_SIZES = { "XXXS", "XXS", "XS", "S", "M", "L", "XL", "XXL", "XXXL" };
 
