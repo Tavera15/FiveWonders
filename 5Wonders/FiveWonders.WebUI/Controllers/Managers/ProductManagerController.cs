@@ -117,7 +117,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(selectedCategories == null || (existingImages == null && imageFiles[0] == null))
+                if(existingImages == null && imageFiles[0] == null)
                 {
                     throw new Exception("No Images and/or Subcategories Selected");
                 }
@@ -135,14 +135,14 @@ namespace FiveWonders.WebUI.Controllers
 
                 // Set Target's properties to new values
                 target.mName = p.Product.mName;
-                target.mDesc = p.Product.mDesc;
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
                 target.mSizeChart = p.Product.mSizeChart;
                 target.isTextCustomizable = p.Product.isTextCustomizable;
                 target.mCustomText = p.Product.mCustomText;
                 target.isNumberCustomizable = p.Product.isNumberCustomizable;
-                target.mSubCategories = String.Join(",", selectedCategories);
+                target.mHtmlDesc = p.Product.mHtmlDesc;
+                target.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "";
 
                 // If new images were selected, update Target's Image property 
                 string[] currentImageFiles = target.mImage.Split(',');

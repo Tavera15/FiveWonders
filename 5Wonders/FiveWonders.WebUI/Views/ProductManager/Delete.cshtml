@@ -30,11 +30,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.mDesc)
+            @Html.DisplayNameFor(model => model.mHtmlDesc)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.mDesc)
+            @Html.Raw(Model.mHtmlDesc)
         </dd>
 
         <dt>

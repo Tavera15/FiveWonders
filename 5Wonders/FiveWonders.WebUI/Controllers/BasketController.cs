@@ -61,29 +61,12 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                BasketItem basketItem;
-                if (basketService.IsItemInUserBasket(HttpContext, Id, out basketItem))
-                {
-                    Product product = productContext.Find(basketItem.mProductID);
+                BasketItemViewModel viewModel = GetSingleBasketItemViewModel(Id);
 
-                    SizeChart sizeChart = null;
+                if (viewModel == null)
+                    throw new Exception("Cannot find basket item");
 
-                    if (product.mSizeChart != "0")
-                        sizeChart = sizeChartContext.Find(product.mSizeChart);
-
-                    BasketItemViewModel viewModel = new BasketItemViewModel()
-                    {
-                        productID = product.mID,
-                        product = product,
-                        basketItem = basketItem,
-                        basketItemID = Id,
-                        sizeChart = sizeChart
-                    };
-
-                    return View(viewModel);
-                }
-
-                throw new Exception("Item Not in basket");
+                return View(viewModel);
             }
             catch(Exception e)
             {
@@ -98,10 +81,12 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                BasketItem oldBasketItem = basketItemContext.Find(Id);
+                if(!ModelState.IsValid || viewModel.basketItem.mQuantity <= 0)
+                {
+                    throw new Exception("Cannot edit properly.");
+                }
 
-                if (!ModelState.IsValid)
-                    return View(oldBasketItem);
+                BasketItem oldBasketItem = basketItemContext.Find(Id);
 
                 BasketItem newBasketItem = new BasketItem()
                 {
@@ -120,9 +105,9 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                BasketItem oldBasketItem = basketItemContext.Find(Id);
+                BasketItemViewModel oldBasketViewModel = GetSingleBasketItemViewModel(Id);
 
-                return View(oldBasketItem);
+                return View(oldBasketViewModel);
             }
         }
 
@@ -138,6 +123,33 @@ namespace FiveWonders.WebUI.Controllers
             }
             
             return RedirectToAction("Index", "Basket");
+        }
+
+        private BasketItemViewModel GetSingleBasketItemViewModel(string Id)
+        {
+            BasketItemViewModel viewModel = null;
+            BasketItem basketItem;
+
+            if (basketService.IsItemInUserBasket(HttpContext, Id, out basketItem))
+            {
+                Product product = productContext.Find(basketItem.mProductID);
+
+                SizeChart sizeChart = null;
+
+                if (product.mSizeChart != "0")
+                    sizeChart = sizeChartContext.Find(product.mSizeChart);
+
+                viewModel = new BasketItemViewModel()
+                {
+                    productID = product.mID,
+                    product = product,
+                    basketItem = basketItem,
+                    basketItemID = Id,
+                    sizeChart = sizeChart
+                };
+            }
+
+           return viewModel;
         }
     }
 }

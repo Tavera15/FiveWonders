@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace FiveWonders.core.Models
 {
@@ -14,7 +15,8 @@ namespace FiveWonders.core.Models
         public string mName { get; set; }
 
         [Display(Name = "Description")]
-        public string mDesc { get; set; }
+        [AllowHtml]
+        public string mHtmlDesc { get; set; }
 
         [Display(Name = "Category")]
         public string mCategory { get; set; }

@@ -29,11 +29,11 @@ namespace FiveWonders.WebUI.Controllers
             Dictionary<string, HashSet<string>> navLinks = new Dictionary<string, HashSet<string>>();
 
             // Create a new hash set for each category key
-            foreach (var x in categoryContext.GetCollection().OrderBy(x => x.mTimeEntered).ToArray())
+            foreach (Category x in categoryContext.GetCollection().OrderBy(x => x.mTimeEntered).ToArray())
                 navLinks.Add(x.mCategoryName, new HashSet<string>());
 
             // Categories will have a dropdown menu popularized of subcategories
-            foreach(var product in productsContext.GetCollection())
+            foreach(Product product in productsContext.GetCollection())
             {
                 Category category = categoryContext.Find(product.mCategory);
 
@@ -41,7 +41,7 @@ namespace FiveWonders.WebUI.Controllers
                 
                 if(!String.IsNullOrWhiteSpace(product.mSubCategories))
                 {
-                    foreach (var subCat in product.mSubCategories.Split(','))
+                    foreach (string subCat in product.mSubCategories.Split(','))
                     {
                         SubCategory sub = subCategoryContext.Find(subCat);
 
