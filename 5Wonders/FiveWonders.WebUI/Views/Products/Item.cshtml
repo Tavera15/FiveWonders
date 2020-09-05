@@ -56,10 +56,13 @@
                     if (Model.sizeChart != null)
                     {
                         <div class="form-group">
-                            @Html.LabelFor(model => model.productOrder.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                            @Html.LabelFor(model => (model.productOrder.mSize), htmlAttributes: new { @class = "control-label col-md-2" })
                             @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new { } })
                             @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
                         </div>
+
+                        <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel = "noopener noreferrer" target = "_blank">(View Size Chart)</a>
                     }
 
                     if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable)
@@ -108,13 +111,5 @@
             </div>
         </div>
     </div>
-
-    @if (Model.sizeChart != null)
-    {
-        <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 sizechart-container">
-            <div class="test-sizechart" style="background-image: url(@Url.Content("~/Content/SizeCharts/" + Model.sizeChart.mImageChartUrl))"></div>
-        </div>
-    }
-
 
 </div>

@@ -488,7 +488,7 @@ body {
 .test-sizechart{
     background-repeat: no-repeat;
     background-size: contain;
-    height: 40vh;
+    height: 50vh;
     width: 100%;
     background-position: center;
 }

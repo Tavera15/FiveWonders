@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using FiveWonders.core.Contracts;
+using System.Web.UI.WebControls;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -113,6 +114,7 @@ namespace FiveWonders.WebUI.Controllers
                 viewModel.productOrder.mProductID = Id;
                 viewModel.sizeChart = chart;
 
+                ViewBag.Title = p.mName;
                 return View(viewModel);
             }
             catch(Exception e)
@@ -150,6 +152,25 @@ namespace FiveWonders.WebUI.Controllers
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 ViewBag.itemQuantity = 0;
                 return RedirectToAction("Index", "Products");
+            }
+        }
+
+        public ActionResult SizeChart(string Id)
+        {
+            try
+            {
+                Product product = productsContext.Find(Id);
+
+                if (product == null || String.IsNullOrWhiteSpace(product.mSizeChart))
+                    throw new Exception("No Size Chart");
+
+                SizeChart chart = sizeChartContext.Find(product.mSizeChart);
+
+                return View(chart);
+            }
+            catch(Exception e)
+            {
+                return RedirectToAction("Item", "Products", new { Id = Id });
             }
         }
 
