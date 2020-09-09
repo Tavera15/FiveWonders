@@ -77,6 +77,7 @@
     <Compile Include="Models\Basket.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\GalleryImg.cs" />
     <Compile Include="Models\HomePage.cs" />
     <Compile Include="Models\InstagramPost.cs" />
     <Compile Include="Models\FWonderOrder.cs" />

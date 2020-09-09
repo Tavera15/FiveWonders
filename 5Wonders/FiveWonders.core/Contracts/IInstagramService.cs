@@ -10,5 +10,6 @@ namespace FiveWonders.core.Contracts
     public interface IInstagramService
     {
         Task<List<InstagramPost>> GetIGMediaAsync();
+        GalleryImg[] GetGalleryImgs();
     }
 }

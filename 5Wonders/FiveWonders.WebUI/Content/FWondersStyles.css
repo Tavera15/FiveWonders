@@ -220,7 +220,7 @@ body {
 .ig-img {
     height: 32vh;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 @media(max-width: 1400px){
@@ -634,4 +634,36 @@ https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-con
     #product-man-edit {
         flex-direction: column;
     }
+}
+
+#gallery-page{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.gallery-img-container{
+    border: 1px solid black;
+}
+
+.gallery-img {
+    height: 35vh;
+    object-fit: contain;
+    width: 100%;
+}
+
+#gallery-delete-page{
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery-delete-img-container {
+}
+
+.gallery-delete-img {
+    height: 50vh;
+    object-fit: contain;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }

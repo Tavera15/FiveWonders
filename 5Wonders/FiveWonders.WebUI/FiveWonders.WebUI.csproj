@@ -197,6 +197,7 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\Managers\AccountController.cs" />
     <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
+    <Compile Include="Controllers\Managers\GalleryManagerController.cs" />
     <Compile Include="Controllers\Managers\HomeController.cs" />
     <Compile Include="Controllers\Managers\HomeManagerController.cs" />
     <Compile Include="Controllers\Managers\ManageController.cs" />
@@ -481,6 +482,8 @@
     <Content Include="Scripts\tinymce\skins\ui\oxide-dark\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Products\SizeChart.cshtml" />
+    <Content Include="Views\GalleryManager\Delete.cshtml" />
+    <Content Include="Views\GalleryManager\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

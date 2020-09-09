@@ -36,20 +36,12 @@ namespace FiveWonders.WebUI.Controllers
 
             Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
-
-            List<InstagramPost> top4IGPosts = new List<InstagramPost>();
+            List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(4).ToList();
             
-            for(int i = 0; i < 4; i++)
-            {
-                top4IGPosts.Add(new InstagramPost()
-                {
-                    mImageURL = "https://scontent-dfw5-1.xx.fbcdn.net/v/t1.0-9/110117948_283600756398816_9044309464005316960_n.jpg?_nc_cat=101&_nc_sid=8bfeb9&_nc_ohc=u4Qvkou0IwcAX8FqcOb&_nc_ht=scontent-dfw5-1.xx&oh=80f5d3540500543d53df86977d0981c6&oe=5F3E541F"
-                });
-            }
 
             homeViewModel.homePageData = homeData;
             homeViewModel.top3Products = top3Products;
-            homeViewModel.top3IGPosts = top4IGPosts;
+            homeViewModel.top3IGPosts = top4GalleryImgs;
 
             return View(homeViewModel);
         }

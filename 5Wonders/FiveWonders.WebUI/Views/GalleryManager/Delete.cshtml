@@ -1,0 +1,23 @@
+﻿@model FiveWonders.core.Models.GalleryImg
+
+<h3>Are you sure you want to delete this?</h3>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+}
+
+<hr />
+
+<div id="gallery-delete-page">
+
+    <div class="gallery-delete-img-container">
+        <img class="gallery-delete-img" alt="@Model.mImageFile" src="@Url.Content("~/Content/GalleryImages/" + Model.mImageFile) " />
+    </div>
+
+</div>

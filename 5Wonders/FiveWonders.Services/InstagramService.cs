@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
+using FiveWonders.DataAccess.InMemory;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,13 @@ namespace FiveWonders.Services
 {
     public class InstagramService : IInstagramService
     {
+        IRepository<GalleryImg> galleryContext;
+
+        public InstagramService(IRepository<GalleryImg> galleryRepository)
+        {
+            galleryContext = galleryRepository;
+        }
+
         const string URL = "https://www.instagram.com/5wondersballoons/?__a=1";
         
         public async Task<List<InstagramPost>> GetIGMediaAsync()
@@ -73,6 +81,18 @@ namespace FiveWonders.Services
             }
 
             return InstagramPosts;
+        }
+
+        public GalleryImg[] GetGalleryImgs()
+        {
+            try
+            {
+                return galleryContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
+            }
+            catch(Exception e)
+            {
+                return new GalleryImg[] { };
+            }
         }
     }
 }

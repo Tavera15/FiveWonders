@@ -21,25 +21,20 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         // GET: Gallery
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             try
             {
-                throw new Exception("No");
-                List<InstagramPost> InstagramPosts = await InstagramService.GetIGMediaAsync();
+                GalleryImg[] galleryImgs = InstagramService.GetGalleryImgs();
 
-                return View(InstagramPosts);
+                return View(galleryImgs);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                List<InstagramPost> errorPost = new List<InstagramPost>();
-                errorPost.Add(new InstagramPost()
-                {
-                    mImageURL = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg"
-                });
+                GalleryImg[] galleryImgs = new GalleryImg[] 
+                    { new GalleryImg { mImageFile = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg" } };
 
-                return View(errorPost);
+                return View(galleryImgs);
             }
         }
     }
