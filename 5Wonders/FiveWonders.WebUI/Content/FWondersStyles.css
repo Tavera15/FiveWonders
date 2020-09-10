@@ -1,4 +1,5 @@
 ﻿
+
 @font-face {
     font-family: oswald;
     src: url(/Content/Fonts/Oswald/Oswald-Regular.ttf)
@@ -9,28 +10,17 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
-    background-color: #878683;
-    background-color: #ed8062;
-    background-color: white;
-    background: rgb(223,223,223);
-    background: linear-gradient(45deg, rgba(223,223,223,1) 0%, rgba(77,77,77,1) 55%, rgba(255,255,255,1) 55%);
-    background: rgb(237,128,98);
-    background: linear-gradient(45deg, rgba(237,128,98,1) 0%, rgba(159,255,230,1) 52%, rgba(237,128,98,1) 95%);
-    background: rgb(255,255,255);
-    background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 44%, rgba(255,255,255,1) 100%);
-    background: rgb(255,255,255);
-    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(219,255,245,1) 51%, rgba(255,255,255,1) 100%);
+    background-color: rgba(255,255,255,0);
     background: rgb(255,255,255);
     background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 43%, rgba(255,223,223,1) 62%, rgba(255,255,255,1) 100%);
 }
 
 .base-container {
     width: 85vw;
-    min-height: 100vh;
     background-color: rgba(0,0,0,0);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
-
+    min-height: 100vh;
 }
 
 .FWonders-navbar-container{
@@ -406,14 +396,13 @@ body {
 /*---------------------------Item page---------------------------*/
 /*TODO Group carousel with data and have them next to each other, put desc below it. flex dir in id should be column*/
 #item-page {
-    background-color: rgba(255,255,255,0);
     background-color: rgba(255,255,255,.45);
     display: flex;
     flex-direction: row;
     padding: 2vh;
     padding: 0;
     flex-wrap: wrap;
-    margin-top: 2vh;
+    min-height: 100vh;
 }
 
 .carousel-inner{
@@ -642,7 +631,18 @@ https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-con
     flex-wrap: wrap;
 }
 
-.gallery-img-container{
+.gallery-man-index-page {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 2vh;
+}
+
+.gallery-section{
+    margin: 1vh 0 0 0;
+}
+
+.gallery-img-container {
     border: 1px solid black;
 }
 
@@ -666,4 +666,67 @@ https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-con
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+/*---------------------------------------Services Page------------------------------------------*/
+
+#services-page{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.service-contact-container{
+    margin: 0 auto;
+}
+
+.service-contact-item{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2vh;
+}
+
+.service-contact-item-data{
+    margin: 0 0 0 2vw;
+    text-align: left;
+}
+
+.service-contact-item-img{
+    height: 6vh;
+    width: auto;
+    align-self: center;
+}
+
+.service-contact-icons {
+    height: 8vh;
+}
+
+.services-form-container{
+    background-color: rgba(255,255,255, .75);
+    padding: 2vh;
+    text-align: center;
+    border-radius: 25px;
+    border: solid black 1px;
+}
+
+.service-form-input-container {
+    margin-bottom: 2vh;
+}
+
+.service-form-input{
+    max-width: 100%;
+    width: 100%;
+    font-size: 2.5vh;
+    margin: 0;
+
+}
+
+.service-data{
+
+}
+
+@media (max-width: 1024px) and (orientation:portrait) {
+    #services-page {
+        flex-direction: column;
+    }
 }

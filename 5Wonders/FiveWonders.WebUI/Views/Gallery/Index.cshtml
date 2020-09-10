@@ -1,11 +1,19 @@
 ﻿@model IEnumerable<FiveWonders.core.Models.GalleryImg>
 
 <div id="gallery-page">
-    @foreach (var item in Model) {
-        <div class="gallery-img-container col-lg-3 col-md-4 col-sm-6 col-xs-12">
-
-        <img class=" gallery-img" src="@Url.Content("~/Content/GalleryImages/" + @item.mImageFile)" alt="@item.mImageFile"/>
+    <div class="pp-title-container col-lg-12"
+         style="background-image:url(https://cl-drupal.orientaltrading.com/sites/default/files/styles/1600x696_img/public/projects/hero/desktop/2x/diy-monster-balloon-table-garland-hero-bleed-desktop-3200x1391.jpg?itok=-LOnOR0V)">
+        <div class="pp-title-dark-layer">
+            <h2 class="pp-title-text">Gallery</h2>
         </div>
-    }
+    </div>
 
+    <div class="gallery-section">
+        @foreach (var item in Model)
+        {
+            <div class="gallery-img-container col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <img class="gallery-img" src="@Url.Content("~/Content/GalleryImages/" + @item.mImageFile)" alt="@item.mImageFile" />
+            </div>
+        }
+    </div>
 </div>

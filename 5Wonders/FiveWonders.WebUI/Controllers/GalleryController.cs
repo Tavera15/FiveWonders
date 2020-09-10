@@ -23,6 +23,8 @@ namespace FiveWonders.WebUI.Controllers
         // GET: Gallery
         public ActionResult Index()
         {
+            ViewBag.Title = "Gallery";
+
             try
             {
                 GalleryImg[] galleryImgs = InstagramService.GetGalleryImgs();

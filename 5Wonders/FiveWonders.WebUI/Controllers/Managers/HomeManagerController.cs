@@ -77,7 +77,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             return RedirectToAction("Index", "Home");
         }
 
-        public void DeleteHomeImage(string fileName)
+        private void DeleteHomeImage(string fileName)
         {
             if (String.IsNullOrWhiteSpace(fileName))
                 return;

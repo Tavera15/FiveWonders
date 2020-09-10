@@ -9,6 +9,8 @@ ConnectionStrings.config
 #Images Folders
 5Wonders/FiveWonders.WebUI/Content/ProductImages
 5Wonders/FiveWonders.WebUI/Content/SizeCharts
+5Wonders/FiveWonders.WebUI/Content/GalleryImages
+5Wonders/FiveWonders.WebUI/Content/Icons
 
 # User-specific files
 *.rsuser

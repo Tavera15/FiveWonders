@@ -10,72 +10,60 @@ namespace FiveWonders.WebUI.Controllers.Managers
 {
     public class ServicesManagerController : Controller
     {
-        IRepository<ServicesMessage> serviceContext;
+        IRepository<ServicePage> servicePageContext;
 
-        public ServicesManagerController(IRepository<ServicesMessage> serviceMessagesRepository)
+        public ServicesManagerController(IRepository<ServicePage> servicePageRepository)
         {
-            serviceContext = serviceMessagesRepository;
+            servicePageContext = servicePageRepository;
         }
 
         // GET: ServicesManager
         public ActionResult Index()
         {
-            List<ServicesMessage> allServiceMessages = serviceContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
-            
-            return View(allServiceMessages);
+            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
+
+            ServicePage servicePageWithDiffId = new ServicePage()
+            {
+                mBannerMessage = servicePageData.mBannerMessage,
+                mEmail = servicePageData.mEmail,
+                mFacebookUrl = servicePageData.mFacebookUrl,
+                mInstagramUrl = servicePageData.mInstagramUrl,
+                mName = servicePageData.mName,
+                mPhoneNumber = servicePageData.mPhoneNumber
+            };
+
+            return View(servicePageWithDiffId);
         }
 
-        public ActionResult Details(string Id)
-        {
-            try
-            {
-                ServicesMessage message = serviceContext.Find(Id);
-
-                return View(message);
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-
-                return HttpNotFound();
-            }
-        }
-
-        public ActionResult Delete(string Id)
-        {
-            try
-            {
-                ServicesMessage message = serviceContext.Find(Id);
-
-                return View(message);
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-
-                return HttpNotFound();
-            }
-        }
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult ConfirmDelete(string Id)
+        public ActionResult Index(ServicePage updatedPage)
         {
             try
             {
-                ServicesMessage message = serviceContext.Find(Id);
+                ServicePage target = servicePageContext.GetCollection().FirstOrDefault() ?? updatedPage;
 
-                serviceContext.Delete(message);
-                serviceContext.Commit();
+                target.mBannerMessage = updatedPage.mBannerMessage;
+                target.mName = updatedPage.mName;
+                target.mEmail = updatedPage.mEmail;
+                target.mPhoneNumber = updatedPage.mPhoneNumber;
+                target.mFacebookUrl = updatedPage.mFacebookUrl;
+                target.mInstagramUrl = updatedPage.mInstagramUrl;
+
+                if(updatedPage.mID == target.mID)
+                {
+                    servicePageContext.Insert(target);
+                }
+
+                servicePageContext.Commit();
 
                 return RedirectToAction("Index", "ServicesManager");
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-
-                return HttpNotFound();
+               return View(updatedPage);
             }
+            
         }
     }
 }

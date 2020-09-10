@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<FiveWonders.core.Models.GalleryImg>
 
+<div class="gallery-man-index-page">
 
 @using (Html.BeginForm("Index", "GalleryManager", FormMethod.Post, new { encType = "multipart/form-data" }))
 {
     <div class="form-group">
-        @Html.Label("Add Images", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-offset-2 col-md-10">
             <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
         </div>
@@ -18,12 +18,16 @@
 }
 
 
-<div>
+<div class="gallery-section">
     @foreach (FiveWonders.core.Models.GalleryImg item in Model)
     {
-        <div class="gallery-img-container col-lg-3">
-            <img class="gallery-img" src="@Url.Content("~/Content/GalleryImages/" + item.mImageFile)" alt="@item.mImageFile" />
-            <a style="margin: 1vh 0; width: 100%;" href="@Url.Action("Delete", "GalleryManager", new { Id = item.mID})" class="btn btn-danger">Delete</a>
-        </div>
+        <a class="gallery-img-container col-lg-3" href="@Url.Action("Delete", "GalleryManager", new { Id = item.mID})" >
+            <div>
+                <img class="gallery-img" src="@Url.Content("~/Content/GalleryImages/" + item.mImageFile)" alt="@item.mImageFile" />
+                <p style="margin: 1vh 0; width: 100%;" class="btn btn-danger">Delete</p>
+            </div>
+        </a>
     }
+</div>
+
 </div>

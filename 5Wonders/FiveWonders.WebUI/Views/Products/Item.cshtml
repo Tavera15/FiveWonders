@@ -62,7 +62,7 @@
                             @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
                         </div>
 
-                        <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel = "noopener noreferrer" target = "_blank">(View Size Chart)</a>
+                        <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a>
                     }
 
                     if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable)

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,13 +24,18 @@
             </div>
         </div>
     </div>
-    <div class="container body-content base-container" >
+    <div class="container body-content base-container">
         @RenderBody()
     </div>
     
     <hr />
     <footer>
         <p style="text-align: center">&copy; @DateTime.Now.Year - 5 Wonders Party</p>
+
+        <div style="text-align: center;">
+            <a rel="noopener noreferrer" target="_blank" href="https://www.facebook.com/5wonders/"><img style="height: 4vh;" src="~/Content/Icons/Facebook 64.png"/></a>
+            <a rel="noopener noreferrer" target="_blank" href="https://www.instagram.com/5wondersballoons/"><img style="height: 4vh;" src="~/Content/Icons/Instagram 64.png"/></a>
+        </div>
     </footer>
 
     @Scripts.Render("~/bundles/jquery")

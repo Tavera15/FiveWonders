@@ -153,6 +153,10 @@
     <Compile Include="Migrations\202009090023113_addedGalleryImg.Designer.cs">
       <DependentUpon>202009090023113_addedGalleryImg.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009100741045_addedServicePage.cs" />
+    <Compile Include="Migrations\202009100741045_addedServicePage.Designer.cs">
+      <DependentUpon>202009100741045_addedServicePage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -245,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009090023113_addedGalleryImg.resx">
       <DependentUpon>202009090023113_addedGalleryImg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009100741045_addedServicePage.resx">
+      <DependentUpon>202009100741045_addedServicePage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

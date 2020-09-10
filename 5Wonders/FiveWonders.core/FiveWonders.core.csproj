@@ -84,6 +84,7 @@
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\BasketItem.cs" />
+    <Compile Include="Models\ServicePage.cs" />
     <Compile Include="Models\ServicesMessage.cs" />
     <Compile Include="Models\SizeChart.cs" />
     <Compile Include="Models\SubCategory.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\ProductManagerViewModel.cs" />
     <Compile Include="ViewModels\ProductOrderViewModel.cs" />
+    <Compile Include="ViewModels\ServicePageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

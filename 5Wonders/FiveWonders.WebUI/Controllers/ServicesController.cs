@@ -1,4 +1,5 @@
 ﻿using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -10,38 +11,34 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class ServicesController : Controller
     {
-        IRepository<ServicesMessage> serviceContext;
+        IRepository<ServicePage> servicePageContext;
 
-        public ServicesController(IRepository<ServicesMessage> serviceMessagesRepository)
+        public ServicesController(IRepository<ServicePage> servicePageRepository)
         {
-            serviceContext = serviceMessagesRepository;
+            servicePageContext = servicePageRepository;
         }
 
         // GET: Services
         public ActionResult Index()
         {
-            return View(new ServicesMessage());
+            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
+            ServicesMessage servicesMessage = new ServicesMessage();
+
+            ServicePageViewModel viewModel = new ServicePageViewModel()
+            {
+                servicePageData = servicePageData,
+                servicesMessage = servicesMessage
+            };
+
+            return View(viewModel);
         }
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Index(ServicesMessage message)
+        public ActionResult Index(ServicePageViewModel viewModel)
         {
-            if(!ModelState.IsValid)
-            {
-                return View(message);
-            }
-
             try
             {
-                serviceContext.Insert(message);
-                serviceContext.Commit();
-
-                System.Diagnostics.Debug.WriteLine(message.mCustomerName);
-                System.Diagnostics.Debug.WriteLine(message.mEmail);
-                System.Diagnostics.Debug.WriteLine(message.mSubject);
-                System.Diagnostics.Debug.WriteLine(message.mContent);
-
                 return RedirectToAction("Index", "Products");
             }
             catch(Exception e)
