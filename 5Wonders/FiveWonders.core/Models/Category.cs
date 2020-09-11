@@ -10,8 +10,15 @@ namespace FiveWonders.core.Models
     public class Category : BaseEntity
     {
 
+        [Display(Name = "Category Name")]
         [Required(ErrorMessage = "A category name is required")]
         public string mCategoryName { get; set; }
+
+        [Display(Name = "Image")]
+        public string mImgUrL { get; set; }
+ 
+        [Range(0, 1)]
+        public float mImgShaderAmount { get; set; }
 
         public Category()
         {

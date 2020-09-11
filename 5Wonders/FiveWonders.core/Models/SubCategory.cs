@@ -12,9 +12,14 @@ namespace FiveWonders.core.Models
         [Required(ErrorMessage = "A subcategory name is required")]
         [Display(Name = "Subcategory Name")]
         public string mSubCategoryName { get; set; }
-
         
         [Display(Name = "Is Event or Theme?", Description = "If checked, this subcategory will appear on the Event & Themes tab.")]
         public bool isEventOrTheme { get; set; }
+
+        [Display(Name = "Image")]
+        public string mImageUrl { get; set; }
+
+        [Range(0,1)]
+        public float mImgShaderAmount { get; set; }
     }
 }

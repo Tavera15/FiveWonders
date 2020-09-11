@@ -157,6 +157,14 @@
     <Compile Include="Migrations\202009100741045_addedServicePage.Designer.cs">
       <DependentUpon>202009100741045_addedServicePage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009110251585_addedImgAndShaderToCategory.cs" />
+    <Compile Include="Migrations\202009110251585_addedImgAndShaderToCategory.Designer.cs">
+      <DependentUpon>202009110251585_addedImgAndShaderToCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009110831029_addedImgAndShaderToSubcategory.cs" />
+    <Compile Include="Migrations\202009110831029_addedImgAndShaderToSubcategory.Designer.cs">
+      <DependentUpon>202009110831029_addedImgAndShaderToSubcategory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -252,6 +260,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009100741045_addedServicePage.resx">
       <DependentUpon>202009100741045_addedServicePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009110251585_addedImgAndShaderToCategory.resx">
+      <DependentUpon>202009110251585_addedImgAndShaderToCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009110831029_addedImgAndShaderToSubcategory.resx">
+      <DependentUpon>202009110831029_addedImgAndShaderToSubcategory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

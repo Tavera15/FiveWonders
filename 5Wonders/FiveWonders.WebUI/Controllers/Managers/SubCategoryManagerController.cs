@@ -34,13 +34,21 @@ namespace FiveWonders.WebUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Create(SubCategory sub)
+        public ActionResult Create(SubCategory sub, HttpPostedFileBase imageFile)
         {
             try
             {
-                if(!ModelState.IsValid)
+                if(!ModelState.IsValid || (sub.isEventOrTheme && imageFile == null))
                 {
                     return View(sub);
+                }
+
+                if(sub.isEventOrTheme && imageFile != null)
+                {
+                    string newImgUrl;
+                    AddImages(sub.mID, imageFile, out newImgUrl);
+
+                    sub.mImageUrl = newImgUrl;
                 }
 
                 subCategoryContext.Insert(sub);
@@ -51,7 +59,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return View(sub);
             }
         }
 
@@ -72,17 +80,38 @@ namespace FiveWonders.WebUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Edit(SubCategory sub, string Id)
+        public ActionResult Edit(SubCategory sub, string Id, HttpPostedFileBase imageFile)
         {
             try
             {
-                if(!ModelState.IsValid)
+                SubCategory subToEdit = subCategoryContext.Find(Id);
+
+                if(!ModelState.IsValid || 
+                    (sub.isEventOrTheme &&
+                        (imageFile == null && String.IsNullOrWhiteSpace(subToEdit.mImageUrl))))
                 {
                     return View(sub);
                 }
 
-                SubCategory subToEdit = subCategoryContext.Find(Id);
+                if(!sub.isEventOrTheme && !String.IsNullOrWhiteSpace(subToEdit.mImageUrl))
+                {
+                    DeleteImages(subToEdit.mImageUrl);
+                    subToEdit.mImageUrl = "";
+                }
+                
                 subToEdit.mSubCategoryName = sub.mSubCategoryName;
+                subToEdit.isEventOrTheme = sub.isEventOrTheme;
+                subToEdit.mImgShaderAmount = sub.mImgShaderAmount;
+
+                if(imageFile != null)
+                {
+                    DeleteImages(subToEdit.mImageUrl);
+
+                    string newImgUrl;
+                    AddImages(Id, imageFile, out newImgUrl);
+
+                    subToEdit.mImageUrl = newImgUrl;
+                }
 
                 subCategoryContext.Commit();
 
@@ -101,15 +130,9 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id);
 
-                List<Product> productsWithSub = new List<Product>();
-
-                foreach(var product in productContext.GetCollection())
-                {
-                    if(product.mSubCategories.Split(',').Contains(subToDelete.mID))
-                    {
-                        productsWithSub.Add(product);
-                    }
-                }
+                Product[] productsWithSub = productContext.GetCollection()
+                    .Where(p => !String.IsNullOrEmpty(p.mSubCategories) 
+                    && p.mSubCategories.Contains(subToDelete.mID)).ToArray();
 
                 ViewBag.productsWithSub = productsWithSub.ToArray();
                 return View(subToDelete);
@@ -129,20 +152,15 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id);
 
-                List<Product> productsWithSub = new List<Product>();
+                bool bItemsWithSub = productContext.GetCollection()
+                    .Any(p => p.mSubCategories.Contains(Id));
 
-                foreach (var product in productContext.GetCollection())
-                {
-                    if (product.mSubCategories.Split(',').Contains(subToDelete.mID))
-                    {
-                        productsWithSub.Add(product);
-                    }
-                }
-
-                if (productsWithSub.ToArray().Length != 0)
+                if (bItemsWithSub)
                 {
                     return RedirectToAction("Delete", "SubCategoryManager");
                 }
+
+                DeleteImages(subToDelete.mImageUrl);
 
                 subCategoryContext.Delete(subToDelete);
                 subCategoryContext.Commit();
@@ -153,6 +171,24 @@ namespace FiveWonders.WebUI.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
+            }
+        }
+
+        private void AddImages(string Id, HttpPostedFileBase imageFile, out string newImageURL)
+        {
+            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
+
+            newImageURL = Id + fileNameWithoutSpaces;
+            imageFile.SaveAs(Server.MapPath("//Content//SubcategoryImages//") + newImageURL);
+        }
+
+        private void DeleteImages(string currentImageURL)
+        {
+            string path = Server.MapPath("//Content//SubcategoryImages//") + currentImageURL;
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
             }
         }
     }

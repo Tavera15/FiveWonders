@@ -35,14 +35,20 @@ namespace FiveWonders.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Category cat)
+        public ActionResult Create(Category cat, HttpPostedFileBase imageFile)
         {
             try
             {
-                if(ModelState == null)
+                if (!ModelState.IsValid || imageFile == null)
                 {
                     return View(cat);
                 }
+
+                // Save img, and store its name to category obj.
+                string newImgUrl;
+                AddImages(cat.mID, imageFile, out newImgUrl);
+
+                cat.mImgUrL = newImgUrl;
 
                 // Save to memory
                 categoryContext.Insert(cat);
@@ -74,18 +80,29 @@ namespace FiveWonders.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Category c, string Id)
+        public ActionResult Edit(Category c, string Id, HttpPostedFileBase imageFile)
         {
             try
             {
-                if(!ModelState.IsValid)
+                Category categoryToEdit = categoryContext.Find(Id);
+
+                if(!ModelState.IsValid || (String.IsNullOrWhiteSpace(categoryToEdit.mImgUrL) && imageFile == null))
                 {
                     return View(c);
                 }
 
-                Category categoryToEdit = categoryContext.Find(Id);
-                categoryToEdit.mCategoryName = c.mCategoryName;
+                if(imageFile != null)
+                {
+                    string newImgUrl;
+                    DeleteImages(categoryToEdit.mImgUrL);
+                    AddImages(Id, imageFile, out newImgUrl);
 
+                   categoryToEdit.mImgUrL = newImgUrl;
+                }
+
+                categoryToEdit.mCategoryName = c.mCategoryName;
+                categoryToEdit.mImgShaderAmount = c.mImgShaderAmount;
+                
                 categoryContext.Commit();
 
                 return RedirectToAction("Index", "CategoryManager");
@@ -102,7 +119,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Category categoryToDelete = categoryContext.Find(Id);
-                Product[] productsWithCategory = productsContext.GetCollection().Where(x => x.mCategory == categoryToDelete.mID).ToArray();
+                
+                Product[] productsWithCategory = productsContext.GetCollection()
+                    .Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
                 ViewBag.productsWithCategory = productsWithCategory;
                 return View(categoryToDelete);
@@ -121,12 +140,15 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Category categoryToDelete = categoryContext.Find(Id);
-                Product[] productsWithCategory = productsContext.GetCollection().Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
-                if(productsWithCategory.Length != 0)
+                bool bItemsWithCat = productsContext.GetCollection().Any(p => p.mCategory == Id);
+
+                if(bItemsWithCat)
                 {
                     return RedirectToAction("Delete", "CategoryManager");
                 }
+
+                DeleteImages(categoryToDelete.mImgUrL);
 
                 categoryContext.Delete(categoryToDelete);
                 categoryContext.Commit();
@@ -137,6 +159,24 @@ namespace FiveWonders.WebUI.Controllers
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
+            }
+        }
+
+        private void AddImages(string Id, HttpPostedFileBase imageFile, out string newImageURL)
+        {
+            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
+
+            newImageURL = Id + fileNameWithoutSpaces;
+            imageFile.SaveAs(Server.MapPath("//Content//CategoryImages//") + newImageURL);
+        }
+
+        private void DeleteImages(string currentImageURL)
+        {
+            string path = Server.MapPath("//Content//CategoryImages//") + currentImageURL;
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
             }
         }
     }

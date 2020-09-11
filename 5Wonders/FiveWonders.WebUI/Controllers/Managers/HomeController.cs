@@ -16,12 +16,14 @@ namespace FiveWonders.WebUI.Controllers
         public IInstagramService InstagramService;
         public IRepository<HomePage> homeContext;
         public IRepository<Product> productsContext;
+        public IRepository<Category> categoryContext;
 
-        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository)
+        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository)
         {
             InstagramService = IGService;
             homeContext = homeRepository;
             productsContext = productsRepository;
+            categoryContext = categoryRepository;
         }
 
         public ActionResult Index()
@@ -37,11 +39,15 @@ namespace FiveWonders.WebUI.Controllers
             Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(4).ToList();
-            
+
+            Category balloons = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "balloons").FirstOrDefault();
+            Category clothing = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "clothing").FirstOrDefault();
 
             homeViewModel.homePageData = homeData;
             homeViewModel.top3Products = top3Products;
             homeViewModel.top3IGPosts = top4GalleryImgs;
+            homeViewModel.balloons = balloons;
+            homeViewModel.clothing = clothing;
 
             return View(homeViewModel);
         }

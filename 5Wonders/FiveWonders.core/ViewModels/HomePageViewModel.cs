@@ -12,5 +12,7 @@ namespace FiveWonders.core.ViewModels
         public HomePage homePageData { get; set; }
         public List<Product> top3Products { get; set; }
         public List<GalleryImg> top3IGPosts { get; set; }
+        public Category clothing { get; set; }
+        public Category balloons { get; set; }
     }
 }

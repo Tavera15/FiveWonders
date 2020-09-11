@@ -33,6 +33,10 @@ namespace FiveWonders.WebUI.Controllers
         [Route(Name = "/{category?}{subcategory?}")]
         public ActionResult Index(string category, string subcategory)
         {
+            const string defaultFolder = "Home";
+            const string defaultImg = "defaultpl.jpg";
+            const float defaultImgShaderAmount = .54f;
+
             string fixedCategory = GetProductsListPageTitle(category);
             string fixedSubcategory = GetProductsListPageTitle(subcategory);
 
@@ -51,15 +55,13 @@ namespace FiveWonders.WebUI.Controllers
                 pageTitle = fixedSubcategory;
             }
 
-            ViewBag.pageName = pageTitle;
-            
             try
             {
+                Product[] products = new Product[] { };
+
                 if(category == null && subcategory == null)
                 {
-                    Product[] allProducts = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
-
-                    return View(allProducts);
+                    products = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
                 }
                 else
                 {
@@ -71,9 +73,6 @@ namespace FiveWonders.WebUI.Controllers
                                     ? GetProductsWithSub(subcategory)
                                     : new Product[] { };
 
-                    Product[] products = catProd.Union(subProd)
-                            .OrderByDescending(p => p.mTimeEntered).ToArray();
-
                     if(!String.IsNullOrEmpty(category) && !String.IsNullOrEmpty(subcategory))
                     {
                         products = catProd.Intersect(subProd)
@@ -84,13 +83,49 @@ namespace FiveWonders.WebUI.Controllers
                         products = catProd.Union(subProd)
                             .OrderByDescending(p => p.mTimeEntered).ToArray();
                     }
-
-                    return View(products);
                 }
+
+                Category categoryObj = categoryContext.GetCollection()
+                    .Where(c => c.mCategoryName == category.ToLower()).FirstOrDefault();
+
+                SubCategory subcategoryObj = subCategoryContext.GetCollection()
+                    .Where(s => s.mSubCategoryName == subcategory.ToLower()).FirstOrDefault();
+
+                ProductsListViewModel viewModel = new ProductsListViewModel
+                {
+                    pageTitle = pageTitle,
+                    products = products,
+                    imgUrl = defaultImg,
+                    folderName = defaultFolder,
+                    mImgShaderAmount = defaultImgShaderAmount
+                };
+
+                if (categoryObj != null)
+                {
+                    viewModel.imgUrl = categoryObj.mImgUrL;
+                    viewModel.folderName = "CategoryImages";
+                    viewModel.mImgShaderAmount = categoryObj.mImgShaderAmount;
+                }
+                else if(subcategoryObj != null)
+                {
+                    viewModel.imgUrl = subcategoryObj.isEventOrTheme 
+                        ? subcategoryObj.mImageUrl
+                        : viewModel.imgUrl;
+
+                    viewModel.folderName = subcategoryObj.isEventOrTheme
+                        ? "SubcategoryImages"
+                        : viewModel.folderName;
+
+                    viewModel.mImgShaderAmount = subcategoryObj.isEventOrTheme
+                        ? subcategoryObj.mImgShaderAmount
+                        : viewModel.mImgShaderAmount;
+                }
+
+                // TODO Fix this. Solo Subcategories display nothing
+                return View(viewModel);
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return RedirectToAction("Index", "Products");
             }
         }

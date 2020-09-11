@@ -15,8 +15,8 @@
     <div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
             <a href="/products/?category=balloons">
-                <div class="single-category" style="background-image: url(https://i.ytimg.com/vi/iELjLUVtjLw/maxresdefault.jpg);">
-                    <div class="category-img-cover">
+                <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.balloons.mImgUrL));">
+                    <div style="background-color: rgba(0,0,0,@Model.balloons.mImgShaderAmount);" class="category-img-cover">
                         <h2>Balloons</h2>
                         <p class="btn btn-lg btn-default redi-btn">Shop Balloons</p>
                     </div>
@@ -25,8 +25,8 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
             <a href="/products/?category=clothing">
-                <div class="single-category" style="background-image: url(https://wpcdn.us-east-1.vip.tn-cloud.net/www.channel3000.com/content/uploads/2019/12/variety-of-clothes-hanging-on-rack_1509457933825_9166901_ver1-0-1024x576.jpg);">
-                    <div class="category-img-cover">
+                <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.clothing.mImgUrL));">
+                    <div style="background-color: rgba(0,0,0,@Model.clothing.mImgShaderAmount);" class="category-img-cover">
                         <h2>Clothing</h2>
                         <p class="btn btn-lg btn-default redi-btn">Shop Clothing</p>
                     </div>

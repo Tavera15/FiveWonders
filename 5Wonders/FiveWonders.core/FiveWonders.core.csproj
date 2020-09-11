@@ -93,6 +93,7 @@
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\ProductManagerViewModel.cs" />
     <Compile Include="ViewModels\ProductOrderViewModel.cs" />
+    <Compile Include="ViewModels\ProductsListViewModel.cs" />
     <Compile Include="ViewModels\ServicePageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
