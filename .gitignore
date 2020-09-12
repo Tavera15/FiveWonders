@@ -11,6 +11,9 @@ ConnectionStrings.config
 5Wonders/FiveWonders.WebUI/Content/SizeCharts
 5Wonders/FiveWonders.WebUI/Content/GalleryImages
 5Wonders/FiveWonders.WebUI/Content/Icons
+5Wonders/FiveWonders.WebUI/Content/CategoryImages
+5Wonders/FiveWonders.WebUI/Content/SubcategoryImages
+5Wonders/FiveWonders.WebUI/Content/Home
 
 # User-specific files
 *.rsuser

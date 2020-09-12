@@ -60,6 +60,13 @@
                             @Html.ValidationMessageFor(model => model.servicesMessage.mCustomerName, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    
+                    <div class="form-group service-form-input-container">
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.servicesMessage.mPhoneNumber, new { htmlAttributes = new { @class = "form-control service-form-input", @placeholder = "Phone Number" } })
+                            @Html.ValidationMessageFor(model => model.servicesMessage.mPhoneNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
                     <div class="form-group service-form-input-container">
                         <div class="col-md-10">
@@ -79,6 +86,7 @@
                 <div class="service-form-input-container">
                     <div>
                         @Html.TextAreaFor(model => model.servicesMessage.mContent, new { htmlAttributes = new { @class = "service-form-input", }, @Id = "email" })
+                        @Html.ValidationMessageFor(model => model.servicesMessage.mContent, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
