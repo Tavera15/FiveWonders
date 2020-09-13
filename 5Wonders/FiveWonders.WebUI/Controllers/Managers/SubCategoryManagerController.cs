@@ -102,6 +102,7 @@ namespace FiveWonders.WebUI.Controllers
                 subToEdit.mSubCategoryName = sub.mSubCategoryName;
                 subToEdit.isEventOrTheme = sub.isEventOrTheme;
                 subToEdit.mImgShaderAmount = sub.mImgShaderAmount;
+                subToEdit.bannerTextColor = sub.bannerTextColor;
 
                 if(imageFile != null)
                 {

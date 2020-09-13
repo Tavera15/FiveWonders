@@ -19,7 +19,16 @@ namespace FiveWonders.core.Models
         [Display(Name = "Image")]
         public string mImageUrl { get; set; }
 
+        [Display(Name = "Banner Image Shade Amount")]
         [Range(0,1)]
         public float mImgShaderAmount { get; set; }
+
+        [Display(Name = "Banner Text Color")]
+        public string bannerTextColor { get; set; }
+
+        public SubCategory()
+        {
+            mImgShaderAmount = 0.4f;
+        }
     }
 }

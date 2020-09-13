@@ -1,52 +1,90 @@
 ﻿@model FiveWonders.core.Models.Category
 
+<div id="products-page">
 
-@using (Html.BeginForm("Create", "CategoryManager", FormMethod.Post, new { encType = "multipart/form-data" })) 
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm("Create", "CategoryManager", FormMethod.Post, new { encType = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
+        <div class="form-horizontal">
+            <div class="pp-title-container"
+                 style="background-image: url();"
+                 id="bannerImg-input">
+                <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, 0);" class="pp-title-dark-layer">
+                    <h2 id="category-title-input" class="pp-title-text">Category</h2>
+                </div>
+            </div>
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        
-        <div class="form-group">
-            @Html.LabelFor(model => model.mCategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mCategoryName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.mCategoryName, "", new { @class = "text-danger" })
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mCategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.mCategoryName, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setColor()" } })
+                    @Html.ValidationMessageFor(model => model.mCategoryName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.bannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.bannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @oninput = "setColor()", @id = "color" } })
+                    @Html.ValidationMessageFor(model => model.bannerTextColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mImgShaderAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.mImgShaderAmount, new { htmlAttributes = new { @class = "form-control", @type = "range", @oninput = "setColor()", @id = "opacity",  @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                    @Html.ValidationMessageFor(model => model.mImgShaderAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mImgUrL, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="file" oninput="setColor()" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mImgUrL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
             </div>
         </div>
+    }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mImgShaderAmount, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mImgShaderAmount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.mImgShaderAmount, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mImgUrL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input type="file" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mImgUrL, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+    <div>
+        @Html.ActionLink("Back to List", "Index")
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function setColor() {
+            var color = document.getElementById('color').value;
+            var opacity = document.getElementById('opacity').value;
+            var categoryName = document.getElementById('help').value;
+            var img = document.getElementById('file').files[0];
+
+            if (img) {
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+
+                reader.onloadend = function () {
+                    document.getElementById('bannerImg-input').style.backgroundImage = 'url("' + reader.result + '")';
+                }
+            }
+
+            document.getElementById('bannerImg-cover-input').style.backgroundColor = "rgba(0,0,0," + opacity + ")";
+            document.getElementById('category-title-input').innerText = categoryName;
+            document.getElementById('category-title-input').style.color = color;
+        }
+        setColor();
+    </script>
 }

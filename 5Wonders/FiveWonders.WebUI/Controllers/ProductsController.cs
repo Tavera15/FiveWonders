@@ -36,6 +36,7 @@ namespace FiveWonders.WebUI.Controllers
             const string defaultFolder = "Home";
             const string defaultImg = "defaultpl.jpg";
             const float defaultImgShaderAmount = .54f;
+            const string defaultPageTitleColor = "white";
 
             string fixedCategory = GetProductsListPageTitle(category);
             string fixedSubcategory = GetProductsListPageTitle(subcategory);
@@ -97,14 +98,34 @@ namespace FiveWonders.WebUI.Controllers
                     products = products,
                     imgUrl = defaultImg,
                     folderName = defaultFolder,
-                    mImgShaderAmount = defaultImgShaderAmount
+                    mImgShaderAmount = defaultImgShaderAmount,
+                    pageTitleColor = defaultPageTitleColor
                 };
 
-                if (categoryObj != null)
+                if(categoryObj != null && subcategoryObj != null)
+                {
+                    viewModel.imgUrl = subcategoryObj.isEventOrTheme
+                        ? subcategoryObj.mImageUrl
+                        : categoryObj.mImgUrL;
+
+                    viewModel.folderName = subcategoryObj.isEventOrTheme
+                        ? "SubcategoryImages"
+                        : "CategoryImages";
+
+                    viewModel.mImgShaderAmount = subcategoryObj.isEventOrTheme
+                        ? subcategoryObj.mImgShaderAmount
+                        : categoryObj.mImgShaderAmount;
+
+                    viewModel.pageTitleColor = subcategoryObj.isEventOrTheme
+                        ? subcategoryObj.bannerTextColor
+                        : categoryObj.bannerTextColor;
+                }
+                else if (categoryObj != null)
                 {
                     viewModel.imgUrl = categoryObj.mImgUrL;
                     viewModel.folderName = "CategoryImages";
                     viewModel.mImgShaderAmount = categoryObj.mImgShaderAmount;
+                    viewModel.pageTitleColor = categoryObj.bannerTextColor ?? viewModel.pageTitleColor;
                 }
                 else if(subcategoryObj != null)
                 {
@@ -119,6 +140,10 @@ namespace FiveWonders.WebUI.Controllers
                     viewModel.mImgShaderAmount = subcategoryObj.isEventOrTheme
                         ? subcategoryObj.mImgShaderAmount
                         : viewModel.mImgShaderAmount;
+
+                    viewModel.pageTitleColor = subcategoryObj.isEventOrTheme
+                        ? subcategoryObj.bannerTextColor
+                        : viewModel.pageTitleColor;
                 }
 
                 // TODO Fix this. Solo Subcategories display nothing

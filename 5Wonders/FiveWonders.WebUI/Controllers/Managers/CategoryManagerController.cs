@@ -102,6 +102,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 categoryToEdit.mCategoryName = c.mCategoryName;
                 categoryToEdit.mImgShaderAmount = c.mImgShaderAmount;
+                categoryToEdit.bannerTextColor = c.bannerTextColor;
                 
                 categoryContext.Commit();
 

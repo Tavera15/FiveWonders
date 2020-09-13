@@ -1,60 +1,116 @@
 ﻿@model FiveWonders.core.Models.SubCategory
 
-
-@using (Html.BeginForm("Edit", "SubCategoryManager", FormMethod.Post, new { encType = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>SubCategory</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.mID)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mSubCategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mSubCategoryName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.mSubCategoryName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.isEventOrTheme, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.isEventOrTheme)
-                @Html.ValidationMessageFor(model => model.isEventOrTheme, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mImgShaderAmount, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mImgShaderAmount)
-                @Html.ValidationMessageFor(model => model.mImgShaderAmount, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input type="file" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mImageUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+@{ 
+    string imgName = Model.isEventOrTheme && !String.IsNullOrWhiteSpace(Model.mImageUrl)
+        ? Url.Content("~/Content/SubcategoryImages/" + Model.mImageUrl)
+        : "";
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+<div id="products-page">
+
+    @using (Html.BeginForm("Edit", "SubCategoryManager", FormMethod.Post, new { encType = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <div class="pp-title-container"
+                 style="background-image: url(@imgName);"
+                 id="bannerImg-input">
+                <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.mImgShaderAmount);" class="pp-title-dark-layer">
+                    <h2 id="category-title-input" class="pp-title-text">@Model.mSubCategoryName</h2>
+                </div>
+            </div>
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.mID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mSubCategoryName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.mSubCategoryName, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setColor()" } })
+                    @Html.ValidationMessageFor(model => model.mSubCategoryName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.isEventOrTheme, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.isEventOrTheme, "", new { htmlAttributes = new { @class = "text-danger", @oninput = "setColor()", @id = "isEventInput" } })
+                    @Html.ValidationMessageFor(model => model.isEventOrTheme, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            <div class="form-group sub-cat-input-conts">
+                @Html.LabelFor(model => model.bannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.bannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @oninput = "setColor()", @id = "color" } })
+                    @Html.ValidationMessageFor(model => model.bannerTextColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group sub-cat-input-conts">
+                @Html.LabelFor(model => model.mImgShaderAmount, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.mImgShaderAmount, new { htmlAttributes = new { @class = "form-control", @type = "range", @oninput = "setColor()", @id = "opacity", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                    @Html.ValidationMessageFor(model => model.mImgShaderAmount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group sub-cat-input-conts">
+                @Html.LabelFor(model => model.mImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="file" oninput="setColor()" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mImageUrl, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function setColor() {
+            var color = document.getElementById('color').value;
+            var opacity = document.getElementById('opacity').value;
+            var categoryName = document.getElementById('help').value;
+            var img = document.getElementById('file').files[0];
+            var isEventOrTheme = document.getElementById('isEventInput').checked;
+            var eventDivs = document.getElementsByClassName('sub-cat-input-conts');
+
+            for (var div of eventDivs) {
+                div.style.display = isEventOrTheme ? "initial" : "none";
+            }
+
+            if (isEventOrTheme && img) {
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+
+                reader.onloadend = function () {
+                    document.getElementById('bannerImg-input').style.backgroundImage = 'url("' + reader.result + '")';
+                }
+            }
+            else if (!isEventOrTheme) {
+                document.getElementById('bannerImg-input').style.backgroundImage = 'url()';
+            }
+
+            document.getElementById('bannerImg-cover-input').style.backgroundColor = "rgba(0,0,0," + opacity + ")";
+            document.getElementById('category-title-input').innerText = categoryName;
+            document.getElementById('category-title-input').style.color = color;
+        }
+
+        setColor();
+    </script>
 }

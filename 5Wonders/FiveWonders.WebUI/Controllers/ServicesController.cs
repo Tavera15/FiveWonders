@@ -46,9 +46,10 @@ namespace FiveWonders.WebUI.Controllers
                     throw new Exception("Services model no good");
                 }
 
-                string fixedCustomerName = "<p>" + viewModel.servicesMessage.mCustomerName + "</p>";
-                string fixedCustomerPhone = "<p>" + viewModel.servicesMessage.mPhoneNumber + "</p>";
-                string fixedCustomerEmail = "<p>" + viewModel.servicesMessage.mEmail + "</p>";
+                string customerSection = "<h4>Customer Info</h4>";
+                string fixedCustomerName = "<p>Name: " + viewModel.servicesMessage.mCustomerName + "</p>";
+                string fixedCustomerPhone = "<p>Phone Number: " + viewModel.servicesMessage.mPhoneNumber + "</p>";
+                string fixedCustomerEmail = "<p>Email: " + viewModel.servicesMessage.mEmail + "</p>";
 
                 MailMessage message = new MailMessage();
                 message.To.Add("");
@@ -56,7 +57,7 @@ namespace FiveWonders.WebUI.Controllers
                 message.Subject = viewModel.servicesMessage.mSubject;
                 message.IsBodyHtml = true;
                 message.Body = viewModel.servicesMessage.mContent 
-                    + "<br />" + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
+                    + "<br />" + customerSection + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
 
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
                 {
@@ -66,6 +67,7 @@ namespace FiveWonders.WebUI.Controllers
                     EnableSsl = true
                 };
 
+                throw new Exception("stop");
                 smtpClient.Send(message);
 
                 return RedirectToAction("Index", "Products");
@@ -73,8 +75,10 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
+                ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
+                viewModel.servicePageData = servicePageData;
 
-                return RedirectToAction("Index", "Services");
+                return View(viewModel);
             }
         }
     }

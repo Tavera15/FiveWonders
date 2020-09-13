@@ -1,54 +1,46 @@
 ﻿@model FiveWonders.core.Models.Category
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.mID)
-        </dt>
+<div id="products-page">
+    <div class="pp-title-container"
+         style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.mImgUrL));"
+    >
+        <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.mImgShaderAmount);" class="pp-title-dark-layer">
+            <h2 style="color: @Model.bannerTextColor" id="category-title-input" class="pp-title-text">Category</h2>
+        </div>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.mID)
-        </dd>
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <hr />
 
-        <dt>
-            @Html.DisplayNameFor(model => model.mCategoryName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mCategoryName)
-        </dd>
-
-    </dl>
-
-    @if(ViewBag.productsWithCategory.Length != 0)
-    {
-        <h2>Products with category <strong>@Html.DisplayFor(model => model.mCategoryName)</strong></h2>
-
-        <table>
-            @foreach(var product in ViewBag.productsWithCategory)
-            {
-                <tr>
-                    <td>
-                        <a href="/ProductManager/Edit/@product.mID">@product.mName</a>
-                    </td>
-                </tr>
-            }
-        </table>
-    }
-
-    <div class="form-actions no-color">
-        @if(ViewBag.productsWithCategory.Length == 0)
+        @if (ViewBag.productsWithCategory.Length != 0)
         {
-            using (Html.BeginForm()) 
-            {
-                @Html.AntiForgeryToken()
+            <h3>Can't delete category <strong>@Html.DisplayFor(model => model.mCategoryName)</strong></h3>
+            <h2>Update the Category field for the following products:</h2>
 
-                <input type="submit" value="Delete" class="btn btn-default" />
-            }
+            <table>
+                @foreach (var product in ViewBag.productsWithCategory)
+                {
+                    <tr>
+                        <td>
+                            <a href="/ProductManager/Edit/@product.mID">@product.mName</a>
+                        </td>
+                    </tr>
+                }
+            </table>
         }
-        @Html.ActionLink("Back to List", "Index")
+
+        <div class="form-actions no-color">
+            @if (ViewBag.productsWithCategory.Length == 0)
+            {
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <input type="submit" value="Delete" class="btn btn-default" />
+                }
+            }
+            @Html.ActionLink("Back to List", "Index")
+        </div>
     </div>
 </div>

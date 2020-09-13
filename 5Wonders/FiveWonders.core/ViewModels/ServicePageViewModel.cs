@@ -9,7 +9,7 @@ namespace FiveWonders.core.ViewModels
 {
     public class ServicePageViewModel
     {
-        public ServicePage servicePageData;
+        public ServicePage servicePageData { get; set; }
         public ServicesMessage servicesMessage { get; set; }
     }
 }
