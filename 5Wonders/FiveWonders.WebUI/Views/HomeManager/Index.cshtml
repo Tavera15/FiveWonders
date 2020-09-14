@@ -1,18 +1,45 @@
 ﻿@model FiveWonders.core.Models.HomePage
 
-@using (Html.BeginForm("Index", "HomeManager", FormMethod.Post ,new { encType = "multipart/form-data"}))
+@using (Html.BeginForm("Index", "HomeManager", FormMethod.Post, new { encType = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>HomePage</h4>
-        <hr />
+
+        <div class="jumbotron jumbo-img" id="jumbo-bg-prev" style="background-image: url();">
+            <img src="" 
+                 alt="logo" 
+                 class="jumbo-logo jumbo-item" 
+                 id="jumbo-logo-prev"/>
+
+            <div id="home-prev-text">
+
+            </div>
+
+            <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+        </div>
+
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input oninput="setHomeBannerLogo()" type="file" id="homeLogo" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mHomePageLogoUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-offset-2 col-md-10">
-                <input type="file" id="file" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                <input oninput="setHomeBannerBg()" type="file" id="homeImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
                 @Html.ValidationMessageFor(model => model.mWelcomeImgUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mHomePageGreeting, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.mHomePageGreeting, new { @Id = "homeTextPrev" })
             </div>
         </div>
 
@@ -20,6 +47,54 @@
             @Html.LabelFor(model => model.mWelcomeBtnUrl, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.mWelcomeBtnUrl, new SelectList(ViewBag.links, "value", "value", Model.mWelcomeBtnUrl), new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+
+        <hr />
+
+        <div id="products-page">
+
+            <div class="pp-title-container"
+                 style="background-image: url();"
+                 id="bannerImg-input">
+                <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, 1);" class="pp-title-dark-layer">
+                    <h2 id="category-title-input" class="pp-title-text">Category</h2>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mDefaultProductsBannerText, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.mDefaultProductsBannerText, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setCategoryProps()" } })
+                @Html.ValidationMessageFor(model => model.mDefaultProductsBannerText, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mdefaultBannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.mdefaultBannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @id = "color", @oninput = "setCategoryProps()" } })
+                @Html.ValidationMessageFor(model => model.mdefaultBannerTextColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.defaultBannerImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.defaultBannerImgShader, new { htmlAttributes = new { @class = "form-control", @oninput = "setCategoryProps()", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                @Html.ValidationMessageFor(model => model.defaultBannerImgShader, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -37,4 +112,61 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/tinymce/tinymce.js"></script>
+    <script src="~/Scripts/TinyMce_Client/HomePagePreview.js"></script>
+    
+    <script>
+        function setHomeBannerBg() {
+            var homeImg = document.getElementById('homeImg').files[0];
+            var homeDest = document.getElementById('jumbo-bg-prev');
+
+            if (homeImg) {
+                var reader = new FileReader();
+                reader.readAsDataURL(homeImg);
+
+                reader.onloadend = function () {
+                    homeDest.style.backgroundImage = 'url("' + reader.result + '")';
+                }
+            }
+        }
+
+        function setHomeBannerLogo() {
+            var logoImg = document.getElementById('homeLogo').files[0];
+            var logoDest = document.getElementById('jumbo-logo-prev');
+
+            if (logoImg) {
+                var reader = new FileReader();
+                reader.readAsDataURL(logoImg);
+
+                reader.onloadend = function () {
+                    logoDest.src = reader.result;
+                }
+            }
+        }
+
+        function setCategoryProps() {
+            var color = document.getElementById('color').value;
+            var opacity = document.getElementById('opacity').value;
+            var categoryName = document.getElementById('help').value;
+            var img = document.getElementById('default_bannerImg').files[0];
+
+            if (img) {
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+
+                reader.onloadend = function () {
+                    document.getElementById('bannerImg-input').style.backgroundImage = 'url("' + reader.result + '")';
+                }
+            }
+
+            document.getElementById('bannerImg-cover-input').style.backgroundColor = "rgba(0,0,0," + opacity + ")";
+            document.getElementById('category-title-input').innerText = categoryName;
+            document.getElementById('category-title-input').style.color = color;
+        }
+
+        setHomeBannerBg();
+        setCategoryProps();
+        setHomeBannerLogo();
+    </script>
+
 }

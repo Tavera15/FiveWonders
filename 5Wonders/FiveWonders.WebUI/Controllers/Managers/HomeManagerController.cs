@@ -50,63 +50,79 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Index(HomePage homeData, HttpPostedFileBase homeImg)
+        public ActionResult Index(HomePage updatedData, HttpPostedFileBase homeLogo, HttpPostedFileBase homeImg, HttpPostedFileBase default_bannerImg)
         {
             try
             {
-                HomePage singularHome = homeDataContext.GetCollection().FirstOrDefault() ?? homeData;
-                singularHome.mWelcomeBtnUrl = homeData.mWelcomeBtnUrl;
-                
-                DeleteHomeImage(singularHome.mWelcomeImgUrl);
-                
-                string newImageURL;
-                AddNewHomeImage(homeImg, out newImageURL);
-                singularHome.mWelcomeImgUrl = newImageURL;
+                if (!ModelState.IsValid)
+                    throw new Exception("Home Manager model not good");
 
-                if(singularHome.mID == homeData.mID)
+                HomePage existingData = homeDataContext.GetCollection().FirstOrDefault() ?? updatedData;
+                
+                existingData.mWelcomeBtnUrl = updatedData.mWelcomeBtnUrl;
+                existingData.mdefaultBannerTextColor = updatedData.mdefaultBannerTextColor;
+                existingData.mDefaultProductsBannerText = updatedData.mDefaultProductsBannerText;
+                existingData.mHomePageGreeting = updatedData.mHomePageGreeting;
+                existingData.defaultBannerImgShader = updatedData.defaultBannerImgShader;
+                
+                if(homeLogo != null)
                 {
-                    homeDataContext.Insert(singularHome);
+                    DeleteImage(existingData.mHomePageLogoUrl);
+
+                    string newLogoUrl;
+                    AddImage(existingData.mID, homeLogo, out newLogoUrl);
+                    existingData.mHomePageLogoUrl = newLogoUrl;
+                }
+
+                if (homeImg != null)
+                {
+                    DeleteImage(existingData.mWelcomeImgUrl);
+
+                    string newWelcomeImgUrl;
+                    AddImage(existingData.mID, homeImg, out newWelcomeImgUrl);
+                    existingData.mWelcomeImgUrl = newWelcomeImgUrl;
+                }
+
+                if (default_bannerImg != null)
+                {
+                    DeleteImage(existingData.mDefaultProductListImgUrl);
+
+                    string newProductListImgUrl;
+                    AddImage(existingData.mID, default_bannerImg, out newProductListImgUrl);
+                    existingData.mDefaultProductListImgUrl = newProductListImgUrl;
+                }
+
+                if (existingData.mID == updatedData.mID)
+                {
+                    homeDataContext.Insert(existingData);
                 }
 
                 homeDataContext.Commit();
+
+                return RedirectToAction("Index", "Home");
             }
             catch(Exception e)
             {
-                return View(homeData);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        private void DeleteHomeImage(string fileName)
-        {
-            if (String.IsNullOrWhiteSpace(fileName))
-                return;
-
-            try
-            {
-                string path = Server.MapPath("//Content//Home//") + fileName;
-
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
-                else
-                {
-                    throw new Exception("Error: " + fileName + " not found");
-                }
-            }
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                return View(updatedData);
             }
         }
 
-        private void AddNewHomeImage(HttpPostedFileBase imageFile, out string newImageURL)
+        private void AddImage(string Id, HttpPostedFileBase imageFile, out string newImageURL)
         {
-            newImageURL = imageFile != null ? "Home_" + imageFile.FileName : null;
+            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
 
-            if (imageFile == null) { return; }
+            newImageURL = Id + fileNameWithoutSpaces;
             imageFile.SaveAs(Server.MapPath("//Content//Home//") + newImageURL);
+        }
+
+        private void DeleteImage(string currentImageURL)
+        {
+            string path = Server.MapPath("//Content//Home//") + currentImageURL;
+
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
         }
     }
 }

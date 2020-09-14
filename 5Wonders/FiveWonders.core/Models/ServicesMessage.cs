@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace FiveWonders.core.Models
 {
-    public class ServicesMessage : BaseEntity
+    public class ServicesMessage
     {
         [Required(ErrorMessage = "A name is required.")]
         [Display(Name = "Full Name")]

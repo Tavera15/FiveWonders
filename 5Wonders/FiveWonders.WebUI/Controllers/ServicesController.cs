@@ -22,7 +22,8 @@ namespace FiveWonders.WebUI.Controllers
         // GET: Services
         public ActionResult Index()
         {
-            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
+            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() 
+                ?? new ServicePage();
 
             ServicePageViewModel viewModel = new ServicePageViewModel()
             {
@@ -74,7 +75,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
                 viewModel.servicePageData = servicePageData;
 

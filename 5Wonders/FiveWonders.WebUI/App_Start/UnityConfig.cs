@@ -51,7 +51,6 @@ namespace FiveWonders.WebUI
             container.RegisterType<IRepository<Category>, SQLRepository<Category>>();
             container.RegisterType<IRepository<SubCategory>, SQLRepository<SubCategory>>();
             container.RegisterType<IRepository<SizeChart>, SQLRepository<SizeChart>>();
-            container.RegisterType<IRepository<ServicesMessage>, SQLRepository<ServicesMessage>>();
             container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
             container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
             container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();

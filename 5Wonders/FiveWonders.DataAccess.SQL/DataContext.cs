@@ -16,7 +16,6 @@ namespace FiveWonders.DataAccess.SQL
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
         public DbSet<SizeChart> SizeCharts { get; set; }
-        public DbSet<ServicesMessage> ServicesMessages { get; set; }
         public DbSet<Basket> Baskets { get; set; }
         public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<Customer> Customers { get; set; }

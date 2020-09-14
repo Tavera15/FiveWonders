@@ -3,11 +3,14 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron jumbo-img" style="background-image: url(@Model.homePageData.mWelcomeImgUrl);">
-    <img src="~/Content/Home/5 Wonders Balloons  Logo_transparent-01.png" alt="logo" class="jumbo-logo jumbo-item" />
+<div class="jumbotron jumbo-img" style="background-image: url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl));">
+    <img src="@Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl)" 
+         alt="logo" class="jumbo-logo jumbo-item" />
 
-    <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">Celebrate the Grand Opening</h1>
-    <h1 style="text-align:left; text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;" class="jumbo-item">With us!</h1>
+    <div class="jumbo-message">
+        @Html.Raw(Model.homePageData.mHomePageGreeting)
+    </div>
+
     <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
 </div>
 

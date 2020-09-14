@@ -108,7 +108,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class = "control-label col-md-2" style="font-weight: bold;">Existing Images</label>
+                    <label class="control-label col-md-2" style="font-weight: bold;">Existing Images</label>
                     <div class="col-md-10">
                         @foreach (string image in imageFiles)
                         {
@@ -117,7 +117,7 @@
                                     <input type="checkbox"
                                            name="existingImages"
                                            value=@image
-                                           @{<text> checked </text>} />
+                                           @{ <text> checked </text> } />
                                     @image
                                 </label>
                             </div>
@@ -174,5 +174,5 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/tinymce/tinymce.js"></script>
-    <script src="~/Scripts/WYSIWYG.js"></script>
+    <script src="~/Scripts/TinyMce_Client/WYSIWYG.js"></script>
 }

@@ -165,6 +165,26 @@
     <Compile Include="Migrations\202009110831029_addedImgAndShaderToSubcategory.Designer.cs">
       <DependentUpon>202009110831029_addedImgAndShaderToSubcategory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009112255057_addedPhonePropertyServiceMessage.cs" />
+    <Compile Include="Migrations\202009112255057_addedPhonePropertyServiceMessage.Designer.cs">
+      <DependentUpon>202009112255057_addedPhonePropertyServiceMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009130352396_addTextColorCategory.cs" />
+    <Compile Include="Migrations\202009130352396_addTextColorCategory.Designer.cs">
+      <DependentUpon>202009130352396_addTextColorCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009130721079_addTextColorSubcategory.cs" />
+    <Compile Include="Migrations\202009130721079_addTextColorSubcategory.Designer.cs">
+      <DependentUpon>202009130721079_addTextColorSubcategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009132039101_removedServiceMessages.cs" />
+    <Compile Include="Migrations\202009132039101_removedServiceMessages.Designer.cs">
+      <DependentUpon>202009132039101_removedServiceMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009140026088_homePageUpdated.cs" />
+    <Compile Include="Migrations\202009140026088_homePageUpdated.Designer.cs">
+      <DependentUpon>202009140026088_homePageUpdated.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -266,6 +286,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009110831029_addedImgAndShaderToSubcategory.resx">
       <DependentUpon>202009110831029_addedImgAndShaderToSubcategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009112255057_addedPhonePropertyServiceMessage.resx">
+      <DependentUpon>202009112255057_addedPhonePropertyServiceMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009130352396_addTextColorCategory.resx">
+      <DependentUpon>202009130352396_addTextColorCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009130721079_addTextColorSubcategory.resx">
+      <DependentUpon>202009130721079_addTextColorSubcategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009132039101_removedServiceMessages.resx">
+      <DependentUpon>202009132039101_removedServiceMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009140026088_homePageUpdated.resx">
+      <DependentUpon>202009140026088_homePageUpdated.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

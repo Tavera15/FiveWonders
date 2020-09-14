@@ -18,14 +18,16 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SizeChart> sizeChartContext;
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subCategoryContext;
+        IRepository<HomePage> homePageContext;
         IBasketServices basketServices;
 
-        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IBasketServices basketServices)
+        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IBasketServices basketServices)
         {
             productsContext = productsRepository;
             sizeChartContext = sizeChartsRepository;
             categoryContext = categoryRepository;
             subCategoryContext = subCategoryRepository;
+            homePageContext = homePageRepository;
             this.basketServices = basketServices;
         }
 
@@ -33,15 +35,19 @@ namespace FiveWonders.WebUI.Controllers
         [Route(Name = "/{category?}{subcategory?}")]
         public ActionResult Index(string category, string subcategory)
         {
+            HomePage homePageDefaults = homePageContext.GetCollection().FirstOrDefault();
+
+            if (homePageDefaults == null)
+                return HttpNotFound();
+
             const string defaultFolder = "Home";
-            const string defaultImg = "defaultpl.jpg";
-            const float defaultImgShaderAmount = .54f;
-            const string defaultPageTitleColor = "white";
+            string defaultImg = homePageDefaults.mDefaultProductListImgUrl;
+            float defaultImgShaderAmount = homePageDefaults.defaultBannerImgShader;
+            string defaultPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
+            string pageTitle = homePageDefaults.mDefaultProductsBannerText;
 
             string fixedCategory = GetProductsListPageTitle(category);
             string fixedSubcategory = GetProductsListPageTitle(subcategory);
-
-            string pageTitle = "Welcome to 5Wonders!";
 
             if (!String.IsNullOrWhiteSpace(fixedCategory) && !String.IsNullOrWhiteSpace(fixedSubcategory))
             {

@@ -394,12 +394,13 @@
     <Content Include="Scripts\tinymce\themes\silver\theme.min.js" />
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\TinyMce_Client\HomePagePreview.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Scripts\WYSIWYG.js" />
-    <Content Include="Scripts\WYSIWYG_email.js" />
+    <Content Include="Scripts\TinyMce_Client\WYSIWYG.js" />
+    <Content Include="Scripts\TinyMce_Client\WYSIWYG_email.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
