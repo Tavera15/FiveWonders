@@ -11,5 +11,6 @@ namespace FiveWonders.core.ViewModels
     {
         public ServicePage servicePageData { get; set; }
         public ServicesMessage servicesMessage { get; set; }
+        public string logo { get; set; }
     }
 }

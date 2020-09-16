@@ -39,6 +39,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
+                // Todo Shouln't create a new category with same name
                 if (!ModelState.IsValid || imageFile == null)
                 {
                     return View(cat);

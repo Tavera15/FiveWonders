@@ -1,41 +1,66 @@
 ﻿@model FiveWonders.core.ViewModels.HomePageViewModel
 @{
     ViewBag.Title = "Home Page";
+
+    string jumboBG = (!String.IsNullOrWhiteSpace(Model.homePageData.mWelcomeImgUrl)
+        ? (Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl))
+        : "");
+
+    string jumboLogo = (!String.IsNullOrWhiteSpace(Model.homePageData.mHomePageLogoUrl)
+        ? (Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl))
+        : "");
+
+    System.Diagnostics.Debug.WriteLine(jumboBG);
 }
 
-<div class="jumbotron jumbo-img" style="background-image: url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl));">
-    <img src="@Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl)" 
-         alt="logo" class="jumbo-logo jumbo-item" />
+@if(!String.IsNullOrWhiteSpace(jumboBG))
+{
+    <div class="jumbotron jumbo-img" style="background-image: url(@jumboBG);">
 
-    <div class="jumbo-message">
-        @Html.Raw(Model.homePageData.mHomePageGreeting)
+        @if(!String.IsNullOrWhiteSpace(jumboLogo))
+        {
+            <img src="@jumboLogo" 
+                 alt="logo" class="jumbo-logo jumbo-item" />
+        }
+
+        <div class="jumbo-message">
+            @Html.Raw(Model.homePageData.mHomePageGreeting)
+        </div>
+
+        <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
     </div>
-
-    <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
-</div>
+}
 
 <div class="section-top-three category-display">
     <div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
-            <a href="/products/?category=balloons">
-                <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.balloons.mImgUrL));">
-                    <div style="background-color: rgba(0,0,0,@Model.balloons.mImgShaderAmount);" class="category-img-cover">
-                        <h2>Balloons</h2>
-                        <p class="btn btn-lg btn-default redi-btn">Shop Balloons</p>
+        @if(Model.balloons != null)
+        {
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
+                <a href="/products/?category=balloons">
+                    <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.balloons.mImgUrL));">
+                        <div style="background-color: rgba(0,0,0,@Model.balloons.mImgShaderAmount);" class="category-img-cover">
+                            <h2>Balloons</h2>
+                            <p class="btn btn-lg btn-default redi-btn">Shop Balloons</p>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
-            <a href="/products/?category=clothing">
-                <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.clothing.mImgUrL));">
-                    <div style="background-color: rgba(0,0,0,@Model.clothing.mImgShaderAmount);" class="category-img-cover">
-                        <h2>Clothing</h2>
-                        <p class="btn btn-lg btn-default redi-btn">Shop Clothing</p>
+                </a>
+            </div>
+        }
+
+        @if(Model.clothing != null)
+        {
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
+                <a href="/products/?category=clothing">
+                    <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.clothing.mImgUrL));">
+                        <div style="background-color: rgba(0,0,0,@Model.clothing.mImgShaderAmount);" class="category-img-cover">
+                            <h2>Clothing</h2>
+                            <p class="btn btn-lg btn-default redi-btn">Shop Clothing</p>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
+        }
+    
     </div>
 </div>
 

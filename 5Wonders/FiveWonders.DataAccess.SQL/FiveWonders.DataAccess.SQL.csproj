@@ -185,6 +185,18 @@
     <Compile Include="Migrations\202009140026088_homePageUpdated.Designer.cs">
       <DependentUpon>202009140026088_homePageUpdated.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009160622482_addedSocialMedia.cs" />
+    <Compile Include="Migrations\202009160622482_addedSocialMedia.Designer.cs">
+      <DependentUpon>202009160622482_addedSocialMedia.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009160625183_addedSocialMediaFix.cs" />
+    <Compile Include="Migrations\202009160625183_addedSocialMediaFix.Designer.cs">
+      <DependentUpon>202009160625183_addedSocialMediaFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009160636417_addedSocialMediaUnreqIcon.cs" />
+    <Compile Include="Migrations\202009160636417_addedSocialMediaUnreqIcon.Designer.cs">
+      <DependentUpon>202009160636417_addedSocialMediaUnreqIcon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -301,6 +313,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009140026088_homePageUpdated.resx">
       <DependentUpon>202009140026088_homePageUpdated.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009160622482_addedSocialMedia.resx">
+      <DependentUpon>202009160622482_addedSocialMedia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009160625183_addedSocialMediaFix.resx">
+      <DependentUpon>202009160625183_addedSocialMediaFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009160636417_addedSocialMediaUnreqIcon.resx">
+      <DependentUpon>202009160636417_addedSocialMediaUnreqIcon.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

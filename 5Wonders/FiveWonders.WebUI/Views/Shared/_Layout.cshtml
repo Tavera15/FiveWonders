@@ -33,8 +33,7 @@
         <p style="text-align: center">&copy; @DateTime.Now.Year - 5 Wonders Party</p>
 
         <div style="text-align: center;">
-            <a rel="noopener noreferrer" target="_blank" href="https://www.facebook.com/5wonders/"><img style="height: 4vh;" src="~/Content/Icons/Facebook 64.png"/></a>
-            <a rel="noopener noreferrer" target="_blank" href="https://www.instagram.com/5wondersballoons/"><img style="height: 4vh;" src="~/Content/Icons/Instagram 64.png"/></a>
+            @{Html.RenderAction("Index", "SocialMedia", new { Id = "4" });}
         </div>
     </footer>
 

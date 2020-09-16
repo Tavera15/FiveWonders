@@ -1,0 +1,38 @@
+﻿@model IEnumerable<FiveWonders.core.Models.SocialMedia>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.m64x64Icon)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.mTimeEntered)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.m64x64Icon)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.mID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.mID })
+        </td>
+    </tr>
+}
+
+</table>

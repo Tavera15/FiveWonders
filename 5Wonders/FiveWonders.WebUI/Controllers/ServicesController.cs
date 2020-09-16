@@ -13,10 +13,12 @@ namespace FiveWonders.WebUI.Controllers
     public class ServicesController : Controller
     {
         IRepository<ServicePage> servicePageContext;
+        IRepository<HomePage> homePageContext;
 
-        public ServicesController(IRepository<ServicePage> servicePageRepository)
+        public ServicesController(IRepository<ServicePage> servicePageRepository, IRepository<HomePage> homePageRepository)
         {
             servicePageContext = servicePageRepository;
+            homePageContext = homePageRepository;
         }
 
         // GET: Services
@@ -25,10 +27,13 @@ namespace FiveWonders.WebUI.Controllers
             ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() 
                 ?? new ServicePage();
 
+            HomePage homePageData = homePageContext.GetCollection().FirstOrDefault() ?? new HomePage();
+
             ServicePageViewModel viewModel = new ServicePageViewModel()
             {
                 servicePageData = servicePageData,
-                servicesMessage = new ServicesMessage()
+                servicesMessage = new ServicesMessage(),
+                logo = String.IsNullOrEmpty(homePageData.mHomePageLogoUrl) ? "" : homePageData.mHomePageLogoUrl
             };
 
             return View(viewModel);

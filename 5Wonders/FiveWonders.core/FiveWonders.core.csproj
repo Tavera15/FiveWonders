@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IBasketServices.cs" />
+    <Compile Include="Contracts\IImageStorageService.cs" />
     <Compile Include="Contracts\IInstagramService.cs" />
     <Compile Include="Contracts\IRepository.cs" />
     <Compile Include="Models\BaseEntity.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Models\ServicePage.cs" />
     <Compile Include="Models\ServicesMessage.cs" />
     <Compile Include="Models\SizeChart.cs" />
+    <Compile Include="Models\SocialMedia.cs" />
     <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BasketItemViewModel.cs" />

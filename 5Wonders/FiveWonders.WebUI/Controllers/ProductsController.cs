@@ -203,7 +203,7 @@ namespace FiveWonders.WebUI.Controllers
                 
                 int tempCustom;
 
-                if (!ModelState.IsValid || item.productOrder.mQuantity <= 0 || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
+                if (!ModelState.IsValid || productToBuy == null || item.productOrder.mQuantity <= 0 || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
                 {
                     return View(item);
                 }

@@ -30,18 +30,20 @@ namespace FiveWonders.WebUI.Controllers
         {
             HomePageViewModel homeViewModel = new HomePageViewModel();
 
-            HomePage homeData = homeContext.GetCollection().FirstOrDefault();
+            HomePage homeData = homeContext.GetCollection().FirstOrDefault() ?? new HomePage();
             homeData.mWelcomeBtnUrl = homeData.mWelcomeBtnUrl ?? "/products";
 
-            string pic = homeData.mWelcomeImgUrl ?? "FWondersDefault.jpg";
-            homeData.mWelcomeImgUrl = "../content/home/" + pic;
+            string pic = homeData.mWelcomeImgUrl ?? "";
+            homeData.mWelcomeImgUrl = !String.IsNullOrEmpty(pic) 
+                ? "../content/home/" + pic
+                : "";
 
             Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(4).ToList();
 
-            Category balloons = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "balloons").FirstOrDefault();
-            Category clothing = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "clothing").FirstOrDefault();
+            Category balloons = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "balloons").FirstOrDefault() ?? null;
+            Category clothing = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "clothing").FirstOrDefault() ?? null;
 
             homeViewModel.homePageData = homeData;
             homeViewModel.top3Products = top3Products;

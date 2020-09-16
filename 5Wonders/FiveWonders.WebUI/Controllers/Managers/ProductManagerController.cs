@@ -18,14 +18,16 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SubCategory> subCateroryContext;
         IRepository<SizeChart> sizeChartContext;
         IBasketServices basketService;
+        IImageStorageService imageStorageService;
 
-        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories, IRepository<Basket> basketRepository, IBasketServices basketServices)
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories, IRepository<Basket> basketRepository, IBasketServices basketServices, IImageStorageService imageStorageService)
         {
             context = productContext;
             productCategories = categoriesContext;
             subCateroryContext = subCategoryRepository;
             sizeChartContext = sizeChartRepositories;
             basketService = basketServices;
+            this.imageStorageService = imageStorageService;
         }
 
         // Should display all products
@@ -73,7 +75,7 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 string newImageURL;
-                AddImages(p.Product.mID, imageFiles, out newImageURL);
+                imageStorageService.AddMultipleImages(EFolderName.Products, Server, imageFiles, p.Product.mID, out newImageURL);
 
                 p.Product.mImage = newImageURL;
                 p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
@@ -215,7 +217,7 @@ namespace FiveWonders.WebUI.Controllers
                 basketService.RemoveItemFromAllBaskets(Id);
 
                 string[] currentImageFiles = target.mImage.Split(',');
-                DeleteImages(currentImageFiles);
+                imageStorageService.DeleteMultipleImages(EFolderName.Products, currentImageFiles, Server);
 
                 context.Delete(target);
                 context.Commit();
@@ -229,35 +231,6 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
-        private void DeleteImages(string[] currentImageFiles)
-        {
-            foreach (string file in currentImageFiles)
-            {
-                string path = Server.MapPath("//Content//ProductImages//") + file;
-
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
-            }
-        }
-
-        private void AddImages(string Id, HttpPostedFileBase[] imageFiles, out string newImageURL)
-        {
-            var allFileNames = new List<string>();
-
-            foreach (HttpPostedFileBase file in imageFiles)
-            {
-                string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-                string fileName = Id + fileNameWithoutSpaces;
-                file.SaveAs(Server.MapPath("//Content//ProductImages//") + fileName);
-                allFileNames.Add(fileName);
-            }
-
-            newImageURL = String.Join(",", allFileNames);
-        }
-
         private void UpdateImages(string Id, string[] existingImages, HttpPostedFileBase[] newImageFiles, out string newImageURL)
         {
             // Get current product images
@@ -268,7 +241,7 @@ namespace FiveWonders.WebUI.Controllers
                 ? productImgs
                 : productImgs.Where(img => !existingImages.Contains(img)).ToArray();
 
-            DeleteImages(imagesToDelete);
+            imageStorageService.DeleteMultipleImages(EFolderName.Products, imagesToDelete, Server);
 
             // Initialize - Either new List or with images that were checkboxed
             List<string> allFileNames = existingImages != null 

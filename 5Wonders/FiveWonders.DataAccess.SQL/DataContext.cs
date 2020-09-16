@@ -24,5 +24,6 @@ namespace FiveWonders.DataAccess.SQL
         public DbSet<HomePage> HomeData { get; set; }
         public DbSet<GalleryImg> GalleryImgs { get; set; }
         public DbSet<ServicePage> ServiceData { get; set; }
+        public DbSet<SocialMedia> SocialMedia { get; set; }
     }
 }

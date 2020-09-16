@@ -1,4 +1,5 @@
-﻿using FiveWonders.core.Models;
+﻿using FiveWonders.core.Contracts;
+using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,14 @@ namespace FiveWonders.WebUI.Controllers.Managers
         public IRepository<HomePage> homeDataContext;
         public IRepository<Category> categoryContext;
         public IRepository<SubCategory> subcategoryContext;
+        public IImageStorageService imageStorageSystem;
 
-        public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext)
+        public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext, IImageStorageService imageStorageSystem)
         {
             homeDataContext = homePageRepository;
             categoryContext = categoryRepository;
             subcategoryContext = subContext;
+            this.imageStorageSystem = imageStorageSystem;
         }
 
         // GET: HomeManager
@@ -67,28 +70,28 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 
                 if(homeLogo != null)
                 {
-                    DeleteImage(existingData.mHomePageLogoUrl);
+                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mHomePageLogoUrl, Server);
 
                     string newLogoUrl;
-                    AddImage(existingData.mID, homeLogo, out newLogoUrl);
+                    imageStorageSystem.AddImage(EFolderName.Home, Server, homeLogo, existingData.mID, out newLogoUrl, "Logo");
                     existingData.mHomePageLogoUrl = newLogoUrl;
                 }
 
                 if (homeImg != null)
                 {
-                    DeleteImage(existingData.mWelcomeImgUrl);
+                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mWelcomeImgUrl, Server);
 
                     string newWelcomeImgUrl;
-                    AddImage(existingData.mID, homeImg, out newWelcomeImgUrl);
+                    imageStorageSystem.AddImage(EFolderName.Home, Server, homeImg, existingData.mID, out newWelcomeImgUrl, "DefaultHomeBanner");
                     existingData.mWelcomeImgUrl = newWelcomeImgUrl;
                 }
 
                 if (default_bannerImg != null)
                 {
-                    DeleteImage(existingData.mDefaultProductListImgUrl);
+                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mDefaultProductListImgUrl, Server);
 
                     string newProductListImgUrl;
-                    AddImage(existingData.mID, default_bannerImg, out newProductListImgUrl);
+                    imageStorageSystem.AddImage(EFolderName.Home, Server, default_bannerImg, existingData.mID, out newProductListImgUrl, "DefaultProductsBanner");
                     existingData.mDefaultProductListImgUrl = newProductListImgUrl;
                 }
 
@@ -104,24 +107,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
             catch(Exception e)
             {
                 return View(updatedData);
-            }
-        }
-
-        private void AddImage(string Id, HttpPostedFileBase imageFile, out string newImageURL)
-        {
-            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-            newImageURL = Id + fileNameWithoutSpaces;
-            imageFile.SaveAs(Server.MapPath("//Content//Home//") + newImageURL);
-        }
-
-        private void DeleteImage(string currentImageURL)
-        {
-            string path = Server.MapPath("//Content//Home//") + currentImageURL;
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
             }
         }
     }
