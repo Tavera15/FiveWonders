@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,17 @@ namespace FiveWonders.core.ViewModels
         public HomePage homePageData { get; set; }
         public List<Product> top3Products { get; set; }
         public List<GalleryImg> top3IGPosts { get; set; }
-        public Category clothing { get; set; }
-        public Category balloons { get; set; }
+        public Promo promo1 { get; set; }
+        public Promo promo2 { get; set; }
+        public string welcomePageUrl { get; set; }
+    }
+
+    public class Promo
+    {
+        public string promoLink { get; set; }
+        public string promoImg { get; set; }
+        public string promoName { get; set; }
+        public float promoImgShader { get; set; }
+        public string promoNameColor { get; set; }
     }
 }

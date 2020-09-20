@@ -13,11 +13,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
     {
         public IInstagramService InstagramService;
         public IRepository<GalleryImg> galleryContext;
+        public IImageStorageService imageStorageService;
 
-        public GalleryManagerController(IInstagramService IgService, IRepository<GalleryImg> galleryRepository)
+        public GalleryManagerController(IInstagramService IgService, IRepository<GalleryImg> galleryRepository, IImageStorageService imageStorageService)
         {
             InstagramService = IgService;
             galleryContext = galleryRepository;
+            this.imageStorageService = imageStorageService;
         }
 
         // GET: GalleryManager - All images 
@@ -42,14 +44,11 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 // Else add new images and store them to Db.
                 foreach (HttpPostedFileBase file in imageFiles)
                 {
-                    string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
+                    GalleryImg newImg = new GalleryImg();
+                    string newImgUrl;
+                    imageStorageService.AddImage(EFolderName.Gallery, Server, file, newImg.mID, out newImgUrl);
 
-                    file.SaveAs(Server.MapPath("//Content//GalleryImages//") + fileNameWithoutSpaces);
-
-                    GalleryImg newImg = new GalleryImg
-                    {
-                        mImageFile = fileNameWithoutSpaces
-                    };
+                    newImg.mImageFile = newImgUrl;
 
                     galleryContext.Insert(newImg);
                 }
@@ -70,11 +69,14 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 GalleryImg target = galleryContext.Find(Id);
 
+                if (target == null)
+                    throw new Exception(Id + " not found");
+
                 return View(target);
             }
             catch(Exception e)
             {
-                return RedirectToAction("Index", "GalleryManager");
+                return HttpNotFound();
             }
         }
 
@@ -86,12 +88,10 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 GalleryImg target = galleryContext.Find(Id);
 
-                string path = Server.MapPath("//Content//GalleryImages//") + target.mImageFile;
+                if (target == null)
+                    throw new Exception(Id + " not found");
 
-                if (System.IO.File.Exists(path))
-                {
-                    System.IO.File.Delete(path);
-                }
+                imageStorageService.DeleteImage(EFolderName.Gallery, target.mImageFile, Server);
 
                 galleryContext.Delete(target);
                 galleryContext.Commit();

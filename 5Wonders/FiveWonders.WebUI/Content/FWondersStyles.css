@@ -60,8 +60,8 @@ body {
     border: 1px solid black;
     border-radius: 25px;
     background-color: blanchedalmond;
-    background-color: rgba(255,255,255,1);
     background-color: aliceblue;
+    background-color: rgba(240,248,255, .54);
     text-align: center;
     background-position: center;
     background-repeat: no-repeat;

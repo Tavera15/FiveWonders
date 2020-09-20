@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
 
@@ -12,11 +13,13 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<Category> categoryContext;
         IRepository<Product> productsContext;
+        IImageStorageService imageStorageService;
 
-        public CategoryManagerController(IRepository<Category> categoryRepository, IRepository<Product> productsRepository)
+        public CategoryManagerController(IRepository<Category> categoryRepository, IRepository<Product> productsRepository, IImageStorageService imageStorageService)
         {
             categoryContext = categoryRepository;
             productsContext = productsRepository;
+            this.imageStorageService = imageStorageService;
         }
 
         // GET: CategoryManager
@@ -42,13 +45,12 @@ namespace FiveWonders.WebUI.Controllers
                 // Todo Shouln't create a new category with same name
                 if (!ModelState.IsValid || imageFile == null)
                 {
-                    return View(cat);
+                    throw new Exception("Category Create model no good");
                 }
 
                 // Save img, and store its name to category obj.
                 string newImgUrl;
-                AddImages(cat.mID, imageFile, out newImgUrl);
-
+                imageStorageService.AddImage(EFolderName.Category, Server, imageFile, cat.mID, out newImgUrl);
                 cat.mImgUrL = newImgUrl;
 
                 // Save to memory
@@ -59,7 +61,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return View(cat);
             }
         }
@@ -69,6 +70,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Category categoryToEdit = categoryContext.Find(Id);
+
+                if (categoryToEdit == null)
+                    throw new Exception(Id + " not found");
 
                 return View(categoryToEdit);
             }
@@ -87,18 +91,21 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Category categoryToEdit = categoryContext.Find(Id);
 
-                if(!ModelState.IsValid || (String.IsNullOrWhiteSpace(categoryToEdit.mImgUrL) && imageFile == null))
+                if (categoryToEdit == null)
+                    throw new Exception(Id + " not found");
+
+                if (!ModelState.IsValid || (String.IsNullOrWhiteSpace(categoryToEdit.mImgUrL) && imageFile == null))
                 {
-                    return View(c);
+                    throw new Exception("Category Edit model no good");
                 }
 
                 if(imageFile != null)
                 {
                     string newImgUrl;
-                    DeleteImages(categoryToEdit.mImgUrL);
-                    AddImages(Id, imageFile, out newImgUrl);
+                    imageStorageService.DeleteImage(EFolderName.Category, categoryToEdit.mImgUrL, Server);
+                    imageStorageService.AddImage(EFolderName.Category, Server, imageFile, Id, out newImgUrl);
 
-                   categoryToEdit.mImgUrL = newImgUrl;
+                    categoryToEdit.mImgUrL = newImgUrl;
                 }
 
                 categoryToEdit.mCategoryName = c.mCategoryName;
@@ -111,17 +118,20 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return View(c);
             }
         }
 
+        // TODO Shouldn't be able to delete promoted category in home page
         public ActionResult Delete(string Id)
         {
             try
             {
                 Category categoryToDelete = categoryContext.Find(Id);
-                
+
+                if (categoryToDelete == null)
+                    throw new Exception(Id + " not found");
+
                 Product[] productsWithCategory = productsContext.GetCollection()
                     .Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
@@ -143,14 +153,17 @@ namespace FiveWonders.WebUI.Controllers
             {
                 Category categoryToDelete = categoryContext.Find(Id);
 
+                if(categoryToDelete == null)
+                    throw new Exception(Id + " not found");
+
                 bool bItemsWithCat = productsContext.GetCollection().Any(p => p.mCategory == Id);
 
                 if(bItemsWithCat)
                 {
-                    return RedirectToAction("Delete", "CategoryManager");
+                    throw new Exception("Products contain targeted category");
                 }
 
-                DeleteImages(categoryToDelete.mImgUrL);
+                imageStorageService.DeleteImage(EFolderName.Category, categoryToDelete.mImgUrL, Server);
 
                 categoryContext.Delete(categoryToDelete);
                 categoryContext.Commit();
@@ -159,26 +172,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
-            }
-        }
-
-        private void AddImages(string Id, HttpPostedFileBase imageFile, out string newImageURL)
-        {
-            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-            newImageURL = Id + fileNameWithoutSpaces;
-            imageFile.SaveAs(Server.MapPath("//Content//CategoryImages//") + newImageURL);
-        }
-
-        private void DeleteImages(string currentImageURL)
-        {
-            string path = Server.MapPath("//Content//CategoryImages//") + currentImageURL;
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
+                return RedirectToAction("Delete", "CategoryManager", new { Id = Id });
             }
         }
     }

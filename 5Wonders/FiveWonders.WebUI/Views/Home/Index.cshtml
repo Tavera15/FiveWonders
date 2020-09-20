@@ -10,10 +10,21 @@
         ? (Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl))
         : "");
 
-    System.Diagnostics.Debug.WriteLine(jumboBG);
+    string promoImg1 = (!String.IsNullOrWhiteSpace(Model.promo1.promoImg)
+        ? (Url.Content("~/Content" + Model.promo1.promoImg))
+        : "");
+
+    string promoImg2 = (!String.IsNullOrWhiteSpace(Model.promo2.promoImg)
+        ? (Url.Content("~/Content" + Model.promo2.promoImg))
+        : "");
+
+    string promoClassNames = (!String.IsNullOrWhiteSpace(Model.promo1.promoLink)
+        && !String.IsNullOrWhiteSpace(Model.promo1.promoLink))
+        ? "col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container"
+        : "col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container";
 }
 
-@if(!String.IsNullOrWhiteSpace(jumboBG))
+@if (!String.IsNullOrWhiteSpace(jumboBG))
 {
     <div class="jumbotron jumbo-img" style="background-image: url(@jumboBG);">
 
@@ -27,40 +38,39 @@
             @Html.Raw(Model.homePageData.mHomePageGreeting)
         </div>
 
-        <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.homePageData.mWelcomeBtnUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+        <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.welcomePageUrl" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
     </div>
 }
 
 <div class="section-top-three category-display">
     <div>
-        @if(Model.balloons != null)
+        @if(!String.IsNullOrWhiteSpace(Model.promo1.promoLink) && !String.IsNullOrWhiteSpace(promoImg1))
         {
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
-                <a href="/products/?category=balloons">
-                    <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.balloons.mImgUrL));">
-                        <div style="background-color: rgba(0,0,0,@Model.balloons.mImgShaderAmount);" class="category-img-cover">
-                            <h2>Balloons</h2>
-                            <p class="btn btn-lg btn-default redi-btn">Shop Balloons</p>
+            <div class="@promoClassNames">
+                <a href="@Model.promo1.promoLink">
+                    <div class="single-category" style="background-image: url(@promoImg1);">
+                        <div style="background-color: rgba(0,0,0,@Model.promo1.promoImgShader);" class="category-img-cover">
+                            <h2 style="color: @Model.promo1.promoNameColor;">@Model.promo1.promoName</h2>
+                            <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo1.promoName</p>
                         </div>
                     </div>
                 </a>
             </div>
         }
 
-        @if(Model.clothing != null)
+        @if(!String.IsNullOrWhiteSpace(Model.promo2.promoLink) && !String.IsNullOrWhiteSpace(promoImg2))
         {
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container">
-                <a href="/products/?category=clothing">
-                    <div class="single-category" style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.clothing.mImgUrL));">
-                        <div style="background-color: rgba(0,0,0,@Model.clothing.mImgShaderAmount);" class="category-img-cover">
-                            <h2>Clothing</h2>
-                            <p class="btn btn-lg btn-default redi-btn">Shop Clothing</p>
+            <div class="@promoClassNames">
+                <a href="@Model.promo2.promoLink">
+                    <div class="single-category" style="background-image: url(@promoImg2);">
+                        <div style="background-color: rgba(0,0,0,@Model.promo2.promoImgShader);" class="category-img-cover">
+                            <h2 style="color: @Model.promo2.promoNameColor;">@Model.promo2.promoName</h2>
+                            <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo2.promoName</p>
                         </div>
                     </div>
                 </a>
             </div>
         }
-    
     </div>
 </div>
 

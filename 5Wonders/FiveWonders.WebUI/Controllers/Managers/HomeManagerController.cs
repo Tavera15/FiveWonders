@@ -16,6 +16,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
         public IRepository<SubCategory> subcategoryContext;
         public IImageStorageService imageStorageSystem;
 
+        // TODO User should be able to select what two categories to promote on Home page
+
         public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext, IImageStorageService imageStorageSystem)
         {
             homeDataContext = homePageRepository;
@@ -31,18 +33,29 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 HomePage home = homeDataContext.GetCollection().FirstOrDefault() ?? new HomePage();
                 Dictionary<string, string> links = new Dictionary<string, string>();
+                Dictionary<string, string> promoLinks = new Dictionary<string, string>();
 
-                foreach(var cat in categoryContext.GetCollection())
+                links.Add("0", "All Products");
+                promoLinks.Add("0", "Empty");
+
+                foreach(Category cat in categoryContext.GetCollection())
                 {
-                    links.Add(cat.mCategoryName, "/products/?category=" + cat.mCategoryName);
+                    links.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
+                    promoLinks.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
                 }
 
-                foreach (var sub in subcategoryContext.GetCollection())
+                foreach (SubCategory sub in subcategoryContext.GetCollection())
                 {
-                    links.Add(sub.mSubCategoryName, "/products/?subcategory=" + sub.mSubCategoryName);
+                    links.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+                    
+                    if(sub.isEventOrTheme)
+                    {
+                        promoLinks.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+                    }
                 }
 
                 ViewBag.links = links;
+                ViewBag.promoLinks = promoLinks;
                 return View(home);
             }
             catch(Exception e)
@@ -67,6 +80,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 existingData.mDefaultProductsBannerText = updatedData.mDefaultProductsBannerText;
                 existingData.mHomePageGreeting = updatedData.mHomePageGreeting;
                 existingData.defaultBannerImgShader = updatedData.defaultBannerImgShader;
+                existingData.mPromo1 = updatedData.mPromo1;
+                existingData.mPromo2 = updatedData.mPromo2;
                 
                 if(homeLogo != null)
                 {

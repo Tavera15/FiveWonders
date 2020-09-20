@@ -17,13 +17,15 @@ namespace FiveWonders.WebUI.Controllers
         public IRepository<HomePage> homeContext;
         public IRepository<Product> productsContext;
         public IRepository<Category> categoryContext;
+        public IRepository<SubCategory> subcategoryContext;
 
-        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository)
+        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository)
         {
             InstagramService = IGService;
             homeContext = homeRepository;
             productsContext = productsRepository;
             categoryContext = categoryRepository;
+            subcategoryContext = subcategoryRepository;
         }
 
         public ActionResult Index()
@@ -31,7 +33,19 @@ namespace FiveWonders.WebUI.Controllers
             HomePageViewModel homeViewModel = new HomePageViewModel();
 
             HomePage homeData = homeContext.GetCollection().FirstOrDefault() ?? new HomePage();
-            homeData.mWelcomeBtnUrl = homeData.mWelcomeBtnUrl ?? "/products";
+            
+            homeViewModel.welcomePageUrl = "/Products/";
+
+            if (categoryContext.Find(homeData.mWelcomeBtnUrl) != null)
+            {
+                homeViewModel.welcomePageUrl = "/Products/?Category=" 
+                    + categoryContext.Find(homeData.mWelcomeBtnUrl).mCategoryName;
+            }
+            else if(subcategoryContext.Find(homeData.mWelcomeBtnUrl) != null)
+            {
+                homeViewModel.welcomePageUrl = "/Products/?Subcategory="
+                    + subcategoryContext.Find(homeData.mWelcomeBtnUrl).mSubCategoryName;
+            }
 
             string pic = homeData.mWelcomeImgUrl ?? "";
             homeData.mWelcomeImgUrl = !String.IsNullOrEmpty(pic) 
@@ -42,14 +56,58 @@ namespace FiveWonders.WebUI.Controllers
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(4).ToList();
 
-            Category balloons = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "balloons").FirstOrDefault() ?? null;
-            Category clothing = categoryContext.GetCollection().Where(c => c.mCategoryName.ToLower() == "clothing").FirstOrDefault() ?? null;
+            Promo promo1 = new Promo();
+            Promo promo2 = new Promo();
+
+            // Find data for promo 1
+            if (categoryContext.Find(homeData.mPromo1) != null)
+            {
+                Category category = categoryContext.Find(homeData.mPromo1);
+
+                promo1.promoName = category.mCategoryName;
+                promo1.promoLink = "/Products/?Category=" + category.mCategoryName;
+                promo1.promoImg = "/CategoryImages/" + category.mImgUrL;
+                promo1.promoImgShader = category.mImgShaderAmount;
+                promo1.promoNameColor = category.bannerTextColor;
+            }
+            else if(subcategoryContext.Find(homeData.mPromo1) != null)
+            {
+                SubCategory sub = subcategoryContext.Find(homeData.mPromo1);
+
+                promo1.promoName = sub.mSubCategoryName;
+                promo1.promoLink = "/Products/?Subcategory=" + sub.mSubCategoryName;
+                promo1.promoImg = "/SubcategoryImages/" + sub.mImageUrl;
+                promo1.promoImgShader = sub.mImgShaderAmount;
+                promo1.promoNameColor = sub.bannerTextColor;
+            }
+
+            // Find data for promo 2
+            if (categoryContext.Find(homeData.mPromo2) != null)
+            {
+                Category category = categoryContext.Find(homeData.mPromo2);
+
+                promo2.promoName = category.mCategoryName;
+                promo2.promoLink = "/Products/?Category=" + category.mCategoryName;
+                promo2.promoImg = "/CategoryImages/" + category.mImgUrL;
+                promo2.promoImgShader = category.mImgShaderAmount;
+                promo2.promoNameColor = category.bannerTextColor;
+            }
+            else if (subcategoryContext.Find(homeData.mPromo2) != null)
+            {
+                SubCategory sub = subcategoryContext.Find(homeData.mPromo2);
+
+                promo2.promoName = sub.mSubCategoryName;
+                promo2.promoLink = "/Products/?Subcategory=" + sub.mSubCategoryName;
+                promo2.promoImg = "/SubcategoryImages/" + sub.mImageUrl;
+                promo2.promoImgShader = sub.mImgShaderAmount;
+                promo2.promoNameColor = sub.bannerTextColor;
+            }
 
             homeViewModel.homePageData = homeData;
             homeViewModel.top3Products = top3Products;
             homeViewModel.top3IGPosts = top4GalleryImgs;
-            homeViewModel.balloons = balloons;
-            homeViewModel.clothing = clothing;
+            homeViewModel.promo1 = promo1;
+            homeViewModel.promo2 = promo2;
 
             return View(homeViewModel);
         }

@@ -42,9 +42,8 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Create()
         {
             ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            var allSizeCharts = sizeChartContext.GetCollection().ToList();
+            List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
 
-            // TODO Fix the "None" option mID
             allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
             viewModel.Product = new Product();
@@ -60,20 +59,13 @@ namespace FiveWonders.WebUI.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories, HttpPostedFileBase[] imageFiles)
         {
-            if(!ModelState.IsValid || imageFiles[0] == null)
-            {
-                var allSizeCharts = sizeChartContext.GetCollection().ToList();
-                allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
-
-                p.categories = productCategories.GetCollection();
-                p.subCategories = subCateroryContext.GetCollection();
-                p.sizeCharts = allSizeCharts;
-
-                return View(p);
-            }
-
             try
             {
+                if(!ModelState.IsValid || imageFiles[0] == null)
+                {
+                    throw new Exception("Product Create model no good");
+                }
+                
                 string newImageURL;
                 imageStorageService.AddMultipleImages(EFolderName.Products, Server, imageFiles, p.Product.mID, out newImageURL);
 
@@ -87,8 +79,14 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
+                allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
+
+                p.categories = productCategories.GetCollection();
+                p.subCategories = subCateroryContext.GetCollection();
+                p.sizeCharts = allSizeCharts;
+
+                return View(p);
             }
         }
 
@@ -97,7 +95,12 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(String.IsNullOrWhiteSpace(Id))
+                Product target = context.Find(Id);
+
+                if (target == null)
+                    throw new Exception(Id + " not found");
+
+                if (String.IsNullOrWhiteSpace(Id))
                 {
                     throw new Exception("No item Id");
                 }
@@ -108,7 +111,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
         }
@@ -119,13 +121,17 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(existingImages == null && imageFiles[0] == null)
+                // Find product to edit
+                Product target = context.Find(Id);
+
+                if (target == null)
+                    throw new Exception(Id + " not found");
+
+                if (existingImages == null && imageFiles[0] == null)
                 {
                     throw new Exception("No Images and/or Subcategories Selected");
                 }
 
-                // Find product to edit
-                Product target = context.Find(Id);
                 bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable
                                            || target.isTextCustomizable != p.Product.isTextCustomizable);
@@ -162,17 +168,11 @@ namespace FiveWonders.WebUI.Controllers
 
                 context.Commit();
 
-                // TODO Update customer baskets by removing 
-                // updated item if size chart and/or custom opts updated
-
                 return RedirectToAction("Index", "ProductManager");
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                ProductManagerViewModel viewModel = GetProductManagerVM(Id);
-
-                return View(viewModel);
+                return RedirectToAction("Edit", "ProductManager", new { Id = Id});
             }
         }
 
@@ -181,6 +181,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product target = context.Find(Id);
+
+                if (target == null)
+                    throw new Exception(Id + " not found");
 
                 // Gets all the Subcategories' IDs
                 string[] allSubIDs = target.mSubCategories != "" ? target.mSubCategories.Split(',') : new string[] { "None" };
@@ -201,7 +204,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
         }
@@ -213,6 +215,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product target = context.Find(Id);
+
+                if (target == null)
+                    throw new Exception(Id + " not found");
 
                 basketService.RemoveItemFromAllBaskets(Id);
 
@@ -226,8 +231,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return RedirectToAction("Delete", "ProductManager", new { Id = Id });
             }
         }
 
@@ -268,7 +272,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             Product productToEdit = context.Find(productId);
 
-            var allSizeCharts = sizeChartContext.GetCollection().ToList();
+            List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
             allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
             // Popularize the view model with all the lists and product to edit

@@ -29,10 +29,3 @@ namespace FiveWonders.core.Models
         }
     }
 }
-
-/*
-    Balloons: Male Female Kids
-    Clothing: Male Female Kids | XS | S | M | L | XL | XXL |
-    Giveaway: Create GiveAway, Past GiveAways   ID, Name, Empty List of Customers, Winner, Price, End date
-    
-*/

@@ -1,4 +1,5 @@
-﻿using FiveWonders.core.Models;
+﻿using FiveWonders.core.Contracts;
+using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,14 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<SubCategory> subCategoryContext;
         IRepository<Product> productContext;
+        IImageStorageService imageStorageService;
 
         // GET: SubCategoryManager
-        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository)
+        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository, IImageStorageService imageStorageService)
         {
             subCategoryContext = subcategoryRepository;
             productContext = productRepository;
+            this.imageStorageService = imageStorageService;
         }
 
         public ActionResult Index()
@@ -40,13 +43,13 @@ namespace FiveWonders.WebUI.Controllers
             {
                 if(!ModelState.IsValid || (sub.isEventOrTheme && imageFile == null))
                 {
-                    return View(sub);
+                    throw new Exception("Subcategory Model no good");
                 }
 
                 if(sub.isEventOrTheme && imageFile != null)
                 {
                     string newImgUrl;
-                    AddImages(sub.mID, imageFile, out newImgUrl);
+                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, sub.mID, out newImgUrl);
 
                     sub.mImageUrl = newImgUrl;
                 }
@@ -58,7 +61,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return View(sub);
             }
         }
@@ -68,6 +70,9 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 SubCategory subToEdit = subCategoryContext.Find(Id);
+
+                if (subToEdit == null)
+                    throw new Exception(Id + " not found");
 
                 return View(subToEdit);
             }
@@ -86,7 +91,10 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SubCategory subToEdit = subCategoryContext.Find(Id);
 
-                if(!ModelState.IsValid || 
+                if (subToEdit == null)
+                    throw new Exception(Id + " not found");
+
+                if (!ModelState.IsValid || 
                     (sub.isEventOrTheme &&
                         (imageFile == null && String.IsNullOrWhiteSpace(subToEdit.mImageUrl))))
                 {
@@ -95,7 +103,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 if(!sub.isEventOrTheme && !String.IsNullOrWhiteSpace(subToEdit.mImageUrl))
                 {
-                    DeleteImages(subToEdit.mImageUrl);
+                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
                     subToEdit.mImageUrl = "";
                 }
                 
@@ -106,11 +114,10 @@ namespace FiveWonders.WebUI.Controllers
 
                 if(imageFile != null)
                 {
-                    DeleteImages(subToEdit.mImageUrl);
+                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
 
                     string newImgUrl;
-                    AddImages(Id, imageFile, out newImgUrl);
-
+                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, sub.mID, out newImgUrl);
                     subToEdit.mImageUrl = newImgUrl;
                 }
 
@@ -120,16 +127,19 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return View(sub);
             }
         }
 
+        // TODO shouldn't be able to delete promoted subcategory in home page
         public ActionResult Delete(string Id)
         {
             try
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id);
+
+                if (subToDelete == null)
+                    throw new Exception(Id + " not found");
 
                 Product[] productsWithSub = productContext.GetCollection()
                     .Where(p => !String.IsNullOrEmpty(p.mSubCategories) 
@@ -153,15 +163,18 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id);
 
+                if (subToDelete == null)
+                    throw new Exception(Id + " not found");
+
                 bool bItemsWithSub = productContext.GetCollection()
                     .Any(p => p.mSubCategories.Contains(Id));
 
                 if (bItemsWithSub)
                 {
-                    return RedirectToAction("Delete", "SubCategoryManager");
+                    throw new Exception("Products contain target subcategory.");
                 }
 
-                DeleteImages(subToDelete.mImageUrl);
+                imageStorageService.DeleteImage(EFolderName.Subcategory, subToDelete.mImageUrl, Server);
 
                 subCategoryContext.Delete(subToDelete);
                 subCategoryContext.Commit();
@@ -170,26 +183,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
-            }
-        }
-
-        private void AddImages(string Id, HttpPostedFileBase imageFile, out string newImageURL)
-        {
-            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-            newImageURL = Id + fileNameWithoutSpaces;
-            imageFile.SaveAs(Server.MapPath("//Content//SubcategoryImages//") + newImageURL);
-        }
-
-        private void DeleteImages(string currentImageURL)
-        {
-            string path = Server.MapPath("//Content//SubcategoryImages//") + currentImageURL;
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
+                return RedirectToAction("Delete", "SubCategoryManager", new { Id = Id});
             }
         }
     }

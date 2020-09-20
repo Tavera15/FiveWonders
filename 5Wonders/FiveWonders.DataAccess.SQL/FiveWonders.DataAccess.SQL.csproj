@@ -197,6 +197,14 @@
     <Compile Include="Migrations\202009160636417_addedSocialMediaUnreqIcon.Designer.cs">
       <DependentUpon>202009160636417_addedSocialMediaUnreqIcon.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009192327533_homePageCatsToPromote.cs" />
+    <Compile Include="Migrations\202009192327533_homePageCatsToPromote.Designer.cs">
+      <DependentUpon>202009192327533_homePageCatsToPromote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009200215175_homePageRenameToPromos.cs" />
+    <Compile Include="Migrations\202009200215175_homePageRenameToPromos.Designer.cs">
+      <DependentUpon>202009200215175_homePageRenameToPromos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -322,6 +330,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009160636417_addedSocialMediaUnreqIcon.resx">
       <DependentUpon>202009160636417_addedSocialMediaUnreqIcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009192327533_homePageCatsToPromote.resx">
+      <DependentUpon>202009192327533_homePageCatsToPromote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009200215175_homePageRenameToPromos.resx">
+      <DependentUpon>202009200215175_homePageRenameToPromos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

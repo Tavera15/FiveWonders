@@ -24,7 +24,11 @@ namespace FiveWonders.core.Models
         [Required(ErrorMessage = "A Greeting is required.")]
         public string mHomePageGreeting { get; set; }
 
+        [Display(Name = "Category 1 to promote")]
+        public string mPromo1 { get; set; }
 
+        [Display(Name = "Category 2 to promote")]
+        public string mPromo2 { get; set; }
 
 
 

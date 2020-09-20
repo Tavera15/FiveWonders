@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
 
@@ -12,11 +13,13 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<SizeChart> sizeChartContext;
         IRepository<Product> productContext;
+        IImageStorageService imageStorageService;
 
-        public SizeChartManagerController(IRepository<SizeChart> sizeChartRepository, IRepository<Product> productRepository)
+        public SizeChartManagerController(IRepository<SizeChart> sizeChartRepository, IRepository<Product> productRepository, IImageStorageService imageStorageService)
         {
             sizeChartContext = sizeChartRepository;
             productContext = productRepository;
+            this.imageStorageService = imageStorageService;
         }
 
         // GET: SizeChartManager
@@ -41,10 +44,10 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             string newImageURL;
-            AddImages(chart.mID, imageFile, out newImageURL);
+            imageStorageService.AddImage(EFolderName.SizeCharts, Server, imageFile, chart.mID, out newImageURL);
 
-            chart.mSizesToDisplay = String.Join(",", selectedSizes);
             chart.mImageChartUrl = newImageURL;
+            chart.mSizesToDisplay = String.Join(",", selectedSizes);
 
             sizeChartContext.Insert(chart);
             sizeChartContext.Commit();
@@ -58,11 +61,13 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SizeChart chartToEdit = sizeChartContext.Find(Id);
 
+                if (chartToEdit == null)
+                    throw new Exception(Id + " not found");
+
                 return View(chartToEdit);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
         }
@@ -71,14 +76,18 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(SizeChart newChart, string[] newSelectedSizes, HttpPostedFileBase newImage, string Id)
         {
-            if(!ModelState.IsValid || newSelectedSizes == null)
-            {
-                return View();
-            }
 
             try
             {
                 SizeChart chartToEdit = sizeChartContext.Find(Id);
+
+                if (chartToEdit == null)
+                    throw new Exception(Id + " not found");
+                
+                if(!ModelState.IsValid || newSelectedSizes == null)
+                {
+                    throw new Exception("Size Chart Edit Model no good");
+                }
 
                 chartToEdit.mChartName = newChart.mChartName;
                 chartToEdit.mSizesToDisplay = String.Join(",", newSelectedSizes);
@@ -86,10 +95,9 @@ namespace FiveWonders.WebUI.Controllers
                 if(newImage != null)
                 {
                     string newImageURL;
-                    
-                    DeleteImages(chartToEdit.mImageChartUrl);
-                    AddImages(Id, newImage, out newImageURL);
 
+                    imageStorageService.DeleteImage(EFolderName.SizeCharts, chartToEdit.mImageChartUrl, Server);
+                    imageStorageService.AddImage(EFolderName.SizeCharts, Server, newImage, Id, out newImageURL);
                     chartToEdit.mImageChartUrl = newImageURL;
                 }
 
@@ -99,8 +107,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return RedirectToAction("Edit", "SizeChartManager", new { Id = Id});
             }
         }
 
@@ -109,6 +116,10 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 SizeChart chartToDelete = sizeChartContext.Find(Id);
+
+                if (chartToDelete == null)
+                    throw new Exception(Id + " not found");
+
                 Product[] productsWithSizeChart = productContext.GetCollection().Where(x => x.mSizeChart == chartToDelete.mID).ToArray();
 
                 ViewBag.productsWithSizeChart = productsWithSizeChart;
@@ -116,7 +127,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 return HttpNotFound();
             }
         }
@@ -127,16 +137,19 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product[] productsWithSizeChart = productContext.GetCollection().Where(x => x.mSizeChart == Id).ToArray();
-
-                if(productsWithSizeChart.Length != 0)
-                {
-                    RedirectToAction("Delete", "SizeChartManager");
-                }
-
                 SizeChart chartToDelete = sizeChartContext.Find(Id);
 
-                DeleteImages(chartToDelete.mImageChartUrl);
+                if (chartToDelete == null)
+                    throw new Exception(Id + " not found");
+
+                bool bItemsWithChart = productContext.GetCollection().Any(p => p.mSizeChart == Id);
+
+                if (bItemsWithChart)
+                {
+                    throw new Exception("Products contain targeted size chart");
+                }
+
+                imageStorageService.DeleteImage(EFolderName.SizeCharts, chartToDelete.mImageChartUrl, Server);
 
                 sizeChartContext.Delete(chartToDelete);
                 sizeChartContext.Commit();
@@ -145,27 +158,9 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return HttpNotFound();
+                return RedirectToAction("Delete", "SizeChartManager", new { Id = Id });
             }
         }
 
-        private void AddImages(string Id, HttpPostedFileBase imageFile, out string newImageURL)
-        {
-            string fileNameWithoutSpaces = String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-            newImageURL = Id + fileNameWithoutSpaces;
-            imageFile.SaveAs(Server.MapPath("//Content//SizeCharts//") + newImageURL);
-        }
-
-        private void DeleteImages(string currentImageURL)
-        {
-            string path = Server.MapPath("//Content//SizeCharts//") + currentImageURL;
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-        }
     }
 }
