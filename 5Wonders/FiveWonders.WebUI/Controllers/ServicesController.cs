@@ -80,6 +80,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
                 viewModel.servicePageData = servicePageData;
 

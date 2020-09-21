@@ -61,6 +61,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return View(cat);
             }
         }
@@ -69,16 +70,13 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToEdit = categoryContext.Find(Id);
-
-                if (categoryToEdit == null)
-                    throw new Exception(Id + " not found");
+                Category categoryToEdit = categoryContext.Find(Id, true);
 
                 return View(categoryToEdit);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -89,14 +87,11 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToEdit = categoryContext.Find(Id);
-
-                if (categoryToEdit == null)
-                    throw new Exception(Id + " not found");
+                Category categoryToEdit = categoryContext.Find(Id, true);
 
                 if (!ModelState.IsValid || (String.IsNullOrWhiteSpace(categoryToEdit.mImgUrL) && imageFile == null))
                 {
-                    throw new Exception("Category Edit model no good");
+                    return View(c);
                 }
 
                 if(imageFile != null)
@@ -118,7 +113,8 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                return View(c);
+                _ = e;
+                return RedirectToAction("Edit", "CategoryManager", new { Id = Id });
             }
         }
 
@@ -127,10 +123,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToDelete = categoryContext.Find(Id);
-
-                if (categoryToDelete == null)
-                    throw new Exception(Id + " not found");
+                Category categoryToDelete = categoryContext.Find(Id, true);
 
                 Product[] productsWithCategory = productsContext.GetCollection()
                     .Where(x => x.mCategory == categoryToDelete.mID).ToArray();
@@ -140,7 +133,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -151,10 +144,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Category categoryToDelete = categoryContext.Find(Id);
-
-                if(categoryToDelete == null)
-                    throw new Exception(Id + " not found");
+                Category categoryToDelete = categoryContext.Find(Id, true);
 
                 bool bItemsWithCat = productsContext.GetCollection().Any(p => p.mCategory == Id);
 
@@ -172,6 +162,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Delete", "CategoryManager", new { Id = Id });
             }
         }

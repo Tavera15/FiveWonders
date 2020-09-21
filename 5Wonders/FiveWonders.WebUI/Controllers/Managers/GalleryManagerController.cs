@@ -59,6 +59,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch (Exception e)
             {
+                _ = e;
                 return RedirectToAction("Index", "GalleryManager");
             }
         }
@@ -67,15 +68,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                GalleryImg target = galleryContext.Find(Id);
-
-                if (target == null)
-                    throw new Exception(Id + " not found");
+                GalleryImg target = galleryContext.Find(Id, true);
 
                 return View(target);
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -86,10 +85,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                GalleryImg target = galleryContext.Find(Id);
-
-                if (target == null)
-                    throw new Exception(Id + " not found");
+                GalleryImg target = galleryContext.Find(Id, true);
 
                 imageStorageService.DeleteImage(EFolderName.Gallery, target.mImageFile, Server);
 
@@ -100,6 +96,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch (Exception e)
             {
+                _ = e;
                 return RedirectToAction("Delete", "GalleryManager", new { Id = Id});
             }
         }

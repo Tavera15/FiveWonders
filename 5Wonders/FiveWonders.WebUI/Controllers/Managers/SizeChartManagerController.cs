@@ -59,15 +59,13 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SizeChart chartToEdit = sizeChartContext.Find(Id);
-
-                if (chartToEdit == null)
-                    throw new Exception(Id + " not found");
+                SizeChart chartToEdit = sizeChartContext.Find(Id, true);
 
                 return View(chartToEdit);
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -79,11 +77,8 @@ namespace FiveWonders.WebUI.Controllers
 
             try
             {
-                SizeChart chartToEdit = sizeChartContext.Find(Id);
+                SizeChart chartToEdit = sizeChartContext.Find(Id, true);
 
-                if (chartToEdit == null)
-                    throw new Exception(Id + " not found");
-                
                 if(!ModelState.IsValid || newSelectedSizes == null)
                 {
                     throw new Exception("Size Chart Edit Model no good");
@@ -107,6 +102,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Edit", "SizeChartManager", new { Id = Id});
             }
         }
@@ -115,10 +111,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SizeChart chartToDelete = sizeChartContext.Find(Id);
-
-                if (chartToDelete == null)
-                    throw new Exception(Id + " not found");
+                SizeChart chartToDelete = sizeChartContext.Find(Id, true);
 
                 Product[] productsWithSizeChart = productContext.GetCollection().Where(x => x.mSizeChart == chartToDelete.mID).ToArray();
 
@@ -127,6 +120,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -137,10 +131,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SizeChart chartToDelete = sizeChartContext.Find(Id);
-
-                if (chartToDelete == null)
-                    throw new Exception(Id + " not found");
+                SizeChart chartToDelete = sizeChartContext.Find(Id, true);
 
                 bool bItemsWithChart = productContext.GetCollection().Any(p => p.mSizeChart == Id);
 
@@ -158,6 +149,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
+                _ = e;
                 return RedirectToAction("Delete", "SizeChartManager", new { Id = Id });
             }
         }

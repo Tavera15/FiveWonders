@@ -61,6 +61,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch(Exception e)
             {
+                _ = e;
                return View(updatedPage);
             }
             

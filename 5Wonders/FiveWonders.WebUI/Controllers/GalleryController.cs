@@ -33,6 +33,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 GalleryImg[] galleryImgs = new GalleryImg[] 
                     { new GalleryImg { mImageFile = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg" } };
 

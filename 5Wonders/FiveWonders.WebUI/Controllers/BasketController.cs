@@ -48,19 +48,20 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 basketService.RemoveFromBasket(HttpContext, Id);
-                return RedirectToAction("Index", "Basket");
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                return RedirectToAction("Index", "Basket");
+                _ = e;
             }
+            
+            return RedirectToAction("Index", "Basket");
         }
 
         public ActionResult EditBasketItem(string Id)
         {
             try
             {
+                BasketItem basketItem = basketItemContext.Find(Id, true);
                 BasketItemViewModel viewModel = GetSingleBasketItemViewModel(Id);
 
                 if (viewModel == null)
@@ -70,7 +71,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -83,10 +84,10 @@ namespace FiveWonders.WebUI.Controllers
             {
                 if(!ModelState.IsValid || viewModel.basketItem.mQuantity <= 0)
                 {
-                    throw new Exception("Cannot edit properly.");
+                    throw new Exception("Cannot edit basket item.");
                 }
 
-                BasketItem oldBasketItem = basketItemContext.Find(Id);
+                BasketItem oldBasketItem = basketItemContext.Find(Id, true);
 
                 BasketItem newBasketItem = new BasketItem()
                 {
@@ -104,10 +105,8 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                BasketItemViewModel oldBasketViewModel = GetSingleBasketItemViewModel(Id);
-
-                return View(oldBasketViewModel);
+                _ = e;
+                return RedirectToAction("EditBasketItem", "Basket", new { Id = Id });
             }
         }
 
@@ -119,7 +118,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
             
             return RedirectToAction("Index", "Basket");
@@ -132,12 +131,12 @@ namespace FiveWonders.WebUI.Controllers
 
             if (basketService.IsItemInUserBasket(HttpContext, Id, out basketItem))
             {
-                Product product = productContext.Find(basketItem.mProductID);
+                Product product = productContext.Find(basketItem.mProductID, true);
 
                 SizeChart sizeChart = null;
 
                 if (product.mSizeChart != "0")
-                    sizeChart = sizeChartContext.Find(product.mSizeChart);
+                    sizeChart = sizeChartContext.Find(product.mSizeChart, true);
 
                 viewModel = new BasketItemViewModel()
                 {

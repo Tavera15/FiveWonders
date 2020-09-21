@@ -28,24 +28,30 @@ namespace FiveWonders.WebUI.Controllers
             // Key is the category - Values are subcategories.
             Dictionary<string, HashSet<string>> navLinks = new Dictionary<string, HashSet<string>>();
 
-            // Create a new hash set for each category key
-            foreach (Category x in categoryContext.GetCollection().OrderBy(x => x.mTimeEntered).ToArray())
-                navLinks.Add(x.mCategoryName, new HashSet<string>());
-
-            // Categories will have a dropdown menu popularized of subcategories
-            foreach(Product product in productsContext.GetCollection())
+            foreach(Category cat in categoryContext.GetCollection().OrderBy(x => x.mTimeEntered).ToArray())
             {
-                Category category = categoryContext.Find(product.mCategory);
+                Product[] prodsWithCat = productsContext.GetCollection()
+                    .Where(pro => pro.mCategory == cat.mID).ToArray();
 
-                // If a product of a certain category has subcategories, add the subcategory name into hashset
-                
-                if(!String.IsNullOrWhiteSpace(product.mSubCategories))
+                if (prodsWithCat.Length > 0)
                 {
-                    foreach (string subCat in product.mSubCategories.Split(','))
-                    {
-                        SubCategory sub = subCategoryContext.Find(subCat);
+                    navLinks.Add(cat.mCategoryName, new HashSet<string>());
+                }
+                else
+                {
+                    continue;
+                }
 
-                        navLinks[category.mCategoryName].Add(sub.mSubCategoryName);
+                foreach(Product product in prodsWithCat)
+                {
+                    if (!String.IsNullOrWhiteSpace(product.mSubCategories))
+                    {
+                        foreach (string subCat in product.mSubCategories.Split(','))
+                        {
+                            SubCategory sub = subCategoryContext.Find(subCat);
+
+                            navLinks[cat.mCategoryName].Add(sub.mSubCategoryName);
+                        }
                     }
                 }
             }

@@ -41,15 +41,8 @@ namespace FiveWonders.WebUI.Controllers
         // Form to create a new product
         public ActionResult Create()
         {
-            ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
-
-            allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
-
+            ProductManagerViewModel viewModel = GetProductManagerVM();
             viewModel.Product = new Product();
-            viewModel.categories = productCategories.GetCollection();
-            viewModel.subCategories = subCateroryContext.GetCollection();
-            viewModel.sizeCharts = allSizeCharts;
 
             return View(viewModel);
         }
@@ -61,11 +54,12 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(!ModelState.IsValid || imageFiles[0] == null)
+                if(!ModelState.IsValid || imageFiles[0] == null 
+                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, p.Product.mSizeChart))
                 {
                     throw new Exception("Product Create model no good");
                 }
-                
+
                 string newImageURL;
                 imageStorageService.AddMultipleImages(EFolderName.Products, Server, imageFiles, p.Product.mID, out newImageURL);
 
@@ -79,14 +73,11 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
-                allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
+                _ = e;
+                ProductManagerViewModel viewModel = GetProductManagerVM();
+                viewModel.Product = p.Product;
 
-                p.categories = productCategories.GetCollection();
-                p.subCategories = subCateroryContext.GetCollection();
-                p.sizeCharts = allSizeCharts;
-
-                return View(p);
+                return View(viewModel);
             }
         }
 
@@ -95,22 +86,16 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product target = context.Find(Id);
+                Product target = context.Find(Id, true);
 
-                if (target == null)
-                    throw new Exception(Id + " not found");
-
-                if (String.IsNullOrWhiteSpace(Id))
-                {
-                    throw new Exception("No item Id");
-                }
-
-                ProductManagerViewModel viewModel = GetProductManagerVM(Id); ;
+                ProductManagerViewModel viewModel = GetProductManagerVM();
+                viewModel.Product = target;
 
                 return View(viewModel);
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -122,14 +107,17 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 // Find product to edit
-                Product target = context.Find(Id);
+                Product target = context.Find(Id, true);
 
-                if (target == null)
-                    throw new Exception(Id + " not found");
-
-                if (existingImages == null && imageFiles[0] == null)
+                if ((existingImages == null && imageFiles[0] == null) 
+                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, p.Product.mSizeChart))
                 {
-                    throw new Exception("No Images and/or Subcategories Selected");
+                    ProductManagerViewModel viewModel = GetProductManagerVM();
+                    viewModel.Product = p.Product;
+                    viewModel.Product.mImage = target.mImage;
+                    viewModel.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "";
+
+                    return View(viewModel);
                 }
 
                 bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
@@ -172,6 +160,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Edit", "ProductManager", new { Id = Id});
             }
         }
@@ -180,17 +169,17 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product target = context.Find(Id);
-
-                if (target == null)
-                    throw new Exception(Id + " not found");
+                Product target = context.Find(Id, true);
 
                 // Gets all the Subcategories' IDs
-                string[] allSubIDs = target.mSubCategories != "" ? target.mSubCategories.Split(',') : new string[] { "None" };
+                string[] allSubIDs = target.mSubCategories != "" 
+                    ? target.mSubCategories.Split(',') 
+                    : new string[] { "None" };
 
                 // Gets each Subcategory's name using the ID and stores it in an array...if any
-                string[] allSubCategoryNames = (allSubIDs[0] != "None") ? 
-                    allSubIDs.Select(x => subCateroryContext.Find(x).mSubCategoryName).ToArray() : new string[] { "None" };
+                string[] allSubCategoryNames = (allSubIDs[0] != "None") 
+                    ? allSubIDs.Select(x => subCateroryContext.Find(x).mSubCategoryName).ToArray() 
+                    : new string[] { "None" };
                 
                 // Find the Main Category's and Size Chart's names
                 string mainCategoryName = productCategories.Find(target.mCategory).mCategoryName;
@@ -204,6 +193,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -214,10 +204,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product target = context.Find(Id);
-
-                if (target == null)
-                    throw new Exception(Id + " not found");
+                Product target = context.Find(Id, true);
 
                 basketService.RemoveItemFromAllBaskets(Id);
 
@@ -231,6 +218,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Delete", "ProductManager", new { Id = Id });
             }
         }
@@ -268,21 +256,46 @@ namespace FiveWonders.WebUI.Controllers
             newImageURL = String.Join(",", allFileNames);
         }
 
-        private ProductManagerViewModel GetProductManagerVM(string productId)
+        private ProductManagerViewModel GetProductManagerVM()
         {
-            Product productToEdit = context.Find(productId);
-
             List<SizeChart> allSizeCharts = sizeChartContext.GetCollection().ToList();
             allSizeCharts.Insert(0, new SizeChart() { mID = "0", mChartName = "None" });
 
+            IEnumerable<Category> allCategories = productCategories.GetCollection();
+
+            if(allCategories.Count() <= 0)
+            {
+                throw new Exception("No categories to list");
+            }
+
             // Popularize the view model with all the lists and product to edit
-            ProductManagerViewModel viewModel = new ProductManagerViewModel();
-            viewModel.Product = productToEdit;
-            viewModel.categories = productCategories.GetCollection();
-            viewModel.subCategories = subCateroryContext.GetCollection();
-            viewModel.sizeCharts = allSizeCharts;
+            ProductManagerViewModel viewModel = new ProductManagerViewModel
+            {
+                categories = allCategories,
+                subCategories = subCateroryContext.GetCollection(),
+                sizeCharts = allSizeCharts
+            };
 
             return viewModel;
+        }
+    
+        private bool AreOptionsValid(string categoryId, string[] selectedCategoriesIds, string sizeChartId)
+        {
+            try
+            {
+                Category category = productCategories.Find(categoryId, true);
+                SizeChart chart = sizeChartId != "0" ? sizeChartContext.Find(sizeChartId, true) : null;
+
+                bool bAllSubsExist = selectedCategoriesIds
+                    .All(sel => subCateroryContext.GetCollection().Any(sub => sub.mID == sel));
+
+                return bAllSubsExist;
+            }
+            catch(Exception e)
+            {
+                _ = e;
+                return false;
+            }
         }
     }
 }

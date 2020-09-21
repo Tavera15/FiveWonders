@@ -35,11 +35,11 @@ namespace FiveWonders.DataAccess.InMemory
             items.Add(newItem);
         }
 
-        public T Find(string ID)
+        public T Find(string ID, bool bThrowException = false)
         {
             T itemToFind = items.FirstOrDefault<T>(x => x.mID == ID);
 
-            if (itemToFind == null)
+            if (bThrowException && itemToFind == null)
                 throw new Exception("Item " + ID + " does not exist");
 
             return itemToFind;

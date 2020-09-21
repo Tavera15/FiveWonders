@@ -35,9 +35,16 @@ namespace FiveWonders.DataAccess.SQL
             dbSet.Remove(item);
         }
 
-        public T Find(string ID)
+        public T Find(string ID, bool bThrowException = false)
         {
-            return dbSet.Find(ID);
+            T entity = dbSet.Find(ID);
+
+            if(bThrowException && entity == null) 
+            { 
+                throw new Exception(ID + " not found");
+            }
+
+            return entity;
         }
 
         public IQueryable<T> GetCollection()

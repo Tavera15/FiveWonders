@@ -57,7 +57,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("Index", "Basket");
             }
         }
@@ -162,7 +162,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return View(order);
             }
         }
@@ -175,10 +175,7 @@ namespace FiveWonders.WebUI.Controllers
 
             try
             {
-                order = orderContext.Find(orderId);
-
-                if (order == null)
-                    throw new Exception("Order Not found");
+                order = orderContext.Find(orderId, true);
 
                 // If order is already completed, display Thank You page
                 if (!String.IsNullOrWhiteSpace(order.paypalRef) && order.paypalRef == paymentId)
@@ -186,7 +183,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("CancelOrder", "Checkout", new { paymentId = paymentId });
             }
 
@@ -227,8 +224,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-
+                _ = e;
                 return RedirectToAction("CancelOrder", "Checkout");
             }
         }
@@ -237,16 +233,16 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                FWonderOrder order = orderContext.Find(orderId);
+                FWonderOrder order = orderContext.Find(orderId, true);
 
-                if (order == null || !String.IsNullOrWhiteSpace(order.paypalRef))
+                if (!String.IsNullOrWhiteSpace(order.paypalRef))
                     throw new Exception("Order cannot be deleted");
 
                 return View();
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("Index", "Home");
             }
         }

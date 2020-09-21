@@ -91,6 +91,7 @@ namespace FiveWonders.Services
             }
             catch(Exception e)
             {
+                _ = e;
                 return new GalleryImg[] { };
             }
         }

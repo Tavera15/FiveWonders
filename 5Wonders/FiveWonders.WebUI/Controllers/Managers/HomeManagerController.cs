@@ -60,6 +60,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -121,6 +122,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch(Exception e)
             {
+                _ = e;
                 return View(updatedData);
             }
         }

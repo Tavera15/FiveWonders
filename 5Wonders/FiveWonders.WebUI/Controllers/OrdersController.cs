@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+// TODO Only admin
 namespace FiveWonders.WebUI.Controllers
 {
     [Authorize]
@@ -29,7 +30,7 @@ namespace FiveWonders.WebUI.Controllers
                 Customer customer = customerContext.GetCollection().FirstOrDefault(x => x.mEmail == customerEmail);
 
                 if (customer == null)
-                    return RedirectToAction("Index", "Home");
+                    throw new Exception("Orders: Customer not found");
 
                 // Get customers past completed orders - Sort them by date (Newest are at top) 
                 FWonderOrder[] allCustomerOrders = ordersContext.GetCollection()
@@ -40,7 +41,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -49,15 +50,12 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if (String.IsNullOrWhiteSpace(Id))
-                    throw new Exception("Order Not Found");
-
-                FWonderOrder order = ordersContext.Find(Id);
+                FWonderOrder order = ordersContext.Find(Id, true);
                 return View(order);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("Index", "Orders");
             }
         }

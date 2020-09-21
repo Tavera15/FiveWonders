@@ -61,6 +61,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return View(sub);
             }
         }
@@ -69,16 +70,13 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToEdit = subCategoryContext.Find(Id);
-
-                if (subToEdit == null)
-                    throw new Exception(Id + " not found");
+                SubCategory subToEdit = subCategoryContext.Find(Id, true);
 
                 return View(subToEdit);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -89,10 +87,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToEdit = subCategoryContext.Find(Id);
-
-                if (subToEdit == null)
-                    throw new Exception(Id + " not found");
+                SubCategory subToEdit = subCategoryContext.Find(Id, true);
 
                 if (!ModelState.IsValid || 
                     (sub.isEventOrTheme &&
@@ -127,7 +122,8 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                return View(sub);
+                _ = e;
+                return RedirectToAction("Edit", "SubCategoryManager", new { Id = Id});
             }
         }
 
@@ -136,10 +132,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToDelete = subCategoryContext.Find(Id);
-
-                if (subToDelete == null)
-                    throw new Exception(Id + " not found");
+                SubCategory subToDelete = subCategoryContext.Find(Id, true);
 
                 Product[] productsWithSub = productContext.GetCollection()
                     .Where(p => !String.IsNullOrEmpty(p.mSubCategories) 
@@ -150,7 +143,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -161,10 +154,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                SubCategory subToDelete = subCategoryContext.Find(Id);
-
-                if (subToDelete == null)
-                    throw new Exception(Id + " not found");
+                SubCategory subToDelete = subCategoryContext.Find(Id, true);
 
                 bool bItemsWithSub = productContext.GetCollection()
                     .Any(p => p.mSubCategories.Contains(Id));
@@ -183,6 +173,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Delete", "SubCategoryManager", new { Id = Id});
             }
         }

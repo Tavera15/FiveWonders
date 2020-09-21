@@ -78,19 +78,14 @@ namespace FiveWonders.Services
                     throw new Exception("Basket not found");
                 }
 
-                BasketItem item = basketItemsContext.Find(itemToRemoveID);
-
-                if (item == null)
-                {
-                    throw new Exception("Item was not found");
-                }
+                BasketItem item = basketItemsContext.Find(itemToRemoveID, true);
 
                 basketItemsContext.Delete(item);
                 basketItemsContext.Commit();
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
         }
 
@@ -133,13 +128,13 @@ namespace FiveWonders.Services
                     similarBasketItem.mSize = newBasketItem.mSize;
 
                     // Delete the newest Basket Item entry from DB
-                    BasketItem basketItemToDelete = basketItemsContext.Find(newBasketItem.mID);
+                    BasketItem basketItemToDelete = basketItemsContext.Find(newBasketItem.mID, true);
                     basketItemsContext.Delete(basketItemToDelete);
                 }
                 else
                 {
                     // Update singular Basket Item in DB
-                    BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID);
+                    BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID, true);
                     basketItem.mQuantity = newBasketItem.mQuantity;
                     basketItem.mSize = newBasketItem.mSize;
                     basketItem.mProductText = newBasketItem.mProductText;
@@ -150,7 +145,7 @@ namespace FiveWonders.Services
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
         }
 
@@ -163,13 +158,13 @@ namespace FiveWonders.Services
                 if (basket == null)
                     throw new Exception("User has no basket");
 
-                basketItem = basketItemsContext.Find(basketItemID);
+                basketItem = basketItemsContext.Find(basketItemID, true);
 
-                return (basketItem != null && basket.mID == basketItem.basketID);
+                return (basket.mID == basketItem.basketID);
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                 _ = e;
                 basketItem = null;
                 return false;
             }
@@ -183,7 +178,7 @@ namespace FiveWonders.Services
                 
                 foreach(var item in basket.mBasket)
                 {
-                    BasketItem basketItemToDelete = basketItemsContext.Find(item.mID);
+                    BasketItem basketItemToDelete = basketItemsContext.Find(item.mID, true);
                     basketItemsContext.Delete(basketItemToDelete);
                 }
 
@@ -191,7 +186,7 @@ namespace FiveWonders.Services
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
         }
 
@@ -200,13 +195,13 @@ namespace FiveWonders.Services
             try
             {
                 string basketID = GetBasketID(httpContext, bCreateIfNull);
-                Basket basket = basketContext.Find(basketID);
+                Basket basket = basketContext.Find(basketID, true);
 
                 return basket;
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return new Basket();
             }
         }
@@ -218,7 +213,7 @@ namespace FiveWonders.Services
             // Link the basket to the customer
             if (customerID != null)
             {
-                Customer customer = customerContext.Find(customerID);
+                Customer customer = customerContext.Find(customerID, true);
                 customer.mBasketID = basket.mID;
 
                 customerContext.Commit();
@@ -279,12 +274,12 @@ namespace FiveWonders.Services
         {
             try
             {
-                Customer customer = customerContext.Find(customerID);
+                Customer customer = customerContext.Find(customerID, true);
 
-                if (customer.mBasketID != null || !IsValidBasketID(basketID) || customerContext.GetCollection().Any(x => x.mBasketID == basketID))
+                if (customer.mBasketID != null || customerContext.GetCollection().Any(x => x.mBasketID == basketID))
                     return false;
 
-                Basket basket = basketContext.Find(basketID);
+                Basket basket = basketContext.Find(basketID, true);
                 customer.mBasketID = basketID;
                 customerContext.Commit();
 
@@ -301,13 +296,13 @@ namespace FiveWonders.Services
         {
             try
             {
-                Basket basket = basketContext.Find(basketID);
+                Basket basket = basketContext.Find(basketID, true);
 
                 return basket != null;
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return false;
             }
         }
@@ -341,7 +336,7 @@ namespace FiveWonders.Services
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
         }
     }

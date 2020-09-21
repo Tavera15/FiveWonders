@@ -55,6 +55,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch(Exception e)
             {
+                _ = e;
                 return View(newMedia);
             }
         }
@@ -63,12 +64,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                SocialMedia sm = socialMediaContext.Find(Id);
+                SocialMedia sm = socialMediaContext.Find(Id, true);
 
                 return View(sm);
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -79,11 +81,11 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                SocialMedia sm = socialMediaContext.Find(Id);
+                SocialMedia sm = socialMediaContext.Find(Id, true);
 
-                if(!ModelState.IsValid || sm == null || (String.IsNullOrWhiteSpace(sm.m64x64Icon) && newIcon == null))
+                if(!ModelState.IsValid || (String.IsNullOrWhiteSpace(sm.m64x64Icon) && newIcon == null))
                 {
-                    throw new Exception("Social media edit model no good");
+                    return View(updatedMedia);
                 }
 
                 if(newIcon != null)
@@ -103,6 +105,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch (Exception e)
             {
+                _ = e;
                 return RedirectToAction("Edit", "SocialMediaManager", new { Id = Id });
             }
         }
@@ -111,12 +114,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                SocialMedia sm = socialMediaContext.Find(Id);
+                SocialMedia sm = socialMediaContext.Find(Id, true);
 
                 return View(sm);
             }
             catch(Exception e)
             {
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -127,16 +131,17 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                SocialMedia sm = socialMediaContext.Find(Id);
-                imageStorageService.DeleteImage(EFolderName.Icons, sm.m64x64Icon, Server);
+                SocialMedia sm = socialMediaContext.Find(Id, true);
 
+                imageStorageService.DeleteImage(EFolderName.Icons, sm.m64x64Icon, Server);
                 socialMediaContext.Delete(sm);
                 socialMediaContext.Commit();
 
                 return RedirectToAction("Index", "SocialMediaManager");
             }
             catch(Exception e)
-            {                
+            {
+                _ = e;
                 return RedirectToAction("Delete", "SocialMediaManager", new { Id = Id});
             }
         }

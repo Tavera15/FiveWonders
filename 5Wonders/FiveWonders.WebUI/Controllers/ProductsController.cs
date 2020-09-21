@@ -157,6 +157,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
+                _ = e;
                 return RedirectToAction("Index", "Products");
             }
         }
@@ -166,13 +167,7 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product p = productsContext.Find(Id);
-
-                if(p == null)
-                {
-                    throw new Exception("Product not found");
-                }
-
+                Product p = productsContext.Find(Id, true);
                 SizeChart chart = sizeChartContext.Find(p.mSizeChart);
 
                 ProductOrderViewModel viewModel = new ProductOrderViewModel();
@@ -185,7 +180,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return HttpNotFound();
             }
         }
@@ -197,7 +192,7 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 // Gets the product that the customer wants to buy - along with size and quantity
-                Product productToBuy = productsContext.Find(Id);
+                Product productToBuy = productsContext.Find(Id, true);
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
                 
@@ -215,9 +210,8 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                ViewBag.itemQuantity = 0;
-                return RedirectToAction("Index", "Products");
+                _ = e;
+                return RedirectToAction("Item", "Products", new { Id = Id});
             }
         }
 
@@ -225,17 +219,14 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product product = productsContext.Find(Id);
-
-                if (product == null || String.IsNullOrWhiteSpace(product.mSizeChart))
-                    throw new Exception("No Size Chart");
-
-                SizeChart chart = sizeChartContext.Find(product.mSizeChart);
+                Product product = productsContext.Find(Id, true);
+                SizeChart chart = sizeChartContext.Find(product.mSizeChart, true);
 
                 return View(chart);
             }
             catch(Exception e)
             {
+                _ = e;
                 return RedirectToAction("Item", "Products", new { Id = Id });
             }
         }
