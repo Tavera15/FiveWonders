@@ -1,0 +1,51 @@
+﻿@model IEnumerable<FiveWonders.core.Models.FWonderOrder>
+
+@using (Html.BeginForm())
+{
+    <input placeholder="Enter Email" name="emailFilter" value="@ViewBag.emailFilter" />
+    <input placeholder="Enter Name" name="nameFilter" value="@ViewBag.nameFilter" />
+
+    <input class="btn btn-primary" type="submit" value="Search" />
+    <p class="btn btn-default"><a style="text-decoration: none;" href="/OrdersManager/">Clear Filters</a></p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.mTimeEntered)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mCustomerEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.paypalRef)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.mTimeEntered)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mCustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.mCustomerEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.paypalRef)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.mID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.mID })
+            </td>
+        </tr>
+    }
+
+</table>

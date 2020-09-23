@@ -20,22 +20,6 @@ namespace FiveWonders.core.Models
         [Display(Name = "Email")]
         public string mCustomerEmail { get; set; }
 
-        [Required]
-        [Display(Name = "Address Line 1")]
-        public string mAddress1 { get; set; }
-
-        [Display(Name = "Address Line 2")]
-        public string mAddress2 { get; set; }
-
-        [Required]
-        [Display(Name = "Zip Code")]
-        public string mZipCode { get; set; }
-
-        [Required]
-        [Phone]
-        [Display(Name = "Phone Number")]
-        public string mPhoneNumber { get; set; }
-
         public string paypalRef { get; set; }
 
         public FWonderOrder()

@@ -205,6 +205,10 @@
     <Compile Include="Migrations\202009200215175_homePageRenameToPromos.Designer.cs">
       <DependentUpon>202009200215175_homePageRenameToPromos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009220041479_FWondersOrderRemovedProps.cs" />
+    <Compile Include="Migrations\202009220041479_FWondersOrderRemovedProps.Designer.cs">
+      <DependentUpon>202009220041479_FWondersOrderRemovedProps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -336,6 +340,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009200215175_homePageRenameToPromos.resx">
       <DependentUpon>202009200215175_homePageRenameToPromos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009220041479_FWondersOrderRemovedProps.resx">
+      <DependentUpon>202009220041479_FWondersOrderRemovedProps.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
