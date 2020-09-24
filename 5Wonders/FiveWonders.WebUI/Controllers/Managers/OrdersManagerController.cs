@@ -62,6 +62,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 processedOrders = allCompletedOrders;
             }
 
+            ViewBag.Title = "Orders";
             ViewBag.emailFilter = emailFilter;
             ViewBag.nameFilter = nameFilter;
             return View(processedOrders);
@@ -72,6 +73,26 @@ namespace FiveWonders.WebUI.Controllers.Managers
         public ActionResult SearchIndex(string emailFilter, string nameFilter)
         {
             return RedirectToAction("Index", "OrdersManager", new { emailFilter = emailFilter, nameFilter = nameFilter});
+        }
+
+        public ActionResult Details(string Id)
+        {
+            try
+            {
+                FWonderOrder order = ordersContext.Find(Id, true);
+
+                if(String.IsNullOrWhiteSpace(order.paypalRef))
+                {
+                    throw new Exception("Not a completed order");
+                }
+
+                return View(order);
+            }
+            catch(Exception e)
+            {
+                _ = e;
+                return HttpNotFound();
+            }
         }
     }
 }

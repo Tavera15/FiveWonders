@@ -42,8 +42,10 @@ namespace FiveWonders.Services
                 BasketItem basketItem = basket.mBasket.
                     FirstOrDefault(x => x.mProductID == item.mProductID 
                     && x.mSize == item.mSize 
-                    && x.mProductText == item.mProductText
-                    && x.mCustomNum == item.mCustomNum);
+                    && x.mCustomText == item.mCustomText
+                    && x.mCustomNum == item.mCustomNum
+                    && x.customDate == item.customDate
+                    && x.customTime == item.customTime);
 
                 // Update the quantity if item already exists
                 if (basketItem != null)
@@ -63,7 +65,7 @@ namespace FiveWonders.Services
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
         }
 
@@ -118,8 +120,10 @@ namespace FiveWonders.Services
                                     && x.mSize == newBasketItem.mSize
                                     && x.basketID == newBasketItem.basketID
                                     && x.mID != newBasketItem.mID
-                                    && x.mProductText == newBasketItem.mProductText
-                                    && x.mCustomNum == newBasketItem.mCustomNum);
+                                    && x.mCustomText == newBasketItem.mCustomText
+                                    && x.mCustomNum == newBasketItem.mCustomNum
+                                    && x.customDate == newBasketItem.customDate
+                                    && x.customTime == newBasketItem.customTime);
 
                 if(similarBasketItem != null)
                 {
@@ -137,8 +141,10 @@ namespace FiveWonders.Services
                     BasketItem basketItem = basketItemsContext.Find(newBasketItem.mID, true);
                     basketItem.mQuantity = newBasketItem.mQuantity;
                     basketItem.mSize = newBasketItem.mSize;
-                    basketItem.mProductText = newBasketItem.mProductText;
+                    basketItem.mCustomText = newBasketItem.mCustomText;
                     basketItem.mCustomNum = newBasketItem.mCustomNum;
+                    basketItem.customDate = newBasketItem.customDate;
+                    basketItem.customTime = newBasketItem.customTime;
                 }
                 
                 basketItemsContext.Commit();
@@ -287,7 +293,7 @@ namespace FiveWonders.Services
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return false;
             }
         }

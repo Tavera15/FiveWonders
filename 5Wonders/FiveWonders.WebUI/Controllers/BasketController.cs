@@ -61,7 +61,6 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                BasketItem basketItem = basketItemContext.Find(Id, true);
                 BasketItemViewModel viewModel = GetSingleBasketItemViewModel(Id);
 
                 if (viewModel == null)
@@ -84,7 +83,9 @@ namespace FiveWonders.WebUI.Controllers
             {
                 if(!ModelState.IsValid || viewModel.basketItem.mQuantity <= 0)
                 {
-                    throw new Exception("Cannot edit basket item.");
+                    BasketItemViewModel errorViewModel = GetSingleBasketItemViewModel(Id);
+                    errorViewModel.basketItem = viewModel.basketItem;
+                    return View(errorViewModel);
                 }
 
                 BasketItem oldBasketItem = basketItemContext.Find(Id, true);
@@ -95,7 +96,9 @@ namespace FiveWonders.WebUI.Controllers
                     mQuantity = viewModel.basketItem.mQuantity,
                     mSize = viewModel.basketItem.mSize,
                     mCustomNum = viewModel.basketItem.mCustomNum,
-                    mProductText = viewModel.basketItem.mProductText,
+                    mCustomText = viewModel.basketItem.mCustomText,
+                    customDate = viewModel.basketItem.customDate,
+                    customTime = viewModel.basketItem.customTime,
                     mProductID = oldBasketItem.mProductID,
                     basketID = oldBasketItem.basketID,
                 };
@@ -143,7 +146,7 @@ namespace FiveWonders.WebUI.Controllers
                     productID = product.mID,
                     product = product,
                     basketItem = basketItem,
-                    basketItemID = Id,
+                    basketItemID = basketItem.mID,
                     sizeChart = sizeChart
                 };
             }

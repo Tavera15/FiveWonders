@@ -3,61 +3,104 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4>BasketItemViewModel</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.basketItem.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.basketItem.mQuantity, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.basketItem.mQuantity, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <h4>BasketItemViewModel</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.basketItem.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.basketItem.mQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.basketItem.mQuantity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (Model.sizeChart != null)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.basketItem.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.basketItem.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(','), Model.basketItem.mSize), new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.basketItem.mSize, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        @if (Model.product.isTextCustomizable)
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2">@Model.product.mCustomText</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.basketItem.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.basketItem.mCustomText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        @if (Model.product.isNumberCustomizable)
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.basketItem.mCustomNum, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.basketItem.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
+                    @Html.ValidationMessageFor(model => model.basketItem.mCustomNum, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        @if (Model.product.isDateCustomizable)
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2">Custom Date:</label>
+                <input name="basketItem.customDate" value="@Model.basketItem.customDate"/>
+            </div>
+        }
+
+        @if (Model.product.isTimeCustomizable)
+        {
+            <div class="form-group">
+                <label class="control-label col-md-2">Custom Time:</label>
+                @Html.EditorFor(model => model.basketItem.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
+                <div class="col-md-10">
+                    @Html.ValidationMessageFor(model => model.basketItem.customTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
     </div>
-
-    @if (Model.sizeChart != null)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.basketItem.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.basketItem.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(','), Model.basketItem.mSize), new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.basketItem.mSize, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    }
-    
-    @if(Model.product.isTextCustomizable)
-    {
-        <div class="form-group">
-            <label class = "control-label col-md-2">@Model.product.mCustomText</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.basketItem.mProductText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.basketItem.mProductText, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    }
-    
-    @if(Model.product.isNumberCustomizable)
-    {
-        <div class="form-group">
-            @Html.LabelFor(model => model.basketItem.mCustomNum, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.basketItem.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
-                @Html.ValidationMessageFor(model => model.basketItem.mCustomNum, "", new { @class = "text-danger" })
-            </div>
-        </div>
-    }
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section Scripts {
+    <!-- Include jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+
+
+    <script>
+        $(document).ready(function () {
+            var date_input = $('input[name="basketItem.customDate"]');
+            var options = {
+                format: 'mm/dd/yyyy',
+                container: 'body',
+                todayHighlight: true,
+                autoclose: true,
+                todayBtn: true,
+            };
+            date_input.datepicker(options);
+        })
+    </script>
+}

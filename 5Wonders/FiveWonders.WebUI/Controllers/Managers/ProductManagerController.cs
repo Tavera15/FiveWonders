@@ -122,7 +122,9 @@ namespace FiveWonders.WebUI.Controllers
 
                 bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable
-                                           || target.isTextCustomizable != p.Product.isTextCustomizable);
+                                           || target.isTextCustomizable != p.Product.isTextCustomizable
+                                           || target.isDateCustomizable != p.Product.isDateCustomizable
+                                           || target.isTimeCustomizable != p.Product.isTimeCustomizable);
 
                 if(shouldUpdateBaskets)
                 {

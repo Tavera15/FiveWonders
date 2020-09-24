@@ -3,11 +3,12 @@
 @{
     string[] imageFiles = Model.product.mImage.Split(',');
     string firstImage = imageFiles[0];
+    string todaysDate = DateTime.Now.ToString("MM-dd-yyyy");
 }
 
 <div id="item-page">
     <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
-        <div id="myCarousel" class="carousel slide" data-ride="carousel" >
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
                 @for (int i = 0; i < imageFiles.Length; i++)
@@ -65,7 +66,7 @@
                         <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a>
                     }
 
-                    if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable)
+                    if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable || Model.product.isDateCustomizable || Model.product.isTimeCustomizable)
                     {
                         <div class="ip-customization-container">
 
@@ -73,7 +74,7 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">@Model.product.mCustomText</label>
-                                    @Html.EditorFor(model => model.productOrder.mProductText, "", new { htmlAttributes = new { @class = "text-danger", placeholder = "Recipient Name" } })
+                                    @Html.EditorFor(model => model.productOrder.mCustomText, "", new { htmlAttributes = new {placeholder = "Recipient Name" } })
                                 </div>
                             }
 
@@ -81,7 +82,26 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Custom Number:</label>
-                                    @Html.EditorFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
+                                    @Html.TextAreaFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
+                                </div>
+                            }
+
+                            @if (Model.product.isDateCustomizable)
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Custom Date:</label>
+                                    <input name="productOrder.customDate" value="@Model.productOrder.customDate"/>
+                                </div>
+                            }
+
+                            @if (Model.product.isTimeCustomizable)
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Custom Time:</label>
+                                        @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
+                                    <div class="col-md-10">
+                                        @Html.ValidationMessageFor(model => model.productOrder.customTime, "", new { @class = "text-danger" })
+                                    </div>
                                 </div>
                             }
                         </div>
@@ -97,7 +117,7 @@
                         <input type="submit" value="Add to Cart" class="btn btn-primary ip-add-to-cart-btn" />
                     </div>
 
-                    if(!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
+                    if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
                     {
                         <div class="col-lg-12 col-md-12 col-sm-12 item-data-desc-container">
                             <h3 style="font-weight: bold;">Description</h3>
@@ -113,3 +133,27 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <!-- Include jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Include Date Range Picker -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+
+
+    <script>
+        $(document).ready(function () {
+            var date_input = $('input[name="productOrder.customDate"]'); //our date input has the name "date"
+            var options = {
+                format: 'mm/dd/yyyy',
+                container: 'body',
+                todayHighlight: true,
+                autoclose: true,
+                todayBtn: true,
+            };
+            date_input.datepicker(options);
+        })
+    </script>
+}

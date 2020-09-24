@@ -16,5 +16,7 @@ namespace FiveWonders.core.Models
         public string mSize { get; set; }
         public string mCustomText { get; set; }
         public string mCustomNumber { get; set; }
+        public string mCustomDate { get; set; }
+        public string mCustomTime { get; set; }
     }
 }

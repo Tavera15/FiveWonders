@@ -82,15 +82,19 @@ namespace FiveWonders.WebUI.Controllers
                 foreach (BasketItemViewModel basketItem in allBasketItems)
                 {
                     // Initialize new Order Item per Basket Item, and link them to Order Id
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.mBaseOrderID = order.mID;
+                    OrderItem orderItem = new OrderItem
+                    {
+                        mBaseOrderID = order.mID,
 
-                    // Apply Basket Item's data into Order Item 
-                    orderItem.mProductID = basketItem.productID;
-                    orderItem.mProductName = basketItem.product.mName;
-                    orderItem.mPrice = basketItem.product.mPrice;
-                    orderItem.mQuantity = basketItem.basketItem.mQuantity;
-                    orderItem.mSize = basketItem.basketItem.mSize;
+                        // Apply Basket Item's data into Order Item 
+                        mProductID = basketItem.productID,
+                        mProductName = basketItem.product.mName,
+                        mPrice = basketItem.product.mPrice,
+                        mQuantity = basketItem.basketItem.mQuantity,
+                        mSize = basketItem.basketItem.mSize,
+                        mCustomText = basketItem.basketItem.mCustomText,
+                        mCustomNumber = basketItem.basketItem.mCustomNum
+                    };
 
                     // Add the Order Item into the Order's list
                     order.mOrderItems.Add(orderItem);
@@ -99,7 +103,7 @@ namespace FiveWonders.WebUI.Controllers
 
                     string paypalDesc = String.Format("{0}{1}{2}",
                         (!String.IsNullOrWhiteSpace(basketItem.basketItem.mSize) ? "Size: " + basketItem.basketItem.mSize + " | " : ""),
-                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mProductText) ? "Text: " + basketItem.basketItem.mProductText + " | " : ""),
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomText) ? "Text: " + basketItem.basketItem.mCustomText + " | " : ""),
                         (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomNum) ? "Custom Number: " + basketItem.basketItem.mCustomNum : "")
                     );
 

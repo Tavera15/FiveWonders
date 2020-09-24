@@ -38,11 +38,17 @@ namespace FiveWonders.core.Models
         [Display(Name = "Is Text Customizable?")]
         public bool isTextCustomizable { get; set; }
 
-        [Display(Name = "Product Text")]
+        [Display(Name = "Custom Text Description")]
         public string mCustomText { get; set; }
 
         [Display(Name = "Is Number Customizable?")]
         public bool isNumberCustomizable { get; set; }
+
+        [Display(Name = "Is Date Customizable")]
+        public bool isDateCustomizable { get; set; }
+
+        [Display(Name = "Is Time Customizable")]
+        public bool isTimeCustomizable { get; set; }
 
         public Product()
         {

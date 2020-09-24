@@ -209,6 +209,22 @@
     <Compile Include="Migrations\202009220041479_FWondersOrderRemovedProps.Designer.cs">
       <DependentUpon>202009220041479_FWondersOrderRemovedProps.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202009232111395_addedDateTimeInputProducts.cs" />
+    <Compile Include="Migrations\202009232111395_addedDateTimeInputProducts.Designer.cs">
+      <DependentUpon>202009232111395_addedDateTimeInputProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009240216443_separatedDateTimeInputProducts.cs" />
+    <Compile Include="Migrations\202009240216443_separatedDateTimeInputProducts.Designer.cs">
+      <DependentUpon>202009240216443_separatedDateTimeInputProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009240312030_organizedProductAndBasket.cs" />
+    <Compile Include="Migrations\202009240312030_organizedProductAndBasket.Designer.cs">
+      <DependentUpon>202009240312030_organizedProductAndBasket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202009240617209_dateTimeToStringBasketItemCustDate.cs" />
+    <Compile Include="Migrations\202009240617209_dateTimeToStringBasketItemCustDate.Designer.cs">
+      <DependentUpon>202009240617209_dateTimeToStringBasketItemCustDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -343,6 +359,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202009220041479_FWondersOrderRemovedProps.resx">
       <DependentUpon>202009220041479_FWondersOrderRemovedProps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009232111395_addedDateTimeInputProducts.resx">
+      <DependentUpon>202009232111395_addedDateTimeInputProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009240216443_separatedDateTimeInputProducts.resx">
+      <DependentUpon>202009240216443_separatedDateTimeInputProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009240312030_organizedProductAndBasket.resx">
+      <DependentUpon>202009240312030_organizedProductAndBasket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202009240617209_dateTimeToStringBasketItemCustDate.resx">
+      <DependentUpon>202009240617209_dateTimeToStringBasketItemCustDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

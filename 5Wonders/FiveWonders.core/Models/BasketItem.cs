@@ -19,20 +19,29 @@ namespace FiveWonders.core.Models
         [Display(Name = "Size")]
         public string mSize { get; set; }
 
-        [Display(Name = "Product Text")]
-        public string mProductText { get; set; }
+        [Display(Name = "Custom Text")]
+        public string mCustomText { get; set; }
 
         [Display(Name = "Custom Number")]
         [MaxLength(99)]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Number must be numeric")]
         public string mCustomNum { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+        [Display(Name = "Custom Date")]
+        public string customDate { get; set; }
+
+        [RegularExpression(@"^(0[1-9]|1[0-2]):[0-5][0-9]", ErrorMessage = "Invalid Time.")]
+        public string customTime { get; set; }
+
         public BasketItem()
         {
             mQuantity = 1;
             mSize = "";
-            mProductText = "";
+            mCustomText = "";
             mCustomNum = "";
+            customTime = "";
+            customDate = "";
         }
     }
 }
