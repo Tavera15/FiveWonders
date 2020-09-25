@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers
 {
+    [Authorize(Roles = "FWondersAdmin")]
     public class SubCategoryManagerController : Controller
     {
         IRepository<SubCategory> subCategoryContext;

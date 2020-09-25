@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers.Managers
 {
-    [Authorize]
+    [Authorize(Roles = "FWondersAdmin")]
     public class OrdersManagerController : Controller
     {
         IRepository<FWonderOrder> ordersContext;

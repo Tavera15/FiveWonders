@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers.Managers
 {
+    [Authorize(Roles = "FWondersAdmin")]
     public class GalleryManagerController : Controller
     {
         public IInstagramService InstagramService;

@@ -9,6 +9,7 @@ using FiveWonders.DataAccess.InMemory;
 
 namespace FiveWonders.WebUI.Controllers
 {
+    [Authorize(Roles = "FWondersAdmin")]
     public class SizeChartManagerController : Controller
     {
         IRepository<SizeChart> sizeChartContext;

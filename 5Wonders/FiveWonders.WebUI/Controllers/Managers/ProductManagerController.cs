@@ -11,6 +11,7 @@ using FiveWonders.core.Contracts;
 
 namespace FiveWonders.WebUI.Controllers
 {
+    [Authorize(Roles = "FWondersAdmin")]
     public class ProductManagerController : Controller
     {
         IRepository<Product> context;
