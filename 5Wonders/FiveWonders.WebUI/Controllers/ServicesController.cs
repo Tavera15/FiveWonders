@@ -65,16 +65,10 @@ namespace FiveWonders.WebUI.Controllers
                 message.Body = viewModel.servicesMessage.mContent 
                     + "<br />" + customerSection + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
 
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
-                {
-                    Port = 587,
-                    UseDefaultCredentials = false,
-                    Credentials = new System.Net.NetworkCredential("", ""),
-                    EnableSsl = true
-                };
-
                 throw new Exception("stop");
-                smtpClient.Send(message);
+
+                //SmtpClient smtp = new SmtpClient();
+                //smtp.Send(message);
 
                 return RedirectToAction("Index", "Products");
             }
