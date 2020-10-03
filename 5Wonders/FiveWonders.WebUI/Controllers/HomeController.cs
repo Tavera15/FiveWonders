@@ -54,7 +54,7 @@ namespace FiveWonders.WebUI.Controllers
 
             Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
-            List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(4).ToList();
+            List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(5).ToList();
 
             Promo promo1 = new Promo();
             Promo promo2 = new Promo();

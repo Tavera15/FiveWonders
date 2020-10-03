@@ -82,7 +82,7 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Custom Number:</label>
-                                    @Html.TextAreaFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
+                                    @Html.EditorFor(model => model.productOrder.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0" } })
                                 </div>
                             }
 

@@ -10,6 +10,19 @@
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+
+        @if(User.IsInRole("FWondersAdmin"))
+        {
+            <li>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Admin
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Managers/">Managers</a></li>    
+                    <li><a href="/Orders/">Orders</a></li>    
+                </ul>
+            </li>
+        }
     </ul>
     }
 }

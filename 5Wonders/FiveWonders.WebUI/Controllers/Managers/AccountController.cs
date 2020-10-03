@@ -231,8 +231,8 @@ namespace FiveWonders.WebUI.Controllers
                 message.Body = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>";
                 message.IsBodyHtml = true;
 
-                //SmtpClient smtp = new SmtpClient();
-                //smtp.Send(message);
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(message);
                 
                 //await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
                 return RedirectToAction("ForgotPasswordConfirmation", "Account");

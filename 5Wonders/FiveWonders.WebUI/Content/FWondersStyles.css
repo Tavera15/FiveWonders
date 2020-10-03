@@ -2,11 +2,16 @@
 
 @font-face {
     font-family: oswald;
-    src: url(/Content/Fonts/Oswald/Oswald-Regular.ttf)
+    src: url(/Content/Fonts/Oswald/Oswald-Regular.ttf);
+}
+
+@font-face {
+    font-family: cinzel;
+    src: url(/Content/Fonts/Cinzel_Decorative/CinzelDecorative-Regular.ttf);
 }
 
 body {
-    font-family: oswald;
+    font-family: cinzel;
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -17,10 +22,12 @@ body {
 
 .base-container {
     width: 85vw;
+    width: 100%;
     background-color: rgba(0,0,0,0);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
     min-height: 100vh;
+    padding: 0;
 }
 
 .FWonders-navbar-container{
@@ -37,24 +44,35 @@ body {
     background-size: cover;
     position: relative;
     height: auto;
-    
+    min-height: 65vh;
     display: flex;
     flex-direction: column;
+    font-family: oswald;
+    margin-bottom: 4vh;
 }
 
 .jumbo-logo{
-    height: 20vh;
+    height: 24vh;
     width: auto;
     margin: 0 auto;
     align-self: center;
 }
 
+
 .jumbo-item{
     margin: .75rem 0;
 }
 
+.jumbo-message *{
+    font-size: 8vh;
+}
+
+.jumbo-btn a{
+    font-size: 3vh;
+}
+
 .section-top-three {
-    margin: 0 0 4vh;
+    margin: 0 4vw 4vh;
     display: flex;
     flex-direction: column;
     border: 1px solid black;
@@ -69,7 +87,6 @@ body {
 }
 
 .top-p {
-
     background-repeat: no-repeat;
     background-size: cover;
     color: black;
@@ -87,8 +104,8 @@ body {
 
 .category-display {
     background-color: inherit;
-    padding: 0;
-    border: none;
+    padding: 0 4rem;
+    margin-bottom: 4vh;
 }
 
 .category-img-cover {
@@ -107,6 +124,7 @@ body {
 
 .category-container{
     padding: 0 2rem;
+    padding: 0 4rem;
 }
 
 .category-container a{
@@ -125,7 +143,7 @@ body {
 .single-category h2 {
     color: aliceblue;
     justify-self: flex-end;
-    font-size: 6vh;
+    font-size: 5vh;
     padding: 0;
     margin: 0;
 }
@@ -133,6 +151,7 @@ body {
 .redi-btn {
     margin: 2vh auto 0;
     font-size: 2vh;
+    font-family: oswald;
 }
 
 .top-three-products {
@@ -152,6 +171,7 @@ body {
     border: solid black 3px;
     width: 100%;
     box-shadow: rgba(0,0,0,.4) 4px 4px;
+    font-family: oswald;
 }
 
 .fw-card:hover{
@@ -169,6 +189,7 @@ body {
     background-color: white;
     color: white;
     color: black;
+    font-size: 3vh;
 }
 
 .fw-card-img {
@@ -189,27 +210,14 @@ body {
 .fw-card-btn {
     width: 100%;
     border-radius: 0;
+    font-size: 2vh;
 }
 
-#ig-top-three {
-    background-color: aliceblue;
-    padding: 2vh;
-}
-
-#ig-top-three .redi-btn{
-    margin: 0 auto;
-}
-
-.ig-container {
-    border: 1.5px solid black;
+.home-services-container{
     padding: 0;
 }
 
-.ig-img {
-    height: 32vh;
-    width: 100%;
-    object-fit: contain;
-}
+
 
 @media(max-width: 1400px){
     .top-three-products{
@@ -217,6 +225,16 @@ body {
     }
     .fw-card{
 
+    }
+    .single-category h2 {
+        font-size: 4vh;
+    }
+}
+
+@media(max-width : 1024px)
+{
+    .category-display {
+        padding: 0 1rem;
     }
 }
 
@@ -250,8 +268,9 @@ body {
     .FWonders-navbar-container{
         width: 95vw;
     }
+    
     .single-category h2{
-        font-size: 4vh;
+        font-size: 3rem;
     }
     .top-three-products {
         display: flex;
@@ -272,6 +291,9 @@ body {
     .fw-card-img{
         height: 25rem;
     }
+    .jumbo-logo{
+        height: 24vh;
+    }
     .ig-img {
         height: 25vh;
     }
@@ -279,7 +301,11 @@ body {
         display: inline;
     }
     .category-container{
-        padding: 0 1rem;
+        padding: 0 .5rem;
+    }
+
+    .home-services-container{
+        padding: 0;
     }
 }
 
@@ -430,6 +456,7 @@ body {
 
 .item-data-name {
     margin: 2rem 0;
+    font-weight: bold;
 }
 
 .item-data-price {
@@ -439,6 +466,7 @@ body {
 .item-data-form {
     text-align: center;
     padding: 2vh 0;
+    font-family: oswald;
 }
 
 .ip-add-to-cart-btn-container{
@@ -673,8 +701,9 @@ https://www.google.com/imgres?imgurl=https%3A%2F%2Fdocs.woocommerce.com%2Fwp-con
     flex-wrap: wrap;
 }
 
-.service-contact-container{
+.service-contact-container {
     margin: 0 auto;
+    font-family: oswald;
 }
 
 .service-contact-item{

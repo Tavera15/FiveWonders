@@ -65,10 +65,10 @@ namespace FiveWonders.WebUI.Controllers
                 message.Body = viewModel.servicesMessage.mContent 
                     + "<br />" + customerSection + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
 
-                throw new Exception("stop");
+                //throw new Exception("stop");
 
-                //SmtpClient smtp = new SmtpClient();
-                //smtp.Send(message);
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(message);
 
                 return RedirectToAction("Index", "Products");
             }
