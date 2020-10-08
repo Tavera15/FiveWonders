@@ -223,6 +223,12 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\5WondersCss\Card.css" />
+    <Content Include="Content\5WondersCss\ContactPageCss.css" />
+    <Content Include="Content\5WondersCss\GalleryCss.css" />
+    <Content Include="Content\5WondersCss\HomePageCss.css" />
+    <Content Include="Content\5WondersCss\ItemPage.css" />
+    <Content Include="Content\5WondersCss\ProductList.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-United.css" />

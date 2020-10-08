@@ -28,7 +28,7 @@
 {
     <div class="jumbotron jumbo-img" style="background-image: url(@jumboBG);">
 
-        @if(!String.IsNullOrWhiteSpace(jumboLogo))
+        @if (!String.IsNullOrWhiteSpace(jumboLogo))
         {
             <img src="@jumboLogo" alt="logo" class="jumbo-logo jumbo-item" />
         }
@@ -43,7 +43,7 @@
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-display">
     <div>
-        @if(!String.IsNullOrWhiteSpace(Model.promo1.promoLink) && !String.IsNullOrWhiteSpace(promoImg1))
+        @if (!String.IsNullOrWhiteSpace(Model.promo1.promoLink) && !String.IsNullOrWhiteSpace(promoImg1))
         {
             <div class="@promoClassNames">
                 <a href="@Model.promo1.promoLink">
@@ -57,7 +57,7 @@
             </div>
         }
 
-        @if(!String.IsNullOrWhiteSpace(Model.promo2.promoLink) && !String.IsNullOrWhiteSpace(promoImg2))
+        @if (!String.IsNullOrWhiteSpace(Model.promo2.promoLink) && !String.IsNullOrWhiteSpace(promoImg2))
         {
             <div class="@promoClassNames">
                 <a href="@Model.promo2.promoLink">
@@ -92,8 +92,7 @@
                         <div class="fw-product-container">
                             <div class="fw-card">
                                 <h3 class="fw-card-title">@product.mName</h3>
-                                <img 
-                                     alt="@product.mName"
+                                <img alt="@product.mName"
                                      src="@Url.Content("~/Content/ProductImages/" + firstImage)"
                                      class="fw-card-img" />
                                 <p class="fw-card-price">$@product.mPrice</p>
@@ -119,7 +118,7 @@
     </a>
 </div>
 
-@if(Model.top3IGPosts.Count > 0)
+@if (Model.top3IGPosts.Count > 0)
 {
     <div class="col-lg-12 home-gallery-container">
         <h1 class="col-lg-12 home-gallery-container-title">Gallery</h1>
@@ -128,19 +127,17 @@
             <a href="/Gallery/" class="container home-gallery-imgs-anchor">
 
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 home-gallery-solo-img-container">
-                    <div
-                         class="col-lg-12 home-gallery-img home-gallery-solo-img"
+                    <div class="col-lg-12 home-gallery-img home-gallery-solo-img"
                          style="
                                 background-image: url( @Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[0].mImageFile) )">
                     </div>
                 </div>
 
                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 home-gallery-four-group-container">
-                    @for(int i = 1; i < Model.top3IGPosts.Count; i++)
+                    @for (int i = 1; i < Model.top3IGPosts.Count; i++)
                     {
                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="border: solid white 2px; display: flex; padding:1rem; margin: 0;">
-                            <div
-                                 class="home-gallery-img home-gallery-group-img"
+                            <div class="home-gallery-img home-gallery-group-img"
                                  style="
                                     background-image: url(@Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[i].mImageFile))">
                             </div>
@@ -150,4 +147,12 @@
             </a>
         </div>
     </div>
+}
+
+@section Pagecss{
+    <link href="~/Content/5WondersCss/HomePageCss.css"
+          rel="stylesheet" type="text/css" />
+    
+    <link href="~/Content/5WondersCss/Card.css"
+          rel="stylesheet" type="text/css" />
 }

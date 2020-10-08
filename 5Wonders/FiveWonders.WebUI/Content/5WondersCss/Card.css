@@ -1,0 +1,113 @@
+﻿
+.fw-card-container {
+    padding: 0 4vw;
+}
+
+.fw-card-a:hover {
+    text-decoration: none;
+}
+
+.fw-product-container {
+    background-color: white;
+}
+
+.fw-card {
+    border: solid black 3px;
+    width: 100%;
+    box-shadow: rgba(0,0,0,.4) 4px 4px;
+    font-family: oswald;
+}
+
+.fw-card:hover {
+    box-shadow: none;
+}
+
+.fw-card-title {
+    margin: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 1rem;
+    background-color: #59b7a1;
+    background-color: white;
+    color: white;
+    color: black;
+    font-size: 3vh;
+}
+
+.fw-card-img {
+    width: 100%;
+    height: 30vh;
+    object-fit: cover;
+    border-top: solid 3px black;
+    border-bottom: solid 3px black;
+}
+
+.fw-card-price {
+    padding: 1.5vh 0;
+    margin: 0;
+    color: black;
+    font-size: 2vh;
+}
+
+.fw-card-btn {
+    width: 100%;
+    border-radius: 0;
+    font-size: 2vh;
+}
+
+@media(max-width: 1400px) {
+    .fw-card-container {
+        padding: 0 1vw;
+    }
+}
+
+@media (max-width: 1024px) and (orientation:landscape) {
+    .fw-card-price {
+        padding: 1rem 0;
+    }
+
+    .fw-card-img {
+        height: 30vh;
+    }
+}
+
+@media (max-width: 1024px) and (orientation:portrait) {
+    .fw-card-img {
+        height: 18vh;
+    }
+
+    .fw-card-price {
+        padding: 1rem 0;
+    }
+}
+
+@media (max-width: 768px) and (orientation:portrait) {
+    .fw-card-container {
+        margin: 1vh 0;
+        padding: 0;
+    }
+
+    .fw-card-img {
+        height: 25rem;
+    }
+}
+
+@media (max-width: 768px) and (orientation:landscape) {
+    .fw-card-container {
+        width: calc(100%/3);
+    }
+
+    .fw-card-img {
+        height: 50vh;
+    }
+}
+
+@media (max-height: 444px) and (orientation:landscape) {
+
+    .fw-card-img {
+        height: 40vh;
+    }
+
+}

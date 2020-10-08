@@ -2,8 +2,7 @@
 
 <div id="products-page">
     <div class="pp-title-container"
-         style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.mImgUrL));"
-    >
+         style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.mImgUrL));">
         <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.mImgShaderAmount);" class="pp-title-dark-layer">
             <h2 style="color: @Model.bannerTextColor" id="category-title-input" class="pp-title-text">@Model.mCategoryName</h2>
         </div>
@@ -44,3 +43,9 @@
         </div>
     </div>
 </div>
+
+@section Pagecss
+{
+    <link href="~/Content/5WondersCss/ProductList.css"
+          rel="stylesheet" type="text/css" />
+}

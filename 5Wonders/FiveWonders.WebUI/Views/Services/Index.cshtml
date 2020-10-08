@@ -13,7 +13,7 @@
             <h2 style="margin:2vh 0;">@Model.servicePageData.mName</h2>
 
             <div style="display: inline-block; flex-direction: column; align-items: center; margin: 0 auto;">
-                @if(!String.IsNullOrWhiteSpace(Model.servicePageData.mPhoneNumber))
+                @if (!String.IsNullOrWhiteSpace(Model.servicePageData.mPhoneNumber))
                 {
                     <div class="service-contact-item">
                         <img class="service-contact-item-img" src="~/Content/Icons/Phone Black 64.png" />
@@ -54,7 +54,7 @@
             <h2 style="margin: 0 0 2vh;">5 Wonders Balloons</h2>
             <div class="col-lg-12" style="border-top: black solid 1px;">
 
-                @if(!String.IsNullOrWhiteSpace(Model.logo))
+                @if (!String.IsNullOrWhiteSpace(Model.logo))
                 {
                     <img style="width: auto; height: 20vh;"
                          src="~/Content/Home/@Model.logo" alt="logo" />
@@ -111,4 +111,9 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/tinymce/tinymce.js"></script>
     <script src="~/Scripts/TinyMce_Client/WYSIWYG_email.js"></script>
+}
+
+@section Pagecss{
+    <link href="~/Content/5WondersCss/ContactPageCss.css"
+          rel="stylesheet" type="text/css" />
 }

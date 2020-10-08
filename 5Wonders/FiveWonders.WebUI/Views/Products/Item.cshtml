@@ -74,7 +74,7 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">@Model.product.mCustomText</label>
-                                    @Html.EditorFor(model => model.productOrder.mCustomText, "", new { htmlAttributes = new {placeholder = "Recipient Name" } })
+                                    @Html.EditorFor(model => model.productOrder.mCustomText, "", new { htmlAttributes = new { placeholder = "Recipient Name" } })
                                 </div>
                             }
 
@@ -90,7 +90,7 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Custom Date:</label>
-                                    <input name="productOrder.customDate" value="@Model.productOrder.customDate"/>
+                                    <input name="productOrder.customDate" value="@Model.productOrder.customDate" />
                                 </div>
                             }
 
@@ -98,7 +98,7 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Custom Time:</label>
-                                        @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
+                                    @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
                                     <div class="col-md-10">
                                         @Html.ValidationMessageFor(model => model.productOrder.customTime, "", new { @class = "text-danger" })
                                     </div>
@@ -156,4 +156,10 @@
             date_input.datepicker(options);
         })
     </script>
+}
+
+@section Pagecss
+{
+    <link href="~/Content/5WondersCss/ItemPage.css"
+          rel="stylesheet" type="text/css" />
 }
