@@ -28,6 +28,7 @@ body {
     border-bottom-right-radius: 25px;
     min-height: 100vh;
     padding: 0;
+    border: solid red 1px;
 }
 
 .FWonders-navbar-container{

@@ -203,6 +203,7 @@
     <Compile Include="Controllers\Managers\ManageController.cs" />
     <Compile Include="Controllers\Managers\ManagersController.cs" />
     <Compile Include="Controllers\Managers\OrdersManagerController.cs" />
+    <Compile Include="Controllers\Managers\ProductColorsManagerController.cs" />
     <Compile Include="Controllers\Managers\ProductManagerController.cs" />
     <Compile Include="Controllers\Managers\ServicesManagerController.cs" />
     <Compile Include="Controllers\Managers\SizeChartManagerController.cs" />
@@ -491,6 +492,10 @@
     <Content Include="Views\SocialMedia\Index.cshtml" />
     <Content Include="Views\OrdersManager\Index.cshtml" />
     <Content Include="Views\OrdersManager\Details.cshtml" />
+    <Content Include="Views\ProductColorsManager\Index.cshtml" />
+    <Content Include="Views\ProductColorsManager\Create.cshtml" />
+    <Content Include="Views\ProductColorsManager\Edit.cshtml" />
+    <Content Include="Views\ProductColorsManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

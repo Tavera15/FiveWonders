@@ -1,0 +1,116 @@
+﻿@model FiveWonders.core.Models.ColorSet
+
+<div class="form-group">
+    <label class="control-label col-md-2">g</label>
+    <div class="col-md-10">
+        <input id="newColor" />
+        <button onclick="AddNewColor()" class="btn btn-primary">Add</button>
+    </div>
+</div>
+
+<div class="color-set-input">
+    <ul id="set-of-colors"></ul>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.mID)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">g</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.colors, new { htmlAttributes = new { @class = "form-control", @id = "res", @style = "display: none;" } })
+                @Html.ValidationMessageFor(model => model.colors, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.mName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.mName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts
+{
+    <script>
+        function AddNewColor() {
+            var newColor = document.getElementById('newColor');
+
+            //Is Null or Whitespace
+            if (!(/\S/.test(newColor.value)))
+            {
+                newColor.value = "";
+                return;
+            }
+
+            var existingColors = document.getElementById('res').value;
+
+            document.getElementById('res').value = !(/\S/.test(existingColors))
+                ? (newColor.value)
+                : (existingColors + "," + newColor.value);
+
+            newColor.value = "";
+
+            RenderColorList();
+        }
+
+        function RenderColorList() {
+            var colorList = document.getElementById('set-of-colors');
+            colorList.innerHTML = "";
+
+            var colorsChosen = document.getElementById('res').value.split(',');
+
+            for (let i = 0; i < colorsChosen.length; i++)
+            {
+                if (colorsChosen[i] === "") { continue; }
+
+                var newBtn = document.createElement("BUTTON");
+                newBtn.innerHTML = "Remove";
+
+                newBtn.onclick = function () {
+                    DeleteElement(colorsChosen[i]);
+                }
+
+                var newLi = document.createElement("li");
+
+                newLi.appendChild(document.createTextNode(colorsChosen[i]));
+                newLi.appendChild(newBtn);
+
+                colorList.appendChild(newLi);
+            }
+        }
+
+        function DeleteElement(valToDelete) {
+            var existingColors = document.getElementById('res').value.split(',');
+            var indexToDelete = existingColors.indexOf(valToDelete);
+
+            existingColors.splice(indexToDelete, 1);
+            document.getElementById('res').value = existingColors;
+
+            RenderColorList();
+        }
+
+        RenderColorList();
+    </script>
+}
