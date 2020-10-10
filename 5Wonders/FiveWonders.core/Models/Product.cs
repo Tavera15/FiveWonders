@@ -50,6 +50,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Is Time Customizable")]
         public bool isTimeCustomizable { get; set; }
 
+        [Display(Name = "Custom Option Lists")]
+        public string mCustomLists { get; set; }
+
         public Product()
         {
         }

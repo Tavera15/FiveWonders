@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class ColorSet : BaseEntity
+    public class CustomOptionList : BaseEntity
     {
         [Required(ErrorMessage = "A unique name is required.")]
         public string mName { get; set; }
 
         [Required(ErrorMessage = "Colors are required")]
-        public string colors { get; set; }
+        public string options { get; set; }
     }
 }

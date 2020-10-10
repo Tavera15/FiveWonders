@@ -1,4 +1,4 @@
-﻿@model FiveWonders.core.Models.ColorSet
+﻿@model FiveWonders.core.Models.CustomOptionList
 
 
 <div class="form-group">
@@ -20,8 +20,8 @@
     <div class="form-group">
         <label class="control-label col-md-2">g</label>
         <div class="col-md-10">
-            @Html.EditorFor(model => model.colors, new { htmlAttributes = new { @class = "form-control", @id = "res", @style = "display: none;" } })
-            @Html.ValidationMessageFor(model => model.colors, "", new { @class = "text-danger" })
+            @Html.EditorFor(model => model.options, new { htmlAttributes = new { @class = "form-control", @id = "res", @style = "display: none;" } })
+            @Html.ValidationMessageFor(model => model.options, "", new { @class = "text-danger" })
         </div>
     </div>
 

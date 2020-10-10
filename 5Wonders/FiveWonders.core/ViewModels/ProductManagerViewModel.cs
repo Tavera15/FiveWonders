@@ -12,6 +12,7 @@ namespace FiveWonders.core.ViewModels
         public Product Product { get; set; }
         public IEnumerable<Category> categories { get; set; }
         public IEnumerable<SubCategory> subCategories { get; set; }
+        public IEnumerable<CustomOptionList> customOptionLists { get; set; }
         public List<SizeChart> sizeCharts { get; set; }
     }
 }

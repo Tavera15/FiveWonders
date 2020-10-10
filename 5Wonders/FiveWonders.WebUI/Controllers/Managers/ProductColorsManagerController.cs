@@ -10,9 +10,11 @@ namespace FiveWonders.WebUI.Controllers.Managers
 {
     public class ProductColorsManagerController : Controller
     {
-        IRepository<ColorSet> colorSetContext;
+        IRepository<CustomOptionList> colorSetContext;
 
-        public ProductColorsManagerController(IRepository<ColorSet> colorSetRepository)
+        // TODO Investigate if it is possible to create multiple custom sets. (Color sets, team sets, etc)
+
+        public ProductColorsManagerController(IRepository<CustomOptionList> colorSetRepository)
         {
             colorSetContext = colorSetRepository;
         }
@@ -20,18 +22,18 @@ namespace FiveWonders.WebUI.Controllers.Managers
         // GET: ProductColorsManager
         public ActionResult Index()
         {
-            ColorSet[] colorSets = colorSetContext.GetCollection().ToArray();
+            CustomOptionList[] colorSets = colorSetContext.GetCollection().ToArray();
             return View(colorSets);
         }
 
         public ActionResult Create()
         {
-            return View(new ColorSet());
+            return View(new CustomOptionList());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ColorSet colorSet)
+        public ActionResult Create(CustomOptionList colorSet)
         {
             if(!ModelState.IsValid)
             {
@@ -48,7 +50,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                ColorSet colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = colorSetContext.Find(Id, true);
                 return View(colorSet);
             }
             catch(Exception e)
@@ -60,7 +62,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string Id, ColorSet updatedColor)
+        public ActionResult Edit(string Id, CustomOptionList updatedColor)
         {
             try
             {
@@ -69,10 +71,10 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     return View(updatedColor);
                 }
 
-                ColorSet colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = colorSetContext.Find(Id, true);
 
                 colorSet.mName = updatedColor.mName;
-                colorSet.colors = updatedColor.colors;
+                colorSet.options = updatedColor.options;
 
                 colorSetContext.Commit();
 
@@ -89,7 +91,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                ColorSet colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = colorSetContext.Find(Id, true);
                 return View(colorSet);
             }
             catch(Exception e)
@@ -105,7 +107,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                ColorSet colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = colorSetContext.Find(Id, true);
 
                 colorSetContext.Delete(colorSet);
                 colorSetContext.Commit();

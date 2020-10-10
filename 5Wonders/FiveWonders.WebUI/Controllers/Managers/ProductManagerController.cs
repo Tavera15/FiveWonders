@@ -11,22 +11,24 @@ using FiveWonders.core.Contracts;
 
 namespace FiveWonders.WebUI.Controllers
 {
-    [Authorize(Roles = "FWondersAdmin")]
+    //[Authorize(Roles = "FWondersAdmin")]
     public class ProductManagerController : Controller
     {
         IRepository<Product> context;
         IRepository<Category> productCategories;
         IRepository<SubCategory> subCateroryContext;
         IRepository<SizeChart> sizeChartContext;
+        IRepository<CustomOptionList> customOptionListsContext;
         IBasketServices basketService;
         IImageStorageService imageStorageService;
 
-        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories, IRepository<Basket> basketRepository, IBasketServices basketServices, IImageStorageService imageStorageService)
+        public ProductManagerController(IRepository<Product> productContext, IRepository<Category> categoriesContext, IRepository<SubCategory> subCategoryRepository, IRepository<SizeChart> sizeChartRepositories, IRepository<CustomOptionList> customListsRepository, IBasketServices basketServices, IImageStorageService imageStorageService)
         {
             context = productContext;
             productCategories = categoriesContext;
             subCateroryContext = subCategoryRepository;
             sizeChartContext = sizeChartRepositories;
+            customOptionListsContext = customListsRepository;
             basketService = basketServices;
             this.imageStorageService = imageStorageService;
         }
@@ -51,12 +53,12 @@ namespace FiveWonders.WebUI.Controllers
         // Get form information and store to memory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories, HttpPostedFileBase[] imageFiles)
+        public ActionResult Create(ProductManagerViewModel p, string[] selectedCategories, string[] selectedCustomLists, HttpPostedFileBase[] imageFiles)
         {
             try
             {
                 if(!ModelState.IsValid || imageFiles[0] == null 
-                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, p.Product.mSizeChart))
+                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, selectedCustomLists, p.Product.mSizeChart))
                 {
                     throw new Exception("Product Create model no good");
                 }
@@ -66,6 +68,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 p.Product.mImage = newImageURL;
                 p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
+                p.Product.mCustomLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
 
                 context.Insert(p.Product);
                 context.Commit();
@@ -103,7 +106,7 @@ namespace FiveWonders.WebUI.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Edit(ProductManagerViewModel p, string[] selectedCategories, string[] existingImages, HttpPostedFileBase[] imageFiles, string Id)
+        public ActionResult Edit(ProductManagerViewModel p, string[] selectedCategories, string[] selectedCustomLists, string[] existingImages, HttpPostedFileBase[] imageFiles, string Id)
         {
             try
             {
@@ -111,16 +114,18 @@ namespace FiveWonders.WebUI.Controllers
                 Product target = context.Find(Id, true);
 
                 if ((existingImages == null && imageFiles[0] == null) 
-                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, p.Product.mSizeChart))
+                    || !AreOptionsValid(p.Product.mCategory, selectedCategories, selectedCustomLists, p.Product.mSizeChart))
                 {
                     ProductManagerViewModel viewModel = GetProductManagerVM();
                     viewModel.Product = p.Product;
                     viewModel.Product.mImage = target.mImage;
                     viewModel.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "";
+                    viewModel.Product.mCustomLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
 
                     return View(viewModel);
                 }
 
+                // TODO Update this for when custom lists get updated
                 bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable
                                            || target.isTextCustomizable != p.Product.isTextCustomizable
@@ -142,6 +147,7 @@ namespace FiveWonders.WebUI.Controllers
                 target.isNumberCustomizable = p.Product.isNumberCustomizable;
                 target.mHtmlDesc = p.Product.mHtmlDesc;
                 target.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "";
+                target.mCustomLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
 
                 // If new images were selected, update Target's Image property 
                 string[] currentImageFiles = target.mImage.Split(',');
@@ -276,13 +282,14 @@ namespace FiveWonders.WebUI.Controllers
             {
                 categories = allCategories,
                 subCategories = subCateroryContext.GetCollection(),
+                customOptionLists = customOptionListsContext.GetCollection(),
                 sizeCharts = allSizeCharts
             };
 
             return viewModel;
         }
     
-        private bool AreOptionsValid(string categoryId, string[] selectedCategoriesIds, string sizeChartId)
+        private bool AreOptionsValid(string categoryId, string[] selectedCategoriesIds, string[] selectedCustomLists, string sizeChartId)
         {
             try
             {
@@ -292,7 +299,10 @@ namespace FiveWonders.WebUI.Controllers
                 bool bAllSubsExist = selectedCategoriesIds
                     .All(sel => subCateroryContext.GetCollection().Any(sub => sub.mID == sel));
 
-                return bAllSubsExist;
+                bool bAllCustomListsExist = selectedCustomLists
+                    .All(sel => customOptionListsContext.GetCollection().Any(li => li.mID == sel));
+
+                return bAllSubsExist && bAllCustomListsExist;
             }
             catch(Exception e)
             {
