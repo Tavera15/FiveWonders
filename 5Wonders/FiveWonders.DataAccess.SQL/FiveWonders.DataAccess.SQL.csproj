@@ -233,6 +233,14 @@
     <Compile Include="Migrations\202010100045381_customListsToProducts.Designer.cs">
       <DependentUpon>202010100045381_customListsToProducts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010110131235_basketItemListsAttemp.cs" />
+    <Compile Include="Migrations\202010110131235_basketItemListsAttemp.Designer.cs">
+      <DependentUpon>202010110131235_basketItemListsAttemp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202010110155132_basketItemStringListOpts.cs" />
+    <Compile Include="Migrations\202010110155132_basketItemStringListOpts.Designer.cs">
+      <DependentUpon>202010110155132_basketItemStringListOpts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -385,6 +393,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010100045381_customListsToProducts.resx">
       <DependentUpon>202010100045381_customListsToProducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010110131235_basketItemListsAttemp.resx">
+      <DependentUpon>202010110131235_basketItemListsAttemp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010110155132_basketItemStringListOpts.resx">
+      <DependentUpon>202010110155132_basketItemStringListOpts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

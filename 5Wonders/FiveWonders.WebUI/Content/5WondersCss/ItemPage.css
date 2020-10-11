@@ -131,6 +131,7 @@
 
 @media (max-width: 1024px) {
     #item-page {
+        flex-direction: column;
     }
 
     .ip-product-img-container {

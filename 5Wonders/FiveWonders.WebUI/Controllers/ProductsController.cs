@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using FiveWonders.core.Contracts;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -19,15 +20,17 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subCategoryContext;
         IRepository<HomePage> homePageContext;
+        IRepository<CustomOptionList> customListContext;
         IBasketServices basketServices;
 
-        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IBasketServices basketServices)
+        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IRepository<CustomOptionList> customListRepository, IBasketServices basketServices)
         {
             productsContext = productsRepository;
             sizeChartContext = sizeChartsRepository;
             categoryContext = categoryRepository;
             subCategoryContext = subCategoryRepository;
             homePageContext = homePageRepository;
+            customListContext = customListRepository;
             this.basketServices = basketServices;
         }
 
@@ -167,15 +170,9 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                Product p = productsContext.Find(Id, true);
-                SizeChart chart = sizeChartContext.Find(p.mSizeChart);
+                ProductOrderViewModel viewModel = GetProductOrderViewModel(Id);
 
-                ProductOrderViewModel viewModel = new ProductOrderViewModel();
-                viewModel.product = p;
-                viewModel.productOrder.mProductID = Id;
-                viewModel.sizeChart = chart;
-
-                ViewBag.Title = p.mName;
+                ViewBag.Title = viewModel.product.mName;
                 return View(viewModel);
             }
             catch(Exception e)
@@ -198,10 +195,13 @@ namespace FiveWonders.WebUI.Controllers
                 
                 int tempCustom;
 
-                if (!ModelState.IsValid || productToBuy == null || item.productOrder.mQuantity <= 0 || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
+                if (!ModelState.IsValid || productToBuy == null || item.productOrder.mQuantity <= 0 
+                    || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
                 {
                     return View(item);
                 }
+
+                item.productOrder.mCustomListOptions = JsonConvert.SerializeObject(item.selectedCustomListOptions);
 
                 // Add Product Order to Shopping Cart
                 basketServices.AddToBasket(HttpContext, item.productOrder);
@@ -283,6 +283,36 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             return fixedTitle;
+        }
+    
+        private ProductOrderViewModel GetProductOrderViewModel(string Id)
+        {
+            Product p = productsContext.Find(Id, true);
+            SizeChart chart = sizeChartContext.Find(p.mSizeChart);
+
+            ProductOrderViewModel viewModel = new ProductOrderViewModel();
+            viewModel.product = p;
+            viewModel.productOrder.mProductID = Id;
+            viewModel.sizeChart = chart;
+
+            if (!String.IsNullOrWhiteSpace(p.mCustomLists))
+            {
+                foreach (string listId in p.mCustomLists.Split(','))
+                {
+                    CustomOptionList customOptionList = customListContext.Find(listId);
+                    if (customOptionList == null) { continue; }
+
+                    viewModel.customListNames.Add(customOptionList.mName);
+                    viewModel.listOptions.Add(listId, new List<string>());
+
+                    foreach (string customListOption in customOptionList.options.Split(','))
+                    {
+                        viewModel.listOptions[listId].Add(customListOption);
+                    }
+                }
+            }
+
+            return viewModel;
         }
     }
 }

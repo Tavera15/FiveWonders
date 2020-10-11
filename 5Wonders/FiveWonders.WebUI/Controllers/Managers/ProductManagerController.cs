@@ -189,6 +189,11 @@ namespace FiveWonders.WebUI.Controllers
                 string[] allSubCategoryNames = (allSubIDs[0] != "None") 
                     ? allSubIDs.Select(x => subCateroryContext.Find(x).mSubCategoryName).ToArray() 
                     : new string[] { "None" };
+
+                // Gets each Custom List's name using the ID and stores it in an array...if any
+                string[] allCustomListName = (!String.IsNullOrWhiteSpace(target.mCustomLists))
+                    ? target.mCustomLists.Split(',').Select(x => customOptionListsContext.Find(x).mName).ToArray()
+                    : new string[] { };
                 
                 // Find the Main Category's and Size Chart's names
                 string mainCategoryName = productCategories.Find(target.mCategory).mCategoryName;
@@ -198,6 +203,7 @@ namespace FiveWonders.WebUI.Controllers
                 ViewBag.CategoryName = mainCategoryName;
                 ViewBag.SubCategoryNames = allSubCategoryNames;
                 ViewBag.ChartName = sizeChartName;
+                ViewBag.customListsNames = allCustomListName;
                 return View(target);
             }
             catch(Exception e)

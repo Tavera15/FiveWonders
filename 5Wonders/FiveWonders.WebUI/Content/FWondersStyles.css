@@ -11,7 +11,7 @@
 }
 
 body {
-    font-family: cinzel;
+    font-family: oswald;
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -30,8 +30,9 @@ body {
     padding: 0;
 }
 
-.FWonders-navbar-container{
+.FWonders-navbar-container {
     width: 85vw;
+    font-family: cinzel;
 }
 
 .FWonders-navbar{

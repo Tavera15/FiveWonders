@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,8 +32,12 @@ namespace FiveWonders.core.Models
         [Display(Name = "Custom Date")]
         public string customDate { get; set; }
 
-        [RegularExpression(@"^(0[1-9]|1[0-2]):[0-5][0-9]", ErrorMessage = "Invalid Time.")]
+        //[RegularExpression(@"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$", ErrorMessage = "Invalid Time.")]
+        [RegularExpression(@"^([0]?[0-9]|1[0-2]):[0-5][0-9]$", ErrorMessage = "Invalid Time.")]
         public string customTime { get; set; }
+
+        [Display(Name = "Custom List Options")]
+        public string mCustomListOptions { get; set; }
 
         public BasketItem()
         {

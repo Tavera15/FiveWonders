@@ -98,13 +98,30 @@
                             {
                                 <div class="form-group">
                                     <label class="control-label col-md-2">Custom Time:</label>
-                                    @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
+                                    @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "0:00 - 12:59" } })
                                     <div class="col-md-10">
                                         @Html.ValidationMessageFor(model => model.productOrder.customTime, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             }
                         </div>
+                    }
+
+                    if (Model.listOptions.Count > 0)
+                    {
+                       
+                        int i = 0;
+
+                        foreach (var key in Model.listOptions.Keys)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-2">@Model.customListNames[i++]</label>
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { htmlAttributes = new { } })
+                                    @Html.ValidationMessageFor(model => model.productOrder.mCustomListOptions, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
                     }
 
                     <div class="form-group">

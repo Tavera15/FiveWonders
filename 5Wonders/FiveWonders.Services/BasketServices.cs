@@ -45,7 +45,8 @@ namespace FiveWonders.Services
                     && x.mCustomText == item.mCustomText
                     && x.mCustomNum == item.mCustomNum
                     && x.customDate == item.customDate
-                    && x.customTime == item.customTime);
+                    && x.customTime == item.customTime
+                    && x.mCustomListOptions == item.mCustomListOptions);
 
                 // Update the quantity if item already exists
                 if (basketItem != null)
@@ -123,7 +124,8 @@ namespace FiveWonders.Services
                                     && x.mCustomText == newBasketItem.mCustomText
                                     && x.mCustomNum == newBasketItem.mCustomNum
                                     && x.customDate == newBasketItem.customDate
-                                    && x.customTime == newBasketItem.customTime);
+                                    && x.customTime == newBasketItem.customTime
+                                    && x.mCustomListOptions == newBasketItem.mCustomListOptions);
 
                 if(similarBasketItem != null)
                 {
@@ -145,6 +147,7 @@ namespace FiveWonders.Services
                     basketItem.mCustomNum = newBasketItem.mCustomNum;
                     basketItem.customDate = newBasketItem.customDate;
                     basketItem.customTime = newBasketItem.customTime;
+                    basketItem.mCustomListOptions = newBasketItem.mCustomListOptions;
                 }
                 
                 basketItemsContext.Commit();

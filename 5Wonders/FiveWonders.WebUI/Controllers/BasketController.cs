@@ -4,6 +4,7 @@ using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using FiveWonders.WebUI.Models;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using PayPal.Api;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,15 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Product> productContext;
         IRepository<SizeChart> sizeChartContext;
         IRepository<BasketItem> basketItemContext;
+        IRepository<CustomOptionList> customListContext;
 
-        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository)
+        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository, IRepository<CustomOptionList> customListRepository)
         {
             basketService = services;
             productContext = productsRepository;
             sizeChartContext = sizeChartRepository;
             basketItemContext = basketItemRepository;
+            customListContext = customListRepository;
         }
 
         // GET: Basket
@@ -99,6 +102,7 @@ namespace FiveWonders.WebUI.Controllers
                     mCustomText = viewModel.basketItem.mCustomText,
                     customDate = viewModel.basketItem.customDate,
                     customTime = viewModel.basketItem.customTime,
+                    mCustomListOptions = JsonConvert.SerializeObject(viewModel.selectedCustomListOptions),
                     mProductID = oldBasketItem.mProductID,
                     basketID = oldBasketItem.basketID,
                 };
@@ -141,13 +145,40 @@ namespace FiveWonders.WebUI.Controllers
                 if (product.mSizeChart != "0")
                     sizeChart = sizeChartContext.Find(product.mSizeChart, true);
 
+                // Get custom lists that may be linked to product
+                Dictionary<string, List<string>> productCustomLists = new Dictionary<string, List<string>>();
+                List<string> customListNames = new List<string>();
+
+                if (!String.IsNullOrWhiteSpace(product.mCustomLists))
+                {
+                    foreach(string listId in product.mCustomLists.Split(','))
+                    {
+                        CustomOptionList customList = customListContext.Find(listId);
+
+                        if(customList == null) { continue; }
+
+                        // Add name to list, and init dictionary using custom list Id
+                        customListNames.Add(customList.mName);
+                        productCustomLists.Add(listId, new List<string>());
+
+                        // Go through each custom list option, and add it to dictionary
+                        foreach(string listOpt in customList.options.Split(','))
+                        {
+                            productCustomLists[listId].Add(listOpt);
+                        }
+                    }
+                }
+
                 viewModel = new BasketItemViewModel()
                 {
                     productID = product.mID,
                     product = product,
                     basketItem = basketItem,
                     basketItemID = basketItem.mID,
-                    sizeChart = sizeChart
+                    sizeChart = sizeChart,
+                    listOptions = productCustomLists,
+                    customListNames = customListNames,
+                    selectedCustomListOptions = JsonConvert.DeserializeObject<Dictionary<string, string>>(basketItem.mCustomListOptions)
                 };
             }
 

@@ -75,6 +75,19 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.mCustomLists)
+        </dt>
+
+        <dd>
+            <ul>
+                @foreach(var li in ViewBag.customListsNames)
+                {
+                    <li>@li</li>
+                }
+            </ul>
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.isTextCustomizable)
         </dt>
 
