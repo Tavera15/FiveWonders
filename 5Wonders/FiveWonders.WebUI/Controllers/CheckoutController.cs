@@ -2,6 +2,7 @@
 using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
+using Newtonsoft.Json;
 using PayPal.Api;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,16 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Customer> customerContext;
         IRepository<Product> productContext;
         IRepository<OrderItem> orderItemContext;
+        IRepository<CustomOptionList> customListContext;
 
-        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<Product> productsRepository, IRepository<OrderItem> orderItemRepository)
+        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<Product> productsRepository, IRepository<OrderItem> orderItemRepository, IRepository<CustomOptionList> customListRepository)
         {
             basketService = services;
             orderContext = orderRepository;
             customerContext = customerRepository;
             productContext = productsRepository;
             orderItemContext = orderItemRepository;
+            customListContext = customListRepository;
         }
 
         // GET: Checkout
@@ -81,6 +84,32 @@ namespace FiveWonders.WebUI.Controllers
 
                 foreach (BasketItemViewModel basketItem in allBasketItems)
                 {
+                    // Variable to store all custom list selections. Will be used in PayPal's Item Description prop
+                    string itemCustomListDesc = "";
+                    
+                    // list name, selected value
+                    Dictionary<string, string> orderItemListOpts = new Dictionary<string, string>();
+                    
+                    if(!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomListOptions))
+                    {
+                        // Get the Custom Option Lists selections from the basket item
+                        Dictionary<string, string> basketItemSelectedListOpts =
+                            JsonConvert.DeserializeObject<Dictionary<string, string>>(basketItem.basketItem.mCustomListOptions);
+
+                        foreach(string listID in basketItemSelectedListOpts.Keys)
+                        {
+                            CustomOptionList optionList = customListContext.Find(listID, true);
+                            
+                            orderItemListOpts.Add(optionList.mName, basketItemSelectedListOpts[listID]);
+
+                            string currentListAndInput = String.Format("{0}: {1}", optionList.mName, basketItemSelectedListOpts[listID]);
+                            
+                            itemCustomListDesc = String.IsNullOrWhiteSpace(itemCustomListDesc)
+                                ? currentListAndInput
+                                : itemCustomListDesc + " | " + currentListAndInput; 
+                        }
+                    }
+
                     // Initialize new Order Item per Basket Item, and link them to Order Id
                     OrderItem orderItem = new OrderItem
                     {
@@ -93,7 +122,12 @@ namespace FiveWonders.WebUI.Controllers
                         mQuantity = basketItem.basketItem.mQuantity,
                         mSize = basketItem.basketItem.mSize,
                         mCustomText = basketItem.basketItem.mCustomText,
-                        mCustomNumber = basketItem.basketItem.mCustomNum
+                        mCustomNumber = basketItem.basketItem.mCustomNum,
+                        mCustomDate = basketItem.basketItem.customDate,
+                        mCustomTime = basketItem.basketItem.customTime,
+                        mCustomListOpts = orderItemListOpts.Count == 0 
+                                        ? "" 
+                                        : JsonConvert.SerializeObject(orderItemListOpts) 
                     };
 
                     // Add the Order Item into the Order's list
@@ -101,10 +135,13 @@ namespace FiveWonders.WebUI.Controllers
 
                     total += (basketItem.product.mPrice * basketItem.basketItem.mQuantity);
 
-                    string paypalDesc = String.Format("{0}{1}{2}",
+                    string paypalDesc = String.Format("{0}{1}{2}{3}{4}{5}",
                         (!String.IsNullOrWhiteSpace(basketItem.basketItem.mSize) ? "Size: " + basketItem.basketItem.mSize + " | " : ""),
                         (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomText) ? "Text: " + basketItem.basketItem.mCustomText + " | " : ""),
-                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomNum) ? "Custom Number: " + basketItem.basketItem.mCustomNum : "")
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.mCustomNum) ? "Custom Number: " + basketItem.basketItem.mCustomNum : ""),
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.customDate) ? "Custom Date: " + basketItem.basketItem.customDate + " | " : ""),
+                        (!String.IsNullOrWhiteSpace(basketItem.basketItem.customTime) ? "Custom Time: " + basketItem.basketItem.customTime + " | " : ""),
+                        (itemCustomListDesc)
                     );
 
                     // Create an Item object to add to PayPal's List Items Object
@@ -162,12 +199,14 @@ namespace FiveWonders.WebUI.Controllers
                    createdPayment.links.FirstOrDefault(
                        x => x.rel.Equals("approval_url", StringComparison.OrdinalIgnoreCase));
 
+                // TODO Send confirmation to admins
+
                 return Redirect(approvalUrl.href);
             }
             catch (Exception e)
             {
                 _ = e;
-                return View(order);
+                return RedirectToAction("Index", "Checkout");
             }
         }
 

@@ -1,8 +1,7 @@
-﻿@model FiveWonders.core.Models.ColorSet
+﻿@model FiveWonders.core.Models.CustomOptionList
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>ColorSet</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -22,21 +21,43 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.colors)
+            @Html.DisplayNameFor(model => model.options)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.colors)
+            @Html.DisplayFor(model => model.options)
         </dd>
 
     </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+    @if (ViewBag.productsWithCustList.Length == 0)
+    {
+        using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    }
+    else
+    {
+        <h3>Can't delete custom list: <strong>@Html.DisplayFor(model => model.mName)</strong></h3>
+        <h2>Update the Custom Option Lists field for the following products:</h2>
+
+        <table>
+            @foreach (var product in ViewBag.productsWithCustList)
+            {
+                <tr>
+                    <td>
+                        <a href="/ProductManager/Edit/@product.mID">@product.mName</a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        @Html.ActionLink("Back to List", "Index")
     }
 </div>

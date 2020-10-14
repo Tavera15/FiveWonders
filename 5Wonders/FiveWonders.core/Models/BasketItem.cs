@@ -36,6 +36,8 @@ namespace FiveWonders.core.Models
         [RegularExpression(@"^([0]?[0-9]|1[0-2]):[0-5][0-9]$", ErrorMessage = "Invalid Time.")]
         public string customTime { get; set; }
 
+
+        // This is serialized: Dictionary <string (list id), string (choice)>
         [Display(Name = "Custom List Options")]
         public string mCustomListOptions { get; set; }
 

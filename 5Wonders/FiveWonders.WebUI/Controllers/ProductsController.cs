@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using FiveWonders.core.Contracts;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
+using Microsoft.Ajax.Utilities;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -193,12 +194,14 @@ namespace FiveWonders.WebUI.Controllers
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
                 
-                int tempCustom;
-
-                if (!ModelState.IsValid || productToBuy == null || item.productOrder.mQuantity <= 0 
-                    || (item.product.isNumberCustomizable && !int.TryParse(item.productOrder.mCustomNum, out tempCustom)))
+                // If an input is not valid, return to the item page with warnings and customer selections
+                if (!ModelState.IsValid || productToBuy == null || item.productOrder.mQuantity <= 0
+                    || !IsValidToAddToCart(productToBuy, item))
                 {
-                    return View(item);
+                    ProductOrderViewModel failedViewModel = GetProductOrderViewModel(Id);
+                    failedViewModel.productOrder = item.productOrder;
+
+                    return View(failedViewModel);
                 }
 
                 item.productOrder.mCustomListOptions = JsonConvert.SerializeObject(item.selectedCustomListOptions);
@@ -313,6 +316,67 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             return viewModel;
+        }
+    
+        private bool IsValidToAddToCart(Product product, ProductOrderViewModel possibleItem)
+        {
+            try
+            {
+                bool isCustomDateValid = (!product.isDateCustomizable && String.IsNullOrWhiteSpace(possibleItem.productOrder.customDate))
+                    ||(product.isDateCustomizable && !String.IsNullOrWhiteSpace(possibleItem.productOrder.customDate));
+
+                bool isCustomTimeValid = (!product.isTimeCustomizable && String.IsNullOrWhiteSpace(possibleItem.productOrder.customTime))
+                    ||(product.isTimeCustomizable && !String.IsNullOrWhiteSpace(possibleItem.productOrder.customTime));
+
+                // Checks if a custom number is being submitted on a product that it is not number customizable
+                if (!product.isNumberCustomizable && !String.IsNullOrWhiteSpace(possibleItem.productOrder.mCustomNum))
+                {
+                    throw new Exception("Custom number input not valid");
+                }
+                else if(product.isNumberCustomizable && !String.IsNullOrWhiteSpace(possibleItem.productOrder.mCustomNum))
+                {
+                    int customNum;
+
+                    // Checks if the custom number input is a valid integer
+                    if(!int.TryParse(possibleItem.productOrder.mCustomNum, out customNum) || customNum < 0)
+                    {
+                        throw new Exception("Custom number input not valid");
+                    }
+                }
+                
+                // Checks if a custom text is being submitted on a product that it is not text customizable
+                if(!product.isTextCustomizable && !String.IsNullOrWhiteSpace(possibleItem.productOrder.mCustomText))
+                {
+                    throw new Exception("Text customization is not allowed.");
+                }
+
+                // Makes sure that the product has the custom list still linked, and if the options exist as well
+                if(!String.IsNullOrWhiteSpace(product.mCustomLists))
+                {
+                    // Get list Ids
+                    string[] productListIDs = product.mCustomLists.Split(',');
+                    
+                    foreach(string listID in productListIDs)
+                    {
+                        // Go through each list, and ensures it exists
+                        CustomOptionList customOptionList = customListContext.Find(listID, true);
+
+                        // Check if the customer's selected option exists in the list's options
+                        if(!possibleItem.selectedCustomListOptions.ContainsKey(listID)
+                            || !customOptionList.options.Contains(possibleItem.selectedCustomListOptions[listID]))
+                        {
+                            throw new Exception("Option not valid for: " + customOptionList.mName);
+                        }
+                    }
+                }
+
+                return isCustomDateValid && isCustomTimeValid;
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return false;
+            }
         }
     }
 }

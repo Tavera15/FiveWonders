@@ -125,12 +125,17 @@ namespace FiveWonders.WebUI.Controllers
                     return View(viewModel);
                 }
 
+                string strSelectedSubs = selectedCategories != null ? String.Join(",", selectedCategories) : "";
+                string strSelectedLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
+
                 // TODO Update this for when custom lists get updated
-                bool shouldUpdateBaskets = ((target.mSizeChart != p.Product.mSizeChart)
+                bool shouldUpdateBaskets = (target.mPrice != p.Product.mPrice
+                                           || target.mSizeChart != p.Product.mSizeChart
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable
                                            || target.isTextCustomizable != p.Product.isTextCustomizable
                                            || target.isDateCustomizable != p.Product.isDateCustomizable
-                                           || target.isTimeCustomizable != p.Product.isTimeCustomizable);
+                                           || target.isTimeCustomizable != p.Product.isTimeCustomizable
+                                           || target.mCustomLists != strSelectedLists);
 
                 if(shouldUpdateBaskets)
                 {
@@ -146,8 +151,8 @@ namespace FiveWonders.WebUI.Controllers
                 target.mCustomText = p.Product.mCustomText;
                 target.isNumberCustomizable = p.Product.isNumberCustomizable;
                 target.mHtmlDesc = p.Product.mHtmlDesc;
-                target.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "";
-                target.mCustomLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
+                target.mSubCategories = strSelectedSubs;
+                target.mCustomLists = strSelectedLists;
 
                 // If new images were selected, update Target's Image property 
                 string[] currentImageFiles = target.mImage.Split(',');
@@ -204,6 +209,7 @@ namespace FiveWonders.WebUI.Controllers
                 ViewBag.SubCategoryNames = allSubCategoryNames;
                 ViewBag.ChartName = sizeChartName;
                 ViewBag.customListsNames = allCustomListName;
+
                 return View(target);
             }
             catch(Exception e)
@@ -302,11 +308,13 @@ namespace FiveWonders.WebUI.Controllers
                 Category category = productCategories.Find(categoryId, true);
                 SizeChart chart = sizeChartId != "0" ? sizeChartContext.Find(sizeChartId, true) : null;
 
-                bool bAllSubsExist = selectedCategoriesIds
-                    .All(sel => subCateroryContext.GetCollection().Any(sub => sub.mID == sel));
+                bool bAllSubsExist = selectedCategoriesIds == null 
+                    || selectedCategoriesIds
+                        .All(sel => subCateroryContext.GetCollection().Any(sub => sub.mID == sel));
 
-                bool bAllCustomListsExist = selectedCustomLists
-                    .All(sel => customOptionListsContext.GetCollection().Any(li => li.mID == sel));
+                bool bAllCustomListsExist = selectedCustomLists == null
+                    || selectedCustomLists
+                        .All(sel => customOptionListsContext.GetCollection().Any(li => li.mID == sel));
 
                 return bAllSubsExist && bAllCustomListsExist;
             }

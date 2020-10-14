@@ -327,21 +327,19 @@ namespace FiveWonders.Services
         {
             try
             {
-                Basket[] baskets = basketContext.GetCollection()
-                    .Where(x => x.mBasket.Any(i => i.mProductID == productId)).ToArray();
+                BasketItem[] basketItemsWithProductId = basketItemsContext.GetCollection()
+                    .Where(x => x.mProductID == productId).ToArray();
 
-                foreach(Basket basket in baskets)
+                foreach(BasketItem basketItem in basketItemsWithProductId)
                 {
-                    BasketItem[] basketItems = basket.mBasket
-                        .Where(x => x.mProductID == productId).ToArray();
-                    
-                    foreach(BasketItem basketItem in basketItems)
-                    {
-                        basket.mBasket.Remove(basketItem);
-                    }
+                    BasketItem basketItemToDelete = basketItemsContext.Find(basketItem.mID);
+
+                    if(basketItemToDelete == null) { continue; }
+
+                    basketItemsContext.Delete(basketItemToDelete);
                 }
 
-                basketContext.Commit();
+                basketItemsContext.Commit();
             }
             catch(Exception e)
             {

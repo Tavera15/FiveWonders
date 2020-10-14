@@ -1,28 +1,32 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers.Managers
 {
     public class ProductColorsManagerController : Controller
     {
-        IRepository<CustomOptionList> colorSetContext;
+        IRepository<CustomOptionList> customListContext;
+        IRepository<Product> productsContext;
 
         // TODO Investigate if it is possible to create multiple custom sets. (Color sets, team sets, etc)
 
-        public ProductColorsManagerController(IRepository<CustomOptionList> colorSetRepository)
+        public ProductColorsManagerController(IRepository<CustomOptionList> customListRepository, IRepository<Product> productsRepository)
         {
-            colorSetContext = colorSetRepository;
+            customListContext = customListRepository;
+            productsContext = productsRepository;
         }
 
         // GET: ProductColorsManager
         public ActionResult Index()
         {
-            CustomOptionList[] colorSets = colorSetContext.GetCollection().ToArray();
+            CustomOptionList[] colorSets = customListContext.GetCollection().ToArray();
             return View(colorSets);
         }
 
@@ -40,8 +44,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 return View(colorSet);
             }
 
-            colorSetContext.Insert(colorSet);
-            colorSetContext.Commit();
+            customListContext.Insert(colorSet);
+            customListContext.Commit();
 
             return RedirectToAction("Index", "ProductColorsManager");
         }
@@ -50,7 +54,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                CustomOptionList colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = customListContext.Find(Id, true);
                 return View(colorSet);
             }
             catch(Exception e)
@@ -71,12 +75,12 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     return View(updatedColor);
                 }
 
-                CustomOptionList colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList colorSet = customListContext.Find(Id, true);
 
                 colorSet.mName = updatedColor.mName;
                 colorSet.options = updatedColor.options;
 
-                colorSetContext.Commit();
+                customListContext.Commit();
 
                 return RedirectToAction("Index", "ProductColorsManager");
             }
@@ -91,8 +95,14 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                CustomOptionList colorSet = colorSetContext.Find(Id, true);
-                return View(colorSet);
+                CustomOptionList customList = customListContext.Find(Id, true);
+
+                Product[] productsWithCustList = productsContext.GetCollection()
+                    .Where(p => !String.IsNullOrEmpty(p.mCustomLists)
+                    && p.mCustomLists.Contains(Id)).ToArray();
+
+                ViewBag.productsWithCustList = productsWithCustList;
+                return View(customList);
             }
             catch(Exception e)
             {
@@ -107,10 +117,15 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                CustomOptionList colorSet = colorSetContext.Find(Id, true);
+                CustomOptionList customList = customListContext.Find(Id, true);
 
-                colorSetContext.Delete(colorSet);
-                colorSetContext.Commit();
+                bool bItemsContainList = productsContext.GetCollection()
+                    .Any(p => p.mCustomLists.Contains(Id));
+
+                if (bItemsContainList) { throw new Exception("Products contain custom list"); }
+
+                customListContext.Delete(customList);
+                customListContext.Commit();
 
                 return RedirectToAction("Index", "ProductColorsManager");
             }

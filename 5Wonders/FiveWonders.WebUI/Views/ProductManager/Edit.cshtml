@@ -102,7 +102,7 @@
                                 <input type="checkbox"
                                        name="selectedCustomLists"
                                        value=@item.mID
-                                       @if (Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                       @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
                                 @item.mName
                             </label>
                         </div>
