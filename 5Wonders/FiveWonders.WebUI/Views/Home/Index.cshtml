@@ -24,135 +24,170 @@
         : "col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container";
 }
 
-@if (!String.IsNullOrWhiteSpace(jumboBG))
-{
-    <div class="jumbotron jumbo-img" style="background-image: url(@jumboBG);">
+<div class="col-lg-12" id="home-page">
 
-        @if (!String.IsNullOrWhiteSpace(jumboLogo))
-        {
-            <img src="@jumboLogo" alt="logo" class="jumbo-logo jumbo-item" />
-        }
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-page-greeting-container">
 
-        <div class="jumbo-message">
-            @Html.Raw(Model.homePageData.mHomePageGreeting)
+        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
+            <div class="hp-greeting">
+                @Html.Raw(Model.homePageData.mHomePageGreeting)
+            </div>
         </div>
 
-        <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="@Model.welcomePageUrl" class="btn btn-primary">View Products &raquo;</a></p>
-    </div>
-}
+        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 hp-carousel">
 
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-display">
-    <div>
-        @if (!String.IsNullOrWhiteSpace(Model.promo1.promoLink) && !String.IsNullOrWhiteSpace(promoImg1))
-        {
-            <div class="@promoClassNames">
-                <a href="@Model.promo1.promoLink">
-                    <div class="single-category" style="background-image: url(@promoImg1);">
-                        <div style="background-color: rgba(0,0,0,@Model.promo1.promoImgShader);" class="category-img-cover">
-                            <h2 style="color: @Model.promo1.promoNameColor;">@Model.promo1.promoName</h2>
-                            <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo1.promoName</p>
-                        </div>
-                    </div>
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        string liClassTag = i == 0 ? "active" : "";
+
+                        <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
+                    }
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                    @for (int i = 0; i < 3; i++)
+                    {
+                        string itemClassTag = i == 0 ? "item active" : "item";
+
+                        <div class="@itemClassTag img-test" style="background-image: url(@jumboBG);"></div>
+                    }
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
                 </a>
             </div>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(Model.promo2.promoLink) && !String.IsNullOrWhiteSpace(promoImg2))
-        {
-            <div class="@promoClassNames">
-                <a href="@Model.promo2.promoLink">
-                    <div class="single-category" style="background-image: url(@promoImg2);">
-                        <div style="background-color: rgba(0,0,0,@Model.promo2.promoImgShader);" class="category-img-cover">
-                            <h2 style="color: @Model.promo2.promoNameColor;">@Model.promo2.promoName</h2>
-                            <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo2.promoName</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
+        </div>
     </div>
-</div>
 
-<div class="section-top-three top-p">
-    <div class="thing-cover">
-
-        <h1>Latest Products</h1>
-
-        <div class="top-three-products">
-            @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
-
-            @for (int i = 0; i < Model.top3Products.Count; i++)
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-display">
+        <div>
+            @if (!String.IsNullOrWhiteSpace(Model.promo1.promoLink) && !String.IsNullOrWhiteSpace(promoImg1))
             {
-                var product = Model.top3Products[i];
-                string[] currentImageFiles = product.mImage.Split(',');
-                string firstImage = currentImageFiles[0];
+                <div class="@promoClassNames">
+                    <a href="@Model.promo1.promoLink">
+                        <div class="single-category" style="background-image: url(@promoImg1);">
+                            <div style="background-color: rgba(0,0,0,@Model.promo1.promoImgShader);" class="category-img-cover">
+                                <h2 style="color: @Model.promo1.promoNameColor;">@Model.promo1.promoName</h2>
+                                <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo1.promoName</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
 
-                <div class="@classTags fw-card-container">
-                    <a href="/products/item/@product.mID" class="fw-card-a">
-                        <div class="fw-product-container">
-                            <div class="fw-card">
-                                <h3 class="fw-card-title">@product.mName</h3>
-                                <img alt="@product.mName"
-                                     src="@Url.Content("~/Content/ProductImages/" + firstImage)"
-                                     class="fw-card-img" />
-                                <p class="fw-card-price">$@product.mPrice</p>
-                                <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+            @if (!String.IsNullOrWhiteSpace(Model.promo2.promoLink) && !String.IsNullOrWhiteSpace(promoImg2))
+            {
+                <div class="@promoClassNames">
+                    <a href="@Model.promo2.promoLink">
+                        <div class="single-category" style="background-image: url(@promoImg2);">
+                            <div style="background-color: rgba(0,0,0,@Model.promo2.promoImgShader);" class="category-img-cover">
+                                <h2 style="color: @Model.promo2.promoNameColor;">@Model.promo2.promoName</h2>
+                                <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo2.promoName</p>
                             </div>
                         </div>
                     </a>
                 </div>
             }
         </div>
-        <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
     </div>
-</div>
 
-<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container home-services-container" style="margin-bottom: 4vh; margin-bottom: 0;">
-    <a href="/services/">
-        <div class="single-category" style="height: 35vh; background-attachment: fixed; background-image: url(https://i0.wp.com/onaircode.com/wp-content/uploads/2019/09/css3-gradient.jpg?resize=1024%2C588&ssl=1);">
-            <div class="category-img-cover" style="background-color: rgba(0,0,0,.74);">
-                <h2 style="color: lightgoldenrodyellow;">Customize with us!</h2>
-                <p class="btn btn-lg btn-default redi-btn">Contact</p>
+    <div class="col-lg-12 section-top-three top-p">
+        <div class="thing-cover">
+
+            <h1>Latest Products</h1>
+
+            <div class="top-three-products">
+                @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
+
+                @for (int i = 0; i < Model.top3Products.Count; i++)
+                {
+                    var product = Model.top3Products[i];
+                    string[] currentImageFiles = product.mImage.Split(',');
+                    string firstImage = currentImageFiles[0];
+
+                    <div class="@classTags fw-card-container">
+                        <a href="/products/item/@product.mID" class="fw-card-a">
+                            <div class="fw-product-container">
+                                <div class="fw-card">
+                                    <h3 class="fw-card-title">@product.mName</h3>
+                                    <img alt="@product.mName"
+                                         src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                         class="fw-card-img" />
+                                    <p class="fw-card-price">$@product.mPrice</p>
+                                    <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+            <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-services-container" style="margin-bottom: 4vh;">
+        <a href="/services/" style="text-decoration: none;">
+            <div class="single-category" style="min-height: 30vh; background-attachment: fixed; background-size: contain; background-image: url(@Url.Content("~/Content/Home/Logo.png"));">
+                <div class="category-img-cover" style="background-color: rgba(0,0,0,.74);">
+                    <h2 style="color: lightgoldenrodyellow;">Customize with us!</h2>
+                    <p class="btn btn-lg btn-default redi-btn">Contact</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    @if (Model.top3IGPosts.Count > 0)
+    {
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-container" style="border: black 1px solid;">
+            <h1 class="col-lg-12 home-gallery-container-title">Gallery</h1>
+
+            <div class="col-lg-12 col-md-12 col-xs-12 home-gallery-imgs-container">
+                <a href="/Gallery/" class="container home-gallery-imgs-anchor">
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 home-gallery-solo-img-container">
+                        <div class="col-lg-12 home-gallery-img home-gallery-solo-img"
+                             style="
+                                background-image: url( @Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[0].mImageFile) )">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 home-gallery-four-group-container">
+                        @for (int i = 1; i < Model.top3IGPosts.Count; i++)
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="border: solid white 2px; display: flex; padding:1rem; margin: 0;">
+                                <div class="home-gallery-img home-gallery-group-img"
+                                     style="
+                                    background-image: url(@Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[i].mImageFile))">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </a>
             </div>
         </div>
-    </a>
+    }
 </div>
-
-@if (Model.top3IGPosts.Count > 0)
-{
-    <div class="col-lg-12 home-gallery-container">
-        <h1 class="col-lg-12 home-gallery-container-title">Gallery</h1>
-
-        <div class="col-lg-12 col-md-12 col-xs-12 home-gallery-imgs-container">
-            <a href="/Gallery/" class="container home-gallery-imgs-anchor">
-
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 home-gallery-solo-img-container">
-                    <div class="col-lg-12 home-gallery-img home-gallery-solo-img"
-                         style="
-                                background-image: url( @Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[0].mImageFile) )">
-                    </div>
-                </div>
-
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 home-gallery-four-group-container">
-                    @for (int i = 1; i < Model.top3IGPosts.Count; i++)
-                    {
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="border: solid white 2px; display: flex; padding:1rem; margin: 0;">
-                            <div class="home-gallery-img home-gallery-group-img"
-                                 style="
-                                    background-image: url(@Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[i].mImageFile))">
-                            </div>
-                        </div>
-                    }
-                </div>
-            </a>
-        </div>
-    </div>
-}
 
 @section Pagecss{
     <link href="~/Content/5WondersCss/HomePageCss.css"
           rel="stylesheet" type="text/css" />
-    
+
     <link href="~/Content/5WondersCss/Card.css"
           rel="stylesheet" type="text/css" />
+}
+
+@section Scripts{
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
 }

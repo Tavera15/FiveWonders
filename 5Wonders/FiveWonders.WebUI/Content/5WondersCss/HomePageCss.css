@@ -1,4 +1,47 @@
 ﻿
+#home-page {
+    padding: 0 4vw;
+    margin: 0 auto;
+}
+
+.home-page-greeting-container {
+    margin: 1vh 0 4vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.hp-greeting-box {
+    display: flex;
+    border: 1px solid lightgray;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 0;
+}
+
+.hp-greeting {
+    padding: 0;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-direction: column;
+    margin: 0;
+}
+
+.hp-carousel {
+    text-align: center;
+    padding: 0 0 0 1vw;
+}
+
+
+.img-test {
+    height: 50vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .jumbo-img {
     background-position: center;
     background-repeat: no-repeat;
@@ -34,6 +77,8 @@
 
 .section-top-three {
     margin: 0 4vw 4vh;
+    margin: 0;
+    margin-bottom: 4vh;
     display: flex;
     flex-direction: column;
     border: 1px solid black;
@@ -69,6 +114,8 @@
     background-color: inherit;
     padding: 0 4rem;
     padding: 0 3vw;
+    padding: 0 ;
+    margin: 0 auto;
     margin-bottom: 4vh;
 }
 
@@ -87,8 +134,8 @@
     }
 
 .category-container {
-    padding: 0 2rem;
     padding: 0 4rem;
+    padding: 0 2rem;
 }
 
     .category-container a {
@@ -122,18 +169,22 @@
     margin: 2vh 0;
     padding: 0 10rem;
     padding: 0 3vw;
+    padding: 0
 }
 
 .home-services-container {
     padding: 0;
+    text-decoration: none;
 }
 
 .home-gallery-container {
     background-color: rgba(250, 235, 215, .7);
+    background-color: inherit;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 2vh 8vw 3vh;
+    padding: 2vh 0 3vh;
 }
 
 .home-gallery-container-title {
@@ -144,6 +195,7 @@
 
 .home-gallery-imgs-container {
     background-color: rgba(255,235,205, 1);
+    background-color: inherit;
     margin: 0;
     padding: 0;
 }
@@ -190,6 +242,10 @@
 }
 
 @media(max-width: 1400px) {
+    #home-page{
+        padding: 0;
+    }
+
     .top-three-products {
         padding: 0;
     }
@@ -200,6 +256,22 @@
 }
 
 @media(max-width: 1024px) {
+    .home-page-greeting-container{
+        flex-direction: column-reverse;
+    }
+
+    .hp-carousel{
+        padding: 0;
+    }
+
+    .hp-greeting-box{
+        min-height: unset;
+    }
+
+    .img-test{
+        height:42rem;
+    }
+
     .category-display {
         padding: 0 1rem;
     }
@@ -238,13 +310,12 @@
 }
 
 @media (max-width: 768px) {
-    .base-container {
-        width: 100%;
-        padding: 0;
+    #home-page{
+        width: 95vw;
     }
 
-    .FWonders-navbar-container {
-        width: 95vw;
+    .img-test{
+        height: 30rem;
     }
 
     .single-category h2 {

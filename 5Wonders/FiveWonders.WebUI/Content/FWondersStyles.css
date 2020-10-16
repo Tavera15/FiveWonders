@@ -11,6 +11,7 @@
 }
 
 body {
+    padding-top: 0;
     font-family: oswald;
     background-repeat: no-repeat;
     background-size: cover;
@@ -18,11 +19,12 @@ body {
     background-color: rgba(255,255,255,0);
     background: rgb(255,255,255);
     background: linear-gradient(45deg, rgba(255,255,255,1) 0%, rgba(220,255,246,1) 43%, rgba(255,223,223,1) 62%, rgba(255,255,255,1) 100%);
+    background: white;
 }
 
 .base-container {
-    width: 85vw;
     width: 100%;
+    width: 85vw;
     background-color: rgba(0,0,0,0);
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
@@ -32,13 +34,26 @@ body {
 
 .FWonders-navbar-container {
     width: 85vw;
-    font-family: cinzel;
+    font-family: oswald;
+    background-color: #222;
 }
 
 .FWonders-navbar{
     background-color: #222;
+    background-color: inherit;
+    color: black;
 }
 
+@media(max-width: 768px)
+{
+    .FWonders-navbar-container {
+        width: 100%;
+    }
+    .base-container {
+        width: 100%;
+        padding: 0;
+    }
+}
 
 
 /*---------------------------Products List Page---------------------------*/

@@ -8,38 +8,46 @@
         @Scripts.Render("~/bundles/modernizr")
         @RenderSection("Pagecss", required: false)
     </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top FWonders-navbar">
-        <div class="container FWonders-navbar-container FWonders-navbar">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Five Wonders", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <body>
+
+        @if(ViewContext.RouteData.Values["controller"].ToString() == "Home")
+        {
+            <div style="padding: 0; text-align: center;">
+                <img src="@Url.Content("~/Content/Home/Logo.png")" style="height: 20vh; width: auto; margin: 0;" />
             </div>
-            <div class="navbar-collapse collapse">
-                @{Html.RenderAction("Index", "NavBar");}
-                @Html.Partial("_LoginPartial")
+        }
+
+        <div class="navbar navbar-default sticky-top FWonders-navbar" style="padding: 0; margin: 0; top: 0px; z-index: 100; position: sticky !important; border: none; border-bottom: solid black 1px;">
+            <div class="container FWonders-navbar-container FWonders-navbar">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Five Wonders", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    @{Html.RenderAction("Index", "NavBar");}
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
         </div>
-    </div>
-    <div class="container body-content base-container">
-        @RenderBody()
-    </div>
-    
-    <hr />
-    <footer>
-        <p style="text-align: center">&copy; @DateTime.Now.Year - 5 Wonders Party</p>
-
-        <div style="text-align: center;">
-            @{Html.RenderAction("Index", "SocialMedia", new { Id = "4" });}
+        <div class="container body-content base-container">
+            @RenderBody()
         </div>
-    </footer>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+        <hr />
+        <footer>
+            <p style="text-align: center">&copy; @DateTime.Now.Year - 5 Wonders Party</p>
+
+            <div style="text-align: center;">
+                @{Html.RenderAction("Index", "SocialMedia", new { Id = "4" });}
+            </div>
+        </footer>
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+    </body>
 </html>

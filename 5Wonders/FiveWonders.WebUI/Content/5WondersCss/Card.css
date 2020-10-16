@@ -1,6 +1,7 @@
 ﻿
 .fw-card-container {
     padding: 0 4vw;
+    padding: 0 2vw;
 }
 
 .fw-card-a:hover {
@@ -61,37 +62,56 @@
     .fw-card-container {
         padding: 0 1vw;
     }
+
+    .fw-card-img {
+        height: 25rem;
+    }
+    
+    .fw-card-title, .fw-card-price, .fw-card-btn {
+        font-size: 2rem;
+    }
+}
+
+@media(max-width: 1024px){
 }
 
 @media (max-width: 1024px) and (orientation:landscape) {
     .fw-card-price {
         padding: 1rem 0;
     }
-
-    .fw-card-img {
-        height: 30vh;
-    }
 }
 
 @media (max-width: 1024px) and (orientation:portrait) {
-    .fw-card-img {
-        height: 18vh;
-    }
+
 
     .fw-card-price {
         padding: 1rem 0;
     }
 }
 
+@media(max-width: 768px)
+{
+    .fw-card{
+        box-shadow: none;
+    }
+    .fw-card-title, .fw-card-price, .fw-card-btn {
+        font-size: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) and (orientation:portrait) {
+    .fw-card{
+        border: 1.5px solid black;
+    }
+
     .fw-card-container {
         margin: 1vh 0;
-        padding: 0;
     }
 
     .fw-card-img {
-        height: 25rem;
+        height: 20rem;
     }
+
 }
 
 @media (max-width: 768px) and (orientation:landscape) {
@@ -101,6 +121,7 @@
 
     .fw-card-img {
         height: 50vh;
+        height: 20vh;
     }
 }
 
