@@ -15,8 +15,8 @@ namespace FiveWonders.core.Contracts
     {
         void AddImage(EFolderName folder, HttpServerUtilityBase Server, HttpPostedFileBase imageFile, string Id, out string newImageUrl, string manualFileName = "");
         void DeleteImage(EFolderName folder, string currentImageURL, HttpServerUtilityBase Server);
-
         void AddMultipleImages(EFolderName folder, HttpServerUtilityBase Server, HttpPostedFileBase[] imageFiles, string Id, out string newImageUrl);
         void DeleteMultipleImages(EFolderName folder, string[] currentImageFiles, HttpServerUtilityBase Server);
+        void UpdateImages(HttpServerUtilityBase Server, EFolderName folder, string[] savedCarouselImgs, string[] checkedImgs, HttpPostedFileBase[] newImageFiles, out string newImageURL, string fileNamePrefix);
     }
 }

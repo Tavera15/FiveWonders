@@ -49,10 +49,43 @@ namespace FiveWonders.Services
 
         public void DeleteMultipleImages(EFolderName folder, string[] currentImageFiles, HttpServerUtilityBase Server)
         {
+            if(currentImageFiles == null || currentImageFiles.Length <= 0) { return; }
+
             foreach (string file in currentImageFiles)
             {
                 DeleteImage(folder, file, Server);
             }
+        }
+
+        public void UpdateImages(HttpServerUtilityBase Server, EFolderName folder, string[] savedCarouselImgs, string[] checkedImgs, HttpPostedFileBase[] newImageFiles, out string newImageURL, string fileNamePrefix)
+        {
+            string folderName = GetFolderName(folder);
+
+            string[] imgsToDelete = checkedImgs == null
+                ? savedCarouselImgs
+                : savedCarouselImgs.Where(img => !checkedImgs.Contains(img)).ToArray();
+
+            DeleteMultipleImages(folder, imgsToDelete, Server);
+
+            List<string> imgsToStore = checkedImgs != null
+                ? checkedImgs.ToList()
+                : new List<string>();
+
+            if (newImageFiles != null && newImageFiles[0] != null)
+            {
+                foreach (HttpPostedFileBase file in newImageFiles)
+                {
+                    string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
+
+                    string fileName = fileNamePrefix + fileNameWithoutSpaces;
+                    file.SaveAs(Server.MapPath("//Content//" + folderName + "//") + fileName);
+                    imgsToStore.Add(fileName);
+                }
+            }
+
+            newImageURL = imgsToStore.Count > 0 
+                ? String.Join(",", imgsToStore)
+                : "";
         }
 
         private string GetFolderName(EFolderName folder)

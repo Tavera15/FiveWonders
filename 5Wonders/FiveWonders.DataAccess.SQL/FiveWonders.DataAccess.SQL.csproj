@@ -245,6 +245,14 @@
     <Compile Include="Migrations\202010140237243_orderItemAcceptsCustomLists.Designer.cs">
       <DependentUpon>202010140237243_orderItemAcceptsCustomLists.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010162127392_addCarouselImgsToHomePage.cs" />
+    <Compile Include="Migrations\202010162127392_addCarouselImgsToHomePage.Designer.cs">
+      <DependentUpon>202010162127392_addCarouselImgsToHomePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202010170100231_addGreetingImgCust.cs" />
+    <Compile Include="Migrations\202010170100231_addGreetingImgCust.Designer.cs">
+      <DependentUpon>202010170100231_addGreetingImgCust.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -406,6 +414,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010140237243_orderItemAcceptsCustomLists.resx">
       <DependentUpon>202010140237243_orderItemAcceptsCustomLists.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010162127392_addCarouselImgsToHomePage.resx">
+      <DependentUpon>202010162127392_addCarouselImgsToHomePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010170100231_addGreetingImgCust.resx">
+      <DependentUpon>202010170100231_addGreetingImgCust.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

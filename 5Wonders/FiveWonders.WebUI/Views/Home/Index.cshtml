@@ -22,52 +22,79 @@
         && !String.IsNullOrWhiteSpace(Model.promo1.promoLink))
         ? "col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container"
         : "col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container";
+
+    string greetingBoxClassName = !String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgs)
+        ? "col-lg-4"
+        : "col-lg-12";
 }
 
 <div class="col-lg-12" id="home-page">
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-page-greeting-container">
 
-        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
-            <div class="hp-greeting">
-                @Html.Raw(Model.homePageData.mHomePageGreeting)
-            </div>
-        </div>
-
-        <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 hp-carousel">
-
-            <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    @for (int i = 0; i < 3; i++)
-                    {
-                        string liClassTag = i == 0 ? "active" : "";
-
-                        <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
-                    }
-                </ol>
-
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    @for (int i = 0; i < 3; i++)
-                    {
-                        string itemClassTag = i == 0 ? "item active" : "item";
-
-                        <div class="@itemClassTag img-test" style="background-image: url(@jumboBG);"></div>
-                    }
+        @if (Model.homePageData.mEnableWelcomeImg)
+        {
+            <div class="@greetingBoxClassName col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
+                <div class="hp-greeting" style="background-image:url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl))">
+                    <div style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                        @Html.Raw(Model.homePageData.mHomePageGreeting)
+                        <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;" href="@Model.welcomePageUrl">View Products</a></p>
+                    </div>
                 </div>
-
-                <!-- Left and right controls -->
-                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="@greetingBoxClassName col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
+                <div style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    @Html.Raw(Model.homePageData.mHomePageGreeting)
+                    <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;" href="@Model.welcomePageUrl">View Products</a></p>
+                </div>
+            </div>
+        }
+
+        @if (!String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgs))
+        {
+            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 hp-carousel">
+
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        @for (int i = 0; i < Model.homePageData.mCarouselImgs.Split(',').Length; i++)
+                        {
+                            string liClassTag = i == 0 ? "active" : "";
+
+                            <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
+                        }
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                        @{
+                            int carouselImgIndex = 0;
+                        }
+
+                        @foreach (string imgFileName in Model.homePageData.mCarouselImgs.Split(','))
+                        {
+                            string itemClassTag = carouselImgIndex++ == 0 ? "item active" : "item";
+                            <div class="@itemClassTag img-test"
+                                 style="background-image: url(@Url.Content("~/Content/Home/" + imgFileName));">
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-display">

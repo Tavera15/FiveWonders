@@ -68,7 +68,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Index(HomePage updatedData, HttpPostedFileBase homeLogo, HttpPostedFileBase homeImg, HttpPostedFileBase default_bannerImg)
+        public ActionResult Index(HomePage updatedData, HttpPostedFileBase homeLogo, HttpPostedFileBase homeImg, HttpPostedFileBase default_bannerImg, string[] checkedCarouselImgs, HttpPostedFileBase[] newCarouselImgs)
         {
             try
             {
@@ -84,6 +84,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 existingData.defaultBannerImgShader = updatedData.defaultBannerImgShader;
                 existingData.mPromo1 = updatedData.mPromo1;
                 existingData.mPromo2 = updatedData.mPromo2;
+                existingData.welcomeGreetingImgShader = updatedData.welcomeGreetingImgShader;
+                existingData.mEnableWelcomeImg = updatedData.mEnableWelcomeImg;
                 
                 if(homeLogo != null)
                 {
@@ -110,6 +112,22 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     string newProductListImgUrl;
                     imageStorageSystem.AddImage(EFolderName.Home, Server, default_bannerImg, existingData.mID, out newProductListImgUrl, "DefaultProductsBanner");
                     existingData.mDefaultProductListImgUrl = newProductListImgUrl;
+                }
+
+                // Check for new images
+                string[] savedCarouselImgs = !String.IsNullOrWhiteSpace(existingData.mCarouselImgs)
+                    ? existingData.mCarouselImgs.Split(',')
+                    : null;
+                
+                // Update Images if new ones are selected, or old ones were checked off
+                if((newCarouselImgs != null && newCarouselImgs[0] != null) 
+                    || (checkedCarouselImgs == null && savedCarouselImgs != null)
+                    || (savedCarouselImgs != null && savedCarouselImgs.Length != checkedCarouselImgs.Length))
+                {
+
+                    string newCarouselImgUrl;
+                    imageStorageSystem.UpdateImages(Server, EFolderName.Home, savedCarouselImgs, checkedCarouselImgs, newCarouselImgs, out newCarouselImgUrl, "carousel-");
+                    existingData.mCarouselImgs = newCarouselImgUrl;
                 }
 
                 if (existingData.mID == updatedData.mID)

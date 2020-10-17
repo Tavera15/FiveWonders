@@ -21,116 +21,161 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+    <div class="form-horizontal">
 
-            <div class="jumbotron jumbo-img" id="jumbo-bg-prev" style="background-image: url(@homeBg);">
-                <img src="@logo"
-                     alt="logo"
-                     class="jumbo-logo jumbo-item"
-                     id="jumbo-logo-prev" />
+        <div class="jumbotron jumbo-img" id="jumbo-bg-prev" style="background-image: url(@homeBg);">
+            <img src="@logo"
+                 alt="logo"
+                 class="jumbo-logo jumbo-item"
+                 id="jumbo-logo-prev" />
 
-                <div id="home-prev-text">
-                    @Html.Raw(Model.mHomePageGreeting)
-                </div>
-
-                <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+            <div id="home-prev-text">
+                @Html.Raw(Model.mHomePageGreeting)
             </div>
 
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    <input oninput="setHomeBannerLogo()" type="file" id="homeLogo" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.mHomePageLogoUrl, "", new { @class = "text-danger" })
-                </div>
-            </div>
+            <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    <input oninput="setHomeBannerBg()" type="file" id="homeImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.mWelcomeImgUrl, "", new { @class = "text-danger" })
-                </div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input oninput="setHomeBannerLogo()" type="file" id="homeLogo" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mHomePageLogoUrl, "", new { @class = "text-danger" })
             </div>
+        </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.mEnableWelcomeImg, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.mEnableWelcomeImg, new { htmlAttributes = new { } })
+                @Html.ValidationMessageFor(model => model.mEnableWelcomeImg, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input oninput="setHomeBannerBg()" type="file" id="homeImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mWelcomeImgUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.welcomeGreetingImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.welcomeGreetingImgShader, new { htmlAttributes = new { @class = "form-control", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                @Html.ValidationMessageFor(model => model.welcomeGreetingImgShader, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @if (!String.IsNullOrWhiteSpace(Model.mCarouselImgs))
+        {
             <div class="form-group">
-                @Html.LabelFor(model => model.mHomePageGreeting, htmlAttributes: new { @class = "control-label col-md-2" })
+                <label class="control-label col-md-2" style="font-weight: bold;">Existing Images</label>
                 <div class="col-md-10">
-                    @Html.TextAreaFor(model => model.mHomePageGreeting, new { @Id = "homeTextPrev" })
+                    @foreach (string image in Model.mCarouselImgs.Split(','))
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="checkedCarouselImgs"
+                                       value=@image
+                                       @{ <text> checked </text>  } />
+                                @image
+                            </label>
+                        </div>
+                    }
                 </div>
             </div>
+        }
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mWelcomeBtnUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.mWelcomeBtnUrl, new SelectList(ViewBag.links, "key", "value", Model.mWelcomeBtnUrl), new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mCarouselImgs, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input multiple type="file" id="file" name="newCarouselImgs" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mCarouselImgs, "", new { @class = "text-danger" })
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mPromo1, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.mPromo1, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo1), new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mHomePageGreeting, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.mHomePageGreeting, new { @Id = "homeTextPrev" })
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mPromo2, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.mPromo2, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo2), new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mWelcomeBtnUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.mWelcomeBtnUrl, new SelectList(ViewBag.links, "key", "value", Model.mWelcomeBtnUrl), new { htmlAttributes = new { @class = "form-control" } })
             </div>
+        </div>
 
-            <hr />
-
-            <div id="products-page">
-                <div class="pp-title-container"
-                     style="background-image: url(@Url.Content(catBg));"
-                     id="bannerImg-input">
-                    <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.defaultBannerImgShader);" class="pp-title-dark-layer">
-                        <h2 style="color: @Model.mdefaultBannerTextColor" id="category-title-input" class="pp-title-text">@Model.mDefaultProductsBannerText</h2>
-                    </div>
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mPromo1, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.mPromo1, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo1), new { htmlAttributes = new { @class = "form-control" } })
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.mPromo2, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.mPromo2, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo2), new { htmlAttributes = new { @class = "form-control" } })
             </div>
+        </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mDefaultProductsBannerText, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    @Html.EditorFor(model => model.mDefaultProductsBannerText, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setCategoryProps()" } })
-                    @Html.ValidationMessageFor(model => model.mDefaultProductsBannerText, "", new { @class = "text-danger" })
-                </div>
-            </div>
+        <hr />
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.mdefaultBannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    @Html.EditorFor(model => model.mdefaultBannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @id = "color", @oninput = "setCategoryProps()" } })
-                    @Html.ValidationMessageFor(model => model.mdefaultBannerTextColor, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.defaultBannerImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    @Html.EditorFor(model => model.defaultBannerImgShader, new { htmlAttributes = new { @class = "form-control", @oninput = "setCategoryProps()", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
-                    @Html.ValidationMessageFor(model => model.defaultBannerImgShader, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
+        <div id="products-page">
+            <div class="pp-title-container"
+                 style="background-image: url(@Url.Content(catBg));"
+                 id="bannerImg-input">
+                <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.defaultBannerImgShader);" class="pp-title-dark-layer">
+                    <h2 style="color: @Model.mdefaultBannerTextColor" id="category-title-input" class="pp-title-text">@Model.mDefaultProductsBannerText</h2>
                 </div>
             </div>
         </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                @Html.ValidationMessageFor(model => model.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mDefaultProductsBannerText, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.mDefaultProductsBannerText, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setCategoryProps()" } })
+                @Html.ValidationMessageFor(model => model.mDefaultProductsBannerText, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mdefaultBannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.mdefaultBannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @id = "color", @oninput = "setCategoryProps()" } })
+                @Html.ValidationMessageFor(model => model.mdefaultBannerTextColor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.defaultBannerImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.defaultBannerImgShader, new { htmlAttributes = new { @class = "form-control", @oninput = "setCategoryProps()", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                @Html.ValidationMessageFor(model => model.defaultBannerImgShader, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
     }
 </div>
 <div>

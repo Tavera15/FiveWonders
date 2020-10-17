@@ -12,7 +12,14 @@ namespace FiveWonders.core.Models
     {
         [Display(Name = "Home Page Welcome Image")]
         public string mWelcomeImgUrl { get; set; }
-        
+
+        [Display(Name = "Enable Greeting Image")]
+        public bool mEnableWelcomeImg { get; set; }
+
+        [Display(Name = "Greeting Image Shader")]
+        [Range(0, 1)]
+        public float welcomeGreetingImgShader { get; set; }
+
         [Display(Name = "Home Page Button Url")]
         public string mWelcomeBtnUrl { get; set; }
 
@@ -30,7 +37,8 @@ namespace FiveWonders.core.Models
         [Display(Name = "Category 2 to promote")]
         public string mPromo2 { get; set; }
 
-
+        [Display(Name = "Carousel Images")]
+        public string mCarouselImgs { get; set; }
 
         [Required(ErrorMessage = "A Banner text is required for Product List.")]
         [Display(Name = "Default Banner Text")]
@@ -50,6 +58,7 @@ namespace FiveWonders.core.Models
         {
             defaultBannerImgShader = 0.4f;
             mdefaultBannerTextColor = "white";
+            mEnableWelcomeImg = true;
         }
     }
 }
