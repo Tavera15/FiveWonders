@@ -17,6 +17,7 @@
     width: 100%;
     box-shadow: rgba(0,0,0,.4) 4px 4px;
     font-family: oswald;
+    transition: .24s ease-in-out;
 }
 
 .fw-card:hover {
@@ -32,47 +33,57 @@
     padding: 1rem;
     background-color: #59b7a1;
     background-color: white;
-    color: white;
     color: black;
-    font-size: 3vh;
+    color: white;
+    background-color: rgb(90, 185, 162);
+    transition: .24s ease-in-out;
 }
 
 .fw-card-img {
     width: 100%;
     height: 30vh;
-    object-fit: cover;
-    border-top: solid 3px black;
-    border-bottom: solid 3px black;
+    object-fit: contain;
+    border-top: solid 2px black;
+    border-bottom: solid 2px black;
+    background-color: white;
 }
 
 .fw-card-price {
-    padding: 1.5vh 0;
+    padding: 1.5rem 0;
     margin: 0;
     color: black;
-    font-size: 2vh;
+    background-color: white;
 }
 
 .fw-card-btn {
     width: 100%;
+    color: white;
     border-radius: 0;
-    font-size: 2vh;
+    background-color: rgb(90, 185, 162);
+    transition: .24s ease-in-out;
 }
 
-@media(max-width: 1400px) {
-    .fw-card-container {
-        padding: 0 1vw;
-    }
-
-    .fw-card-img {
-        height: 25rem;
-    }
-    
-    .fw-card-title, .fw-card-price, .fw-card-btn {
-        font-size: 2rem;
-    }
+.fw-card-a:hover .fw-card-title {
+    background-color: rgb(240, 128, 98);
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
 }
 
-@media(max-width: 1024px){
+.fw-card-a:hover .fw-card-btn{
+    background-color: rgb(240, 128, 98);
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+.fw-card-a:hover .fw-card{
+    border-radius: 25px;
+}
+
+
+@media(max-width: 1024px) {
+    .fw-card-img{
+        height: 20rem;
+    }
 }
 
 @media (max-width: 1024px) and (orientation:landscape) {
@@ -91,12 +102,50 @@
 
 @media(max-width: 768px)
 {
+    .fw-card-container{
+        margin: 1rem 0;
+        padding: 0;
+    }
+
+    .fw-card{
+        border: 1px solid black;
+        box-shadow: none;
+    }
+
+}
+
+@media(max-width: 480px)
+{
+    .fw-card-container{
+        width: 100%;
+    }
+}
+
+@media(max-width: 1400px) {
+    .fw-card-container {
+        padding: 0 1vw;
+    }
+
+    .fw-card-img {
+        height: 20rem;
+    }
+
+    
+/*
+    .fw-card-title, .fw-card-price, .fw-card-btn {
+        font-size: 2rem;
+    }
+*/
+}
+
+@media(max-width: 768px)
+{
     .fw-card{
         box-shadow: none;
     }
-    .fw-card-title, .fw-card-price, .fw-card-btn {
+/*    .fw-card-title, .fw-card-price, .fw-card-btn {
         font-size: 1.5rem;
-    }
+    }*/
 }
 
 @media (max-width: 768px) and (orientation:portrait) {
@@ -106,29 +155,24 @@
 
     .fw-card-container {
         margin: 1vh 0;
-    }
-
-    .fw-card-img {
-        height: 20rem;
+        padding: 0;
     }
 
 }
 
 @media (max-width: 768px) and (orientation:landscape) {
+/*
     .fw-card-container {
         width: calc(100%/3);
     }
 
-    .fw-card-img {
-        height: 50vh;
-        height: 20vh;
-    }
+*/
 }
 
 @media (max-height: 444px) and (orientation:landscape) {
 
-    .fw-card-img {
+    /*.fw-card-img {
         height: 40vh;
-    }
+    }*/
 
 }

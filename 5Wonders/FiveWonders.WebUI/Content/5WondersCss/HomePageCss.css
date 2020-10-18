@@ -8,6 +8,7 @@
     margin: 1vh 0 4vh;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap-reverse;
 }
 
 .hp-greeting-box {
@@ -80,8 +81,13 @@
 }
 
 .section-top-three {
+    /*
     margin: 0 4vw 4vh;
     margin: 0;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;*/
+    
     margin-bottom: 4vh;
     display: flex;
     flex-direction: column;
@@ -91,15 +97,20 @@
     background-color: aliceblue;
     background-color: rgba(240,248,255, .54);
     text-align: center;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 .top-p {
     background-repeat: no-repeat;
     background-size: cover;
     color: black;
+}
+
+.top-three-products {
+    margin: 2vh 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 .thing-cover {
@@ -133,18 +144,18 @@
     transition: transform .5s ease;
 }
 
-    .category-img-cover:hover {
-        background-color: rgba(0,0,0,.35);
-    }
+.category-img-cover:hover {
+    background-color: rgba(0,0,0,.35);
+}
 
 .category-container {
     padding: 0 4rem;
     padding: 0 2rem;
 }
 
-    .category-container a {
-        text-decoration: none;
-    }
+.category-container a {
+    text-decoration: none;
+}
 
 .single-category {
     padding: 0;
@@ -155,25 +166,15 @@
     background-size: cover;
 }
 
-    .single-category h2 {
-        color: aliceblue;
-        justify-self: flex-end;
-        font-size: 5vh;
-        padding: 0;
-        margin: 0;
-    }
-
-.redi-btn {
-    margin: 2vh auto 0;
-    font-size: 2vh;
-    font-family: oswald;
+.single-category h1 {
+    padding: 0;
+    margin: 0;
 }
 
-.top-three-products {
-    margin: 2vh 0;
-    padding: 0 10rem;
-    padding: 0 3vw;
-    padding: 0
+.redi-btn {
+    margin: 2rem auto;
+    font-size: 2vh;
+    font-family: oswald;
 }
 
 .home-services-container {
@@ -188,7 +189,9 @@
     flex-direction: row;
     flex-wrap: wrap;
     padding: 2vh 8vw 3vh;
-    padding: 2vh 0 3vh;
+    padding: 0vh 0 3vh;
+    border: solid 1px lightgray;
+    border-radius: 25px;
 }
 
 .home-gallery-container-title {
@@ -259,6 +262,13 @@
     }
 }
 
+@media(max-width: 1200px)
+{
+    .hp-greeting-box{
+        min-height: unset;
+    }
+}
+
 @media(max-width: 1024px) {
     .home-page-greeting-container{
         flex-direction: column-reverse;
@@ -323,7 +333,6 @@
     }
 
     .single-category h2 {
-        font-size: 3rem;
     }
 
     .top-three-products {
@@ -381,7 +390,6 @@
     }
 
     .single-category h2 {
-        font-size: 5rem;
     }
 
     .section-top-three h1 {

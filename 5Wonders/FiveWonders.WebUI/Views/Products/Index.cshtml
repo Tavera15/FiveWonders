@@ -16,15 +16,15 @@
             string[] currentImageFiles = product.mImage.Split(',');
             string firstImage = currentImageFiles[0];
 
-            <div class="@classTags fw-card-container pp-card-container" style="padding: 0 1vw;">
+            <div class="@classTags pp-card-container" style="padding: 0 1vw;">
                 <a href="/products/item/@product.mID" class="fw-card-a">
                     <div class="fw-product-container">
                         <div class="fw-card" style="box-shadow: none;">
-                            <h4 class="fw-card-title">@product.mName</h4>
+                            <h2 class="fw-card-title">@product.mName</h2>
                             <img src="@Url.Content("~/Content/ProductImages/" + firstImage)"
                                  alt="@product.mName"
                                  class="fw-card-img pp-fw-card-img" />
-                            <p class="fw-card-price">$@product.mPrice</p>
+                            <h3 class="fw-card-price">$@product.mPrice</h3>
                             <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
                         </div>
                     </div>

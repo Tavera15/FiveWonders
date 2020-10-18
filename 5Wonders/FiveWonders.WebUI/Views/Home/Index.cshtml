@@ -105,8 +105,7 @@
                     <a href="@Model.promo1.promoLink">
                         <div class="single-category" style="background-image: url(@promoImg1);">
                             <div style="background-color: rgba(0,0,0,@Model.promo1.promoImgShader);" class="category-img-cover">
-                                <h2 style="color: @Model.promo1.promoNameColor;">@Model.promo1.promoName</h2>
-                                <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo1.promoName</p>
+                                <h1 style="color: @Model.promo1.promoNameColor;">@Model.promo1.promoName</h1>
                             </div>
                         </div>
                     </a>
@@ -119,8 +118,7 @@
                     <a href="@Model.promo2.promoLink">
                         <div class="single-category" style="background-image: url(@promoImg2);">
                             <div style="background-color: rgba(0,0,0,@Model.promo2.promoImgShader);" class="category-img-cover">
-                                <h2 style="color: @Model.promo2.promoNameColor;">@Model.promo2.promoName</h2>
-                                <p class="btn btn-lg btn-default redi-btn">Shop @Model.promo2.promoName</p>
+                                <h1 style="color: @Model.promo2.promoNameColor;">@Model.promo2.promoName</h1>
                             </div>
                         </div>
                     </a>
@@ -135,7 +133,7 @@
             <h1>Latest Products</h1>
 
             <div class="top-three-products">
-                @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-12"; }
+                @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-4"; }
 
                 @for (int i = 0; i < Model.top3Products.Count; i++)
                 {
@@ -147,11 +145,11 @@
                         <a href="/products/item/@product.mID" class="fw-card-a">
                             <div class="fw-product-container">
                                 <div class="fw-card">
-                                    <h3 class="fw-card-title">@product.mName</h3>
+                                    <h2 class="fw-card-title">@product.mName</h2>
                                     <img alt="@product.mName"
                                          src="@Url.Content("~/Content/ProductImages/" + firstImage)"
                                          class="fw-card-img" />
-                                    <p class="fw-card-price">$@product.mPrice</p>
+                                    <h3 class="fw-card-price">$@product.mPrice</h3>
                                     <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
                                 </div>
                             </div>
@@ -176,10 +174,10 @@
 
     @if (Model.top3IGPosts.Count > 0)
     {
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-container" style="border: black 1px solid;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-container" >
             <h1 class="col-lg-12 home-gallery-container-title">Gallery</h1>
 
-            <div class="col-lg-12 col-md-12 col-xs-12 home-gallery-imgs-container">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-imgs-container">
                 <a href="/Gallery/" class="container home-gallery-imgs-anchor">
 
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 home-gallery-solo-img-container">
