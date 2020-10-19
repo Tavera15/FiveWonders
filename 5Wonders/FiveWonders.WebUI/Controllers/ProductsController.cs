@@ -156,7 +156,6 @@ namespace FiveWonders.WebUI.Controllers
                         : viewModel.pageTitleColor;
                 }
 
-                // TODO Fix this. Solo Subcategories display nothing
                 return View(viewModel);
             }
             catch (Exception e)
@@ -209,7 +208,7 @@ namespace FiveWonders.WebUI.Controllers
                 // Add Product Order to Shopping Cart
                 basketServices.AddToBasket(HttpContext, item.productOrder);
 
-                return RedirectToAction("Index", "Products");
+                return RedirectToAction("Index", "Basket");
             }
             catch(Exception e)
             {

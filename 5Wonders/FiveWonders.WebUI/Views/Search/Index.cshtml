@@ -1,0 +1,62 @@
+﻿@model FiveWonders.core.ViewModels.SearchViewModel
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="products-page">
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; flex-direction: row; justify-content: center;">
+            @Html.EditorFor(model => model.productNameinput, new { htmlAttributes = new { @placeholder="Product Name", @class = "form-control", @style = "margin-right: 1rem;" } })
+            <div class="">
+                <input type="submit" value="Search" class="btn btn-default" />
+            </div>
+        </div>
+    }
+
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pp-products-section">
+
+
+        @if (Model.results.Count > 0)
+        {
+            string classTags = "col-lg-3 col-md-4 col-sm-4 col-xs-6";
+
+            foreach (var product in Model.results)
+            {
+                string[] currentImageFiles = product.mImage.Split(',');
+                string firstImage = currentImageFiles[0];
+
+                <div class="@classTags pp-card-container" style="padding: 0 1vw;">
+                    <a href="/products/item/@product.mID" class="fw-card-a">
+                        <div class="fw-product-container">
+                            <div class="fw-card" style="box-shadow: none;">
+                                <h2 class="fw-card-title">@product.mName</h2>
+                                <img src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                     alt="@product.mName"
+                                     class="fw-card-img pp-fw-card-img" />
+                                <h3 class="fw-card-price">$@product.mPrice</h3>
+                                <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3 style="align-self: center;">@Model.message</h3>
+            </div>
+        }
+
+    </div>
+</div>
+
+    @section Pagecss
+{
+    <link href="~/Content/5WondersCss/Card.css"
+            rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/5WondersCss/ProductList.css"
+            rel="stylesheet" type="text/css" />
+}

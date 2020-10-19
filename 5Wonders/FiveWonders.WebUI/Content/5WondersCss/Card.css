@@ -17,7 +17,6 @@
     width: 100%;
     box-shadow: rgba(0,0,0,.4) 4px 4px;
     font-family: oswald;
-    transition: .24s ease-in-out;
 }
 
 .fw-card:hover {
@@ -63,20 +62,8 @@
     transition: .24s ease-in-out;
 }
 
-.fw-card-a:hover .fw-card-title {
+.fw-card-a:hover .fw-card-title, .fw-card-a:hover .fw-card-btn {
     background-color: rgb(240, 128, 98);
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-}
-
-.fw-card-a:hover .fw-card-btn{
-    background-color: rgb(240, 128, 98);
-    border-bottom-right-radius: 25px;
-    border-bottom-left-radius: 25px;
-}
-
-.fw-card-a:hover .fw-card{
-    border-radius: 25px;
 }
 
 

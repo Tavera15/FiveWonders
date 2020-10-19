@@ -97,6 +97,7 @@
     <Compile Include="ViewModels\ProductManagerViewModel.cs" />
     <Compile Include="ViewModels\ProductOrderViewModel.cs" />
     <Compile Include="ViewModels\ProductsListViewModel.cs" />
+    <Compile Include="ViewModels\SearchViewModel.cs" />
     <Compile Include="ViewModels\ServicePageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
