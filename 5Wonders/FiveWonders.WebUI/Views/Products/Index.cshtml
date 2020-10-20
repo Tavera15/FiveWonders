@@ -32,6 +32,13 @@
             </div>
         }
     </div>
+
+    @if(Model.products.Length == 0)
+    {
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h2>No Products found that match search criteria.</h2>
+        </div>
+    }
 </div>
 
 

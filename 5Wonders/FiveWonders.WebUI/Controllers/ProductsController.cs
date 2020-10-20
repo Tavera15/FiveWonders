@@ -36,132 +36,46 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         // GET: Product - Displays every products in the store
-        [Route(Name = "/{category?}{subcategory?}")]
-        public ActionResult Index(string category, string subcategory)
+        [Route(Name = "/{category?}{subcategory?}{productName?}")]
+        public ActionResult Index(string category, string[] subcategory, string productName)
         {
             HomePage homePageDefaults = homePageContext.GetCollection().FirstOrDefault();
 
             if (homePageDefaults == null)
                 return HttpNotFound();
 
-            const string defaultFolder = "Home";
-            string defaultImg = homePageDefaults.mDefaultProductListImgUrl;
-            float defaultImgShaderAmount = homePageDefaults.defaultBannerImgShader;
-            string defaultPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
-            string pageTitle = homePageDefaults.mDefaultProductsBannerText;
+            // Read all input
+            List<SubCategory> subcategoriesData = new List<SubCategory>();
+            Category categoryData = null;
 
-            string fixedCategory = GetProductsListPageTitle(category);
-            string fixedSubcategory = GetProductsListPageTitle(subcategory);
+            if (!String.IsNullOrWhiteSpace(category))
+            {
+                categoryData = categoryContext.GetCollection()
+                    .FirstOrDefault(c => c.mCategoryName.ToLower() == category.ToLower());
+            }
 
-            if (!String.IsNullOrWhiteSpace(fixedCategory) && !String.IsNullOrWhiteSpace(fixedSubcategory))
+            if (subcategory != null && subcategory[0] != null)
             {
-                pageTitle = fixedCategory + " - " + fixedSubcategory;
-            }
-            else if(!String.IsNullOrWhiteSpace(fixedCategory))
-            {
-                pageTitle = fixedCategory;
-            }
-            else if(!String.IsNullOrWhiteSpace(fixedSubcategory))
-            {
-                pageTitle = fixedSubcategory;
+                foreach (string possibleSubName in subcategory)
+                {
+                    SubCategory sub = subCategoryContext.GetCollection()
+                        .FirstOrDefault(s => s.mSubCategoryName.ToLower() == possibleSubName.ToLower());
+
+                    if (sub == null) { continue; }
+
+                    subcategoriesData.Add(sub);
+                }
             }
 
             try
             {
-                Product[] products = new Product[] { };
-
-                if(category == null && subcategory == null)
-                {
-                    products = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
-                }
-                else
-                {
-                    Product[] catProd = !String.IsNullOrEmpty(category)
-                                    ? GetProductsWithCategory(category)
-                                    : new Product[] { };
-
-                    Product[] subProd = !String.IsNullOrEmpty(subcategory)
-                                    ? GetProductsWithSub(subcategory)
-                                    : new Product[] { };
-
-                    if(!String.IsNullOrEmpty(category) && !String.IsNullOrEmpty(subcategory))
-                    {
-                        products = catProd.Intersect(subProd)
-                            .OrderByDescending(p => p.mTimeEntered).ToArray();
-                    }
-                    else
-                    {
-                        products = catProd.Union(subProd)
-                            .OrderByDescending(p => p.mTimeEntered).ToArray();
-                    }
-                }
-
-                Category categoryObj = categoryContext.GetCollection()
-                    .Where(c => c.mCategoryName == category.ToLower()).FirstOrDefault();
-
-                SubCategory subcategoryObj = subCategoryContext.GetCollection()
-                    .Where(s => s.mSubCategoryName == subcategory.ToLower()).FirstOrDefault();
-
-                ProductsListViewModel viewModel = new ProductsListViewModel
-                {
-                    pageTitle = pageTitle,
-                    products = products,
-                    imgUrl = defaultImg,
-                    folderName = defaultFolder,
-                    mImgShaderAmount = defaultImgShaderAmount,
-                    pageTitleColor = defaultPageTitleColor
-                };
-
-                if(categoryObj != null && subcategoryObj != null)
-                {
-                    viewModel.imgUrl = subcategoryObj.isEventOrTheme
-                        ? subcategoryObj.mImageUrl
-                        : categoryObj.mImgUrL;
-
-                    viewModel.folderName = subcategoryObj.isEventOrTheme
-                        ? "SubcategoryImages"
-                        : "CategoryImages";
-
-                    viewModel.mImgShaderAmount = subcategoryObj.isEventOrTheme
-                        ? subcategoryObj.mImgShaderAmount
-                        : categoryObj.mImgShaderAmount;
-
-                    viewModel.pageTitleColor = subcategoryObj.isEventOrTheme
-                        ? subcategoryObj.bannerTextColor
-                        : categoryObj.bannerTextColor;
-                }
-                else if (categoryObj != null)
-                {
-                    viewModel.imgUrl = categoryObj.mImgUrL;
-                    viewModel.folderName = "CategoryImages";
-                    viewModel.mImgShaderAmount = categoryObj.mImgShaderAmount;
-                    viewModel.pageTitleColor = categoryObj.bannerTextColor ?? viewModel.pageTitleColor;
-                }
-                else if(subcategoryObj != null)
-                {
-                    viewModel.imgUrl = subcategoryObj.isEventOrTheme 
-                        ? subcategoryObj.mImageUrl
-                        : viewModel.imgUrl;
-
-                    viewModel.folderName = subcategoryObj.isEventOrTheme
-                        ? "SubcategoryImages"
-                        : viewModel.folderName;
-
-                    viewModel.mImgShaderAmount = subcategoryObj.isEventOrTheme
-                        ? subcategoryObj.mImgShaderAmount
-                        : viewModel.mImgShaderAmount;
-
-                    viewModel.pageTitleColor = subcategoryObj.isEventOrTheme
-                        ? subcategoryObj.bannerTextColor
-                        : viewModel.pageTitleColor;
-                }
-
+                ProductsListViewModel viewModel = GetPopularizedProductsViewModel(categoryData, subcategoriesData, productName, homePageDefaults);
                 return View(viewModel);
             }
             catch (Exception e)
             {
                 _ = e;
-                return RedirectToAction("Index", "Products");
+                return HttpNotFound();
             }
         }
 
@@ -285,6 +199,107 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             return fixedTitle;
+        }
+
+        private Product[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName)
+        {
+            Product[] results = productsContext.GetCollection().ToArray();
+
+            try
+            {
+                if(categoryData != null || subcategoriesData.Count > 0 || !String.IsNullOrWhiteSpace(productName))
+                {
+                    // Filter by Category
+                    if (categoryData != null)
+                    {
+                        results = results.Where(p => p.mCategory == categoryData.mID).ToArray();
+                    }
+
+                    // Filter by Subs
+                    if(subcategoriesData.Count > 0)
+                    {
+                        results = results.Where(p => p.mSubCategories.Split(',')
+                            .Any(productSub => subcategoriesData.Any(sub => sub.mID == productSub))).ToArray();
+                    }
+
+                    // Filter by Product Name Search
+                    if(!String.IsNullOrWhiteSpace(productName))
+                    {
+                        results = results.Where(p => p.mName.ToLower().Contains(productName.ToLower())).ToArray();
+                    }
+                }
+
+                return results.OrderByDescending(p => p.mTimeEntered).ToArray();
+            }
+            catch(Exception e)
+            {
+                _ = e;
+                return new Product[] { };
+            }
+        }
+
+        private string GetPageTitle(Category category, List<SubCategory> subCategories, string defaultName)
+        {
+            string pageTitle = defaultName;
+
+            string subTitleName = subCategories.Count == 1
+                ? GetProductsListPageTitle(subCategories[0].mSubCategoryName)
+                : "";
+
+            string categoryTitleName = category != null
+                ? GetProductsListPageTitle(category.mCategoryName)
+                : "";
+
+            if (!String.IsNullOrWhiteSpace(categoryTitleName) && !String.IsNullOrWhiteSpace(subTitleName))
+            {
+                return (categoryTitleName + " - " + subTitleName);
+            }
+            else if (!String.IsNullOrWhiteSpace(categoryTitleName))
+            {
+                pageTitle = categoryTitleName;
+            }
+            else if (!String.IsNullOrWhiteSpace(subTitleName))
+            {
+                pageTitle = subTitleName;
+            }
+
+            return pageTitle;
+        }
+
+        private ProductsListViewModel GetPopularizedProductsViewModel(Category category, List<SubCategory> subCategories, string productNameSearch, HomePage homePageDefaults)
+        {
+            string folderName = "Home";
+            string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
+            float productListImgShaderAmount = homePageDefaults.defaultBannerImgShader;
+            string productListPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
+            string productsListPageTitle = GetPageTitle(category, subCategories, homePageDefaults.mDefaultProductsBannerText);
+
+            if (subCategories.Count == 1 && subCategories[0].isEventOrTheme)
+            {
+                folderName = "SubcategoryImages";
+                productsListbannerImg = subCategories[0].mImageUrl;
+                productListImgShaderAmount = subCategories[0].mImgShaderAmount;
+                productListPageTitleColor = subCategories[0].bannerTextColor;
+            }
+            else if(category != null)
+            {
+                folderName = "CategoryImages";
+                productsListbannerImg = category.mImgUrL;
+                productListImgShaderAmount = category.mImgShaderAmount;
+                productListPageTitleColor = category.bannerTextColor;
+            }
+
+            ProductsListViewModel viewModel = new ProductsListViewModel()
+            {
+                folderName = folderName,
+                imgUrl = productsListbannerImg,
+                mImgShaderAmount = productListImgShaderAmount,
+                pageTitle = productsListPageTitle,
+                pageTitleColor = productListPageTitleColor,
+                products = GetProducts(category, subCategories, productNameSearch)
+            };
+
+            return viewModel;
         }
     
         private ProductOrderViewModel GetProductOrderViewModel(string Id)

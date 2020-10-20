@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -33,42 +34,36 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Index(SearchViewModel searchViewModel)
         {
-            SearchViewModel newSearchViewModel = GetSearchViewModel();
+            RouteValueDictionary parameters = new RouteValueDictionary();
 
-            try
+            parameters["Category"] = searchViewModel.categoryInput;
+            parameters["productName"] = searchViewModel.productNameinput;
+
+            if(searchViewModel.subCategories != null)
             {
-                if(String.IsNullOrWhiteSpace(searchViewModel.productNameinput))
+                for (int i = 0; i < searchViewModel.subCategories.Length; i++)
                 {
-                    throw new Exception("Enter the name for product to search for.");
+                    parameters["Subcategory[" + i + "]"] = searchViewModel.subCategories[i];
                 }
-
-                Product[] productsWithName = productsContext.GetCollection()
-                    .Where(p => p.mName.ToLower().Contains(searchViewModel.productNameinput.ToLower())).ToArray();
-
-                if(productsWithName.Length <= 0)
-                {
-                    throw new Exception("No products were found that match criteria.");
-                }
-
-                newSearchViewModel.results = productsWithName.ToList();
-            }
-            catch(Exception e)
-            {
-                newSearchViewModel.message = e.Message;
             }
 
-            return View(newSearchViewModel);
+            return RedirectToAction("Index", "Products", parameters);
         }
 
         private SearchViewModel GetSearchViewModel()
         {
-            SearchViewModel newSearchViewModel = new SearchViewModel();
-            
-            newSearchViewModel.allCategories = categoryContext.GetCollection()
-                .OrderByDescending(x => x.mTimeEntered).ToArray();
+            SearchViewModel newSearchViewModel = new SearchViewModel
+            {
+                allCategories = categoryContext.GetCollection()
+                .OrderByDescending(x => x.mTimeEntered)
+                .Select(cat => cat.mCategoryName).ToList(),
 
-            newSearchViewModel.allSubcategories = subcategoryContext.GetCollection()
-                .OrderByDescending(x => x.mTimeEntered).ToArray();
+                allSubcategories = subcategoryContext.GetCollection()
+                .OrderByDescending(x => x.mTimeEntered)
+                .Select(sub => sub.mSubCategoryName).ToList()
+            };
+
+            newSearchViewModel.allCategories.Insert(0, "");
 
             return newSearchViewModel;
         }

@@ -14,26 +14,18 @@ namespace FiveWonders.core.ViewModels
         public string productNameinput { get; set; }
         
         [Display(Name = "Category Name:")]
-        public string categoryIdinput { get; set; }
+        public string categoryInput { get; set; }
         
-        [Display(Name = "Sub-Category Name:")]
-        public string[] subCategoryIdinput { get; set; }
+        [Display(Name = "Sub-Category Names:")]
+        public string[] subCategories { get; set; }
 
-        public string message { get; set; }
-        
-        public List<Product> results { get; set; }
-        
-        public List<Product> similarResults { get; set; }
 
-        public Category[] allCategories { get; set; }
+        public List<string> allCategories { get; set; }
         
-        public SubCategory[] allSubcategories { get; set; }
-        
+        public List<string> allSubcategories { get; set; }
         
         public SearchViewModel()
         {
-            results = new List<Product>();
-            similarResults = new List<Product>();
             productNameinput = "";
         }
     }
