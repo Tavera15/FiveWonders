@@ -1,17 +1,119 @@
-﻿@{
-    ViewBag.Title = "Contact";
+﻿@model FiveWonders.core.ViewModels.ServicePageViewModel
+
+
+<div id="services-page">
+
+    <div class="col-lg-12" style="text-align: center; width: 100%; margin: 2vh 0 4vh;">
+        @Html.Raw(Model.servicePageData.mBannerMessage)
+    </div>
+
+    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+
+        <div class="service-contact-container" style="text-align: center;">
+            <h2 style="margin:2vh 0;">@Model.servicePageData.mName</h2>
+
+            <div style="display: inline-block; flex-direction: column; align-items: center; margin: 0 auto;">
+                @if (!String.IsNullOrWhiteSpace(Model.servicePageData.mPhoneNumber))
+                {
+                    <div class="service-contact-item">
+                        <img class="service-contact-item-img" src="~/Content/Icons/Phone Black 64.png" />
+                        <div class="service-contact-item-data">
+                            <h4>Telephone</h4>
+                            <p class="">@Model.servicePageData.mPhoneNumber</p>
+                        </div>
+                    </div>
+                }
+
+                @if (!String.IsNullOrWhiteSpace(Model.servicePageData.mEmail))
+                {
+                    <div class="service-contact-item">
+                        <img class="service-contact-item-img" src="~/Content/Icons/Mail Black 64.png" />
+                        <div class="service-contact-item-data">
+                            <h4>Email</h4>
+                            <p class="">@Model.servicePageData.mEmail</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <h2>We are social</h2>
+
+            @{Html.RenderAction("Index", "SocialMedia", new { Id = "8" });}
+        </div>
+
+    </div>
+
+    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 form-horizontal services-form-container">
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <h2 style="margin: 0 0 2vh;">5 Wonders Balloons</h2>
+            <div class="col-lg-12" style="border-top: black solid 1px;">
+
+                @if (!String.IsNullOrWhiteSpace(Model.logo))
+                {
+                    <img style="width: auto; height: 20vh;"
+                         src="~/Content/Home/@Model.logo" alt="logo" />
+                }
+            </div>
+
+            <div class="service-data col-lg-12">
+                <div class="form-group service-form-input-container">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.servicesMessage.mCustomerName, new { htmlAttributes = new { @class = "form-control service-form-input", @placeholder = "Full Name" } })
+                        @Html.ValidationMessageFor(model => model.servicesMessage.mCustomerName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group service-form-input-container">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.servicesMessage.mPhoneNumber, new { htmlAttributes = new { @class = "form-control service-form-input", @placeholder = "Phone Number" } })
+                        @Html.ValidationMessageFor(model => model.servicesMessage.mPhoneNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group service-form-input-container">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.servicesMessage.mEmail, new { htmlAttributes = new { @class = "form-control service-form-input", @placeholder = "Email" } })
+                        @Html.ValidationMessageFor(model => model.servicesMessage.mEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group service-form-input-container">
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.servicesMessage.mSubject, new { htmlAttributes = new { @class = "form-control service-form-input", @placeholder = "Subject" } })
+                        @Html.ValidationMessageFor(model => model.servicesMessage.mSubject, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-form-input-container">
+                <div>
+                    @Html.TextAreaFor(model => model.servicesMessage.mContent, new { htmlAttributes = new { @class = "service-form-input", }, @Id = "email" })
+                    @Html.ValidationMessageFor(model => model.servicesMessage.mContent, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div>
+                <input type="submit" value="Send" class="btn btn-default" />
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/tinymce/tinymce.js"></script>
+    <script src="~/Scripts/TinyMce_Client/WYSIWYG_email.js"></script>
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
-
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+@section Pagecss{
+    <link href="~/Content/5WondersCss/ContactPageCss.css"
+          rel="stylesheet" type="text/css" />
+}

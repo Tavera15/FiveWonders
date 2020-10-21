@@ -58,7 +58,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
                 servicePageContext.Commit();
 
-                return RedirectToAction("Index", "ServicesManager");
+                return RedirectToAction("Index", "Managers");
             }
             catch(Exception e)
             {

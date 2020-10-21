@@ -1,23 +1,21 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers.Managers
 {
-    public class ProductColorsManagerController : Controller
+    public class CustomListManagerController : Controller
     {
         IRepository<CustomOptionList> customListContext;
         IRepository<Product> productsContext;
 
         // TODO Investigate if it is possible to create multiple custom sets. (Color sets, team sets, etc)
 
-        public ProductColorsManagerController(IRepository<CustomOptionList> customListRepository, IRepository<Product> productsRepository)
+        public CustomListManagerController(IRepository<CustomOptionList> customListRepository, IRepository<Product> productsRepository)
         {
             customListContext = customListRepository;
             productsContext = productsRepository;
@@ -39,7 +37,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CustomOptionList colorSet)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(colorSet);
             }
@@ -47,7 +45,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             customListContext.Insert(colorSet);
             customListContext.Commit();
 
-            return RedirectToAction("Index", "ProductColorsManager");
+            return RedirectToAction("Index", "CustomListManager");
         }
 
         public ActionResult Edit(string Id)
@@ -57,7 +55,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 CustomOptionList colorSet = customListContext.Find(Id, true);
                 return View(colorSet);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _ = e;
                 return HttpNotFound();
@@ -70,7 +68,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(updatedColor);
                 }
@@ -82,12 +80,12 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
                 customListContext.Commit();
 
-                return RedirectToAction("Index", "ProductColorsManager");
+                return RedirectToAction("Index", "CustomListManager");
             }
             catch (Exception e)
             {
                 _ = e;
-                return RedirectToAction("Edit", "ProductColorsManager", new { Id = Id });
+                return RedirectToAction("Edit", "CustomListManager", new { Id = Id });
             }
         }
 
@@ -104,7 +102,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 ViewBag.productsWithCustList = productsWithCustList;
                 return View(customList);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _ = e;
                 return HttpNotFound();
@@ -127,14 +125,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 customListContext.Delete(customList);
                 customListContext.Commit();
 
-                return RedirectToAction("Index", "ProductColorsManager");
+                return RedirectToAction("Index", "CustomListManager");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _ = e;
-                return RedirectToAction("Delete", "ProductColorsManager", new { Id = Id });
+                return RedirectToAction("Delete", "CustomListManager", new { Id = Id });
             }
         }
-
     }
 }

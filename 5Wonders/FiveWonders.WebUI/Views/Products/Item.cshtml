@@ -57,16 +57,14 @@
                     if (Model.sizeChart != null)
                     {
                         <div class="form-group">
-
                             @Html.LabelFor(model => (model.productOrder.mSize), htmlAttributes: new { @class = "control-label col-md-2" })
                             @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { htmlAttributes = new { } })
                             @Html.ValidationMessageFor(model => model.productOrder.mSize, "", new { @class = "text-danger" })
+                            <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a>
                         </div>
-
-                        <a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a>
                     }
 
-                    if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable || Model.product.isDateCustomizable || Model.product.isTimeCustomizable)
+                    if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable || Model.product.isDateCustomizable || Model.product.isTimeCustomizable || Model.listOptions.Count > 0)
                     {
                         <div class="ip-customization-container">
 
@@ -104,25 +102,25 @@
                                     </div>
                                 </div>
                             }
+
+                            @if (Model.listOptions.Count > 0)
+                            {
+                                int i = 0;
+
+                                foreach (var key in Model.listOptions.Keys)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">@Model.customListNames[i++]</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { htmlAttributes = new { } })
+                                            @Html.ValidationMessageFor(model => model.productOrder.mCustomListOptions, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
                     }
 
-                    if (Model.listOptions.Count > 0)
-                    {
-                       
-                        int i = 0;
-
-                        foreach (var key in Model.listOptions.Keys)
-                        {
-                            <div class="form-group">
-                                <label class="control-label col-md-2">@Model.customListNames[i++]</label>
-                                <div class="col-md-10">
-                                    @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { htmlAttributes = new { } })
-                                    @Html.ValidationMessageFor(model => model.productOrder.mCustomListOptions, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-                        }
-                    }
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.productOrder.mQuantity, htmlAttributes: new { @class = "control-label col-md-2" })

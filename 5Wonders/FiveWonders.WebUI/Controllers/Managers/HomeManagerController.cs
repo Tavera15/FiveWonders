@@ -137,7 +137,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
                 homeDataContext.Commit();
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Managers");
             }
             catch(Exception e)
             {

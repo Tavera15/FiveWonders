@@ -8,32 +8,34 @@
         </div>
     </div>
 
-    <div class="pp-products-section">
-        @{string classTags = "col-lg-3 col-md-4 col-sm-4 col-xs-6";}
+    @if(Model.products.Length > 0)
+    {
+        <div class="pp-products-section">
+            @{string classTags = "col-lg-3 col-md-4 col-sm-4 col-xs-6";}
 
-        @foreach (var product in Model.products)
-        {
-            string[] currentImageFiles = product.mImage.Split(',');
-            string firstImage = currentImageFiles[0];
+            @foreach (var product in Model.products)
+            {
+                string[] currentImageFiles = product.mImage.Split(',');
+                string firstImage = currentImageFiles[0];
 
-            <div class="@classTags pp-card-container" style="padding: 0 1vw;">
-                <a href="/products/item/@product.mID" class="fw-card-a">
-                    <div class="fw-product-container">
-                        <div class="fw-card" style="box-shadow: none;">
-                            <h2 class="fw-card-title">@product.mName</h2>
-                            <img src="@Url.Content("~/Content/ProductImages/" + firstImage)"
-                                 alt="@product.mName"
-                                 class="fw-card-img pp-fw-card-img" />
-                            <h3 class="fw-card-price">$@product.mPrice</h3>
-                            <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                <div class="@classTags pp-card-container" style="padding: 0 1vw;">
+                    <a href="/products/item/@product.mID" class="fw-card-a">
+                        <div class="fw-product-container">
+                            <div class="fw-card" style="box-shadow: none;">
+                                <h3 class="fw-card-title">@product.mName</h3>
+                                <img src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                     alt="@product.mName"
+                                     class="fw-card-img pp-fw-card-img" />
+                                <h4 class="fw-card-price">$@product.mPrice</h4>
+                                <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
-        }
-    </div>
-
-    @if(Model.products.Length == 0)
+                    </a>
+                </div>
+            }
+        </div>
+    }
+    else
     {
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h2>No Products found that match search criteria.</h2>

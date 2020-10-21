@@ -197,13 +197,13 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\Managers\AccountController.cs" />
     <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
+    <Compile Include="Controllers\Managers\CustomListManagerController.cs" />
     <Compile Include="Controllers\Managers\GalleryManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Managers\HomeManagerController.cs" />
     <Compile Include="Controllers\Managers\ManageController.cs" />
     <Compile Include="Controllers\Managers\ManagersController.cs" />
     <Compile Include="Controllers\Managers\OrdersManagerController.cs" />
-    <Compile Include="Controllers\Managers\ProductColorsManagerController.cs" />
     <Compile Include="Controllers\Managers\ProductManagerController.cs" />
     <Compile Include="Controllers\Managers\ServicesManagerController.cs" />
     <Compile Include="Controllers\Managers\SizeChartManagerController.cs" />
@@ -213,7 +213,6 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\SocialMediaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -423,7 +422,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -459,7 +457,6 @@
     <Content Include="Views\Products\Item.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\NavBar\Index.cshtml" />
-    <Content Include="Views\Services\Index.cshtml" />
     <Content Include="Views\ServicesManager\Index.cshtml" />
     <Content Include="Views\Basket\Index.cshtml" />
     <Content Include="Views\Basket\EditBasketItem.cshtml" />
@@ -493,11 +490,11 @@
     <Content Include="Views\SocialMedia\Index.cshtml" />
     <Content Include="Views\OrdersManager\Index.cshtml" />
     <Content Include="Views\OrdersManager\Details.cshtml" />
-    <Content Include="Views\ProductColorsManager\Index.cshtml" />
-    <Content Include="Views\ProductColorsManager\Create.cshtml" />
-    <Content Include="Views\ProductColorsManager\Edit.cshtml" />
-    <Content Include="Views\ProductColorsManager\Delete.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\CustomListManager\Index.cshtml" />
+    <Content Include="Views\CustomListManager\Create.cshtml" />
+    <Content Include="Views\CustomListManager\Edit.cshtml" />
+    <Content Include="Views\CustomListManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

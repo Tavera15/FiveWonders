@@ -32,7 +32,6 @@
     padding: 1rem;
     background-color: #59b7a1;
     background-color: white;
-    color: black;
     color: white;
     background-color: rgb(90, 185, 162);
     transition: .24s ease-in-out;
@@ -101,13 +100,6 @@
 
 }
 
-@media(max-width: 480px)
-{
-    .fw-card-container{
-        width: 100%;
-    }
-}
-
 @media(max-width: 1400px) {
     .fw-card-container {
         padding: 0 1vw;
@@ -116,50 +108,29 @@
     .fw-card-img {
         height: 20rem;
     }
-
-    
-/*
-    .fw-card-title, .fw-card-price, .fw-card-btn {
-        font-size: 2rem;
-    }
-*/
 }
 
 @media(max-width: 768px)
 {
     .fw-card{
         box-shadow: none;
+        border: 1.5px solid black;
     }
-/*    .fw-card-title, .fw-card-price, .fw-card-btn {
-        font-size: 1.5rem;
-    }*/
+
 }
 
 @media (max-width: 768px) and (orientation:portrait) {
     .fw-card{
         border: 1.5px solid black;
     }
-
     .fw-card-container {
-        margin: 1vh 0;
+        margin: 1rem 0;
         padding: 0;
     }
-
 }
 
-@media (max-width: 768px) and (orientation:landscape) {
-/*
+@media(max-width: 540px) and (orientation: portrait) {
     .fw-card-container {
-        width: calc(100%/3);
+        width: 100%;
     }
-
-*/
-}
-
-@media (max-height: 444px) and (orientation:landscape) {
-
-    /*.fw-card-img {
-        height: 40vh;
-    }*/
-
 }

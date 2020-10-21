@@ -47,47 +47,9 @@
     background-size: contain;
 }
 
-.jumbo-img {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-    height: auto;
-    min-height: 65vh;
-    display: flex;
-    flex-direction: column;
-    font-family: oswald;
-    margin-bottom: 4vh;
-}
 
-.jumbo-logo {
-    height: 24vh;
-    width: auto;
-    margin: 0 auto;
-    align-self: center;
-}
-
-
-.jumbo-item {
-    margin: .75rem 0;
-}
-
-.jumbo-message * {
-    font-size: 8vh;
-}
-
-.jumbo-btn a {
-    font-size: 3vh;
-}
 
 .section-top-three {
-    /*
-    margin: 0 4vw 4vh;
-    margin: 0;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;*/
-    
     margin-bottom: 4vh;
     display: flex;
     flex-direction: column;
@@ -135,17 +97,12 @@
 }
 
 .category-img-cover {
-    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform .5s ease;
-}
-
-.category-img-cover:hover {
-    background-color: rgba(0,0,0,.35);
+    min-height: 27vh;
 }
 
 .category-container {
@@ -160,26 +117,48 @@
 .single-category {
     padding: 0;
     border: solid 1px black;
-    height: 27vh;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-.single-category h1 {
+.category-title {
     padding: 0;
     margin: 0;
+    width: 100%;
+    text-align: center;
+/*    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: normal;*/
 }
 
 .redi-btn {
     margin: 2rem auto;
-    font-size: 2vh;
     font-family: oswald;
 }
 
 .home-services-container {
     padding: 0;
     text-decoration: none;
+}
+
+.contact-img-cover {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform .5s ease;
+    min-height: 30vh;
+}
+
+.home-services-data {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: contain;
 }
 
 .home-gallery-container {
@@ -257,9 +236,6 @@
         padding: 0;
     }
 
-    .single-category h2 {
-        font-size: 4vh;
-    }
 }
 
 @media(max-width: 1200px)
@@ -290,6 +266,18 @@
         padding: 0 1rem;
     }
 
+    .category-img-cover {
+        min-height: 20rem;
+    }
+
+    .contact-img-cover {
+        min-height: 25rem;
+    }
+
+    .section-top-three h1, .home-gallery-container-title {
+        font-size: 4rem;
+    }
+
     .home-gallery-container {
         flex-direction: column;
     }
@@ -317,12 +305,6 @@
     }
 }
 
-@media (max-width: 1024px) and (orientation:portrait) {
-    .ig-img {
-        height: 18vh;
-    }
-}
-
 @media (max-width: 768px) {
     #home-page{
         width: 95vw;
@@ -332,30 +314,14 @@
         height: 30rem;
     }
 
-    .single-category h2 {
-    }
-
     .top-three-products {
         display: flex;
         flex-direction: row;
     }
 
-    .jumbo-btn {
-        align-self: center;
-    }
-
-    .home-gallery-imgs-anchor {
-    }
 }
 
 @media (max-width: 768px) and (orientation:portrait) {
-    .jumbo-logo {
-        height: 24vh;
-    }
-
-    .ig-img {
-        height: 25vh;
-    }
 
     .top-three-products {
         display: inline;
@@ -372,36 +338,17 @@
 
 @media(max-width: 767px) {
     .home-gallery-solo-img {
-        height: calc(30rem);
+        height: 25rem;
     }
 
     .home-gallery-group-img {
-        height: calc(30rem);
+        height: 20rem;
     }
 }
 
-@media (max-height: 444px) and (orientation:landscape) {
-    .redi-btn {
-        font-size: 2vw;
-    }
-
-    .single-category {
-        height: 27rem;
-    }
-
-    .single-category h2 {
-    }
-
-    .section-top-three h1 {
-        font-size: 4rem;
-    }
-
-    .jumbo-logo {
-        height: auto;
-        width: 20vw;
-    }
-
-    .ig-img {
-        height: 50vh;
+@media(max-width: 540px) and (orientation: portrait){
+    .category-container {
+        width: 100%;
+        margin-bottom: 1rem;
     }
 }

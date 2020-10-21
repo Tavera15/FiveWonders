@@ -1,9 +1,28 @@
 ﻿
-<a href="/ProductManager/"><h3>Products Manager</h3></a>
-<a href="/CategoryManager/"><h3>Category Manager</h3></a>
-<a href="/SubcategoryManager/"><h3>Subcategory Manager</h3></a>
-<a href="/SizeChartManager/"><h3>Size Charts Manager</h3></a>
-<a href="/GalleryManager/"><h3>Gallery Manager</h3></a>
-<a href="/SocialMediaManager/"><h3>Social Media Manager</h3></a>
-<a href="/HomeManager/"><h3>Home Page Setup</h3></a>
-<a href="/ServicesManager/"><h3>Services Page Setup</h3></a>
+@{ 
+    Dictionary<string, string> managerPairs = new Dictionary<string, string>();
+
+    managerPairs.Add("/ProductManager/", "Products Manager");
+    managerPairs.Add("/CategoryManager/", "Category Manager");
+    managerPairs.Add("/SubcategoryManager/", "Subcategory Manager");
+    managerPairs.Add("/SizeChartManager/", "Size Charts Manager");
+    managerPairs.Add("/GalleryManager/", "Gallery Manager");
+    managerPairs.Add("/SocialMediaManager/", "Social Media Manager");
+    managerPairs.Add("/CustomListManager/", "Custom Lists Manager");
+    managerPairs.Add("/HomeManager/", "Home Page Setup");
+    managerPairs.Add("/ServicesManager/", "Contact Page Setup");
+}
+
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    @foreach(var manager in managerPairs)
+    {
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6" style="padding: 1rem;">
+            <a href="@manager.Key">
+                <div style="padding: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 20rem; border: 1px solid lightgrey;">
+                    <h3 style="padding: 0; text-align: center;">@manager.Value</h3>
+                </div>
+            </a>
+        </div>
+    }
+
+</div>

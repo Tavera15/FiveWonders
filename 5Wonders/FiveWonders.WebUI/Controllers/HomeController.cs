@@ -5,6 +5,7 @@ using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -13,19 +14,21 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        public IInstagramService InstagramService;
-        public IRepository<HomePage> homeContext;
-        public IRepository<Product> productsContext;
-        public IRepository<Category> categoryContext;
-        public IRepository<SubCategory> subcategoryContext;
+        IInstagramService InstagramService;
+        IRepository<HomePage> homeContext;
+        IRepository<Product> productsContext;
+        IRepository<Category> categoryContext;
+        IRepository<SubCategory> subcategoryContext;
+        IRepository<ServicePage> servicePageContext;
 
-        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository)
+        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository, IRepository<ServicePage> servicePageRepository)
         {
             InstagramService = IGService;
             homeContext = homeRepository;
             productsContext = productsRepository;
             categoryContext = categoryRepository;
             subcategoryContext = subcategoryRepository;
+            servicePageContext = servicePageRepository;
         }
 
         public ActionResult Index()
@@ -112,18 +115,64 @@ namespace FiveWonders.WebUI.Controllers
             return View(homeViewModel);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault()
+                ?? new ServicePage();
 
-            return View();
+            HomePage homePageData = homeContext.GetCollection().FirstOrDefault() ?? new HomePage();
+
+            ServicePageViewModel viewModel = new ServicePageViewModel()
+            {
+                servicePageData = servicePageData,
+                servicesMessage = new ServicesMessage(),
+                logo = String.IsNullOrEmpty(homePageData.mHomePageLogoUrl) ? "" : homePageData.mHomePageLogoUrl
+            };
+
+            return View(viewModel);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Contact(ServicePageViewModel viewModel)
+        {
+            try
+            {
+                if (!ModelState.IsValid || viewModel.servicesMessage == null ||
+                    String.IsNullOrWhiteSpace(viewModel.servicesMessage.mSubject) ||
+                    String.IsNullOrWhiteSpace(viewModel.servicesMessage.mContent))
+                {
+                    throw new Exception("Services model no good");
+                }
+
+                string customerSection = "<h4>Customer Info</h4>";
+                string fixedCustomerName = "<p>Name: " + viewModel.servicesMessage.mCustomerName + "</p>";
+                string fixedCustomerPhone = "<p>Phone Number: " + viewModel.servicesMessage.mPhoneNumber + "</p>";
+                string fixedCustomerEmail = "<p>Email: " + viewModel.servicesMessage.mEmail + "</p>";
+
+                MailMessage message = new MailMessage();
+                message.To.Add("");
+                message.From = new MailAddress("");
+                message.Subject = viewModel.servicesMessage.mSubject;
+                message.IsBodyHtml = true;
+                message.Body = viewModel.servicesMessage.mContent
+                    + "<br />" + customerSection + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
+
+                throw new Exception("stop");
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(message);
+
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception e)
+            {
+                _ = e;
+                ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault() ?? new ServicePage();
+                viewModel.servicePageData = servicePageData;
+
+                return View(viewModel);
+            }
         }
     }
 }
