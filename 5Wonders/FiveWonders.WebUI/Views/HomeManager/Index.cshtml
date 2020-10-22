@@ -3,7 +3,7 @@
 @{
     string logo = !String.IsNullOrWhiteSpace(Model.mHomePageLogoUrl)
         ? Url.Content("~/Content/Home/" + Model.mHomePageLogoUrl)
-        : "";
+        : Url.Content("~/Content/Home/Logo.png");
 
     string homeBg = !String.IsNullOrWhiteSpace(Model.mWelcomeImgUrl)
         ? Url.Content("~/Content/Home/" + Model.mWelcomeImgUrl)
@@ -14,172 +14,172 @@
         : "";
 }
 
-<div>
-
+<div class="col-lg-12" id="home-page">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-page-greeting-container">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
+            <div class="hp-greeting" id="greetingImgDestination" style="background-image:url(@homeBg)">
+                <div class="home-page-greeting-shade-cover" id="greeting-shade" style="background-color: rgba(0,0,0,@Model.welcomeGreetingImgShader);">
+                    <div id="home-prev-text"></div>
+                    <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;">View Products</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @using (Html.BeginForm("Index", "HomeManager", FormMethod.Post, new { encType = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
+        <div class="form-horizontal">
 
-        <div class="jumbotron jumbo-img" id="jumbo-bg-prev" style="background-image: url(@homeBg);">
-            <img src="@logo"
-                 alt="logo"
-                 class="jumbo-logo jumbo-item"
-                 id="jumbo-logo-prev" />
-
-            <div id="home-prev-text">
-                @Html.Raw(Model.mHomePageGreeting)
-            </div>
-
-            <p style="text-align:left;" class="jumbo-item jumbo-btn"><a href="" class="btn btn-primary btn-lg">View Products &raquo;</a></p>
-        </div>
-
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input oninput="setHomeBannerLogo()" type="file" id="homeLogo" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mHomePageLogoUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mEnableWelcomeImg, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mEnableWelcomeImg, new { htmlAttributes = new { } })
-                @Html.ValidationMessageFor(model => model.mEnableWelcomeImg, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input oninput="setHomeBannerBg()" type="file" id="homeImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mWelcomeImgUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.welcomeGreetingImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                @Html.EditorFor(model => model.welcomeGreetingImgShader, new { htmlAttributes = new { @class = "form-control", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
-                @Html.ValidationMessageFor(model => model.welcomeGreetingImgShader, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        @if (!String.IsNullOrWhiteSpace(Model.mCarouselImgs))
-        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                <label class="control-label col-md-2" style="font-weight: bold;">Existing Images</label>
+                @Html.LabelFor(model => model.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @foreach (string image in Model.mCarouselImgs.Split(','))
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       name="checkedCarouselImgs"
-                                       value=@image
-                                       @{ <text> checked </text>  } />
-                                @image
-                            </label>
-                        </div>
-                    }
+                    <input type="file" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mHomePageLogoUrl, "", new { @class = "text-danger" })
                 </div>
             </div>
-        }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mCarouselImgs, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input multiple type="file" id="file" name="newCarouselImgs" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mCarouselImgs, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.mEnableWelcomeImg, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.mEnableWelcomeImg, new { htmlAttributes = new { @Id = "greetingImgBtn", @oninput = "setGreetingImg()" } })
+                    @Html.ValidationMessageFor(model => model.mEnableWelcomeImg, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mHomePageGreeting, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.mHomePageGreeting, new { @Id = "homeTextPrev" })
+            <div class="form-group" id="greeting-img-container">
+                @Html.LabelFor(model => model.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input oninput="setGreetingImg()" type="file" id="greetingImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mWelcomeImgUrl, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mWelcomeBtnUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.mWelcomeBtnUrl, new SelectList(ViewBag.links, "key", "value", Model.mWelcomeBtnUrl), new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.welcomeGreetingImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.EditorFor(model => model.welcomeGreetingImgShader, new { htmlAttributes = new { @oninput = "setGreetingImg()", @class = "form-control", @id = "greetingShader", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                    @Html.ValidationMessageFor(model => model.welcomeGreetingImgShader, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mPromo1, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.mPromo1, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo1), new { htmlAttributes = new { @class = "form-control" } })
+            @if (!String.IsNullOrWhiteSpace(Model.mCarouselImgs))
+            {
+                <div class="form-group">
+                    <label class="control-label col-md-2" style="font-weight: bold;">Existing Images</label>
+                    <div class="col-md-10">
+                        @foreach (string image in Model.mCarouselImgs.Split(','))
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="checkedCarouselImgs"
+                                           value=@image
+                                           @{ <text> checked </text>  } />
+                                    @image
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mCarouselImgs, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input multiple type="file" id="file" name="newCarouselImgs" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mCarouselImgs, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mPromo2, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.mPromo2, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo2), new { htmlAttributes = new { @class = "form-control" } })
+            <div class="form-group">
+                @Html.LabelFor(model => model.mHomePageGreeting, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.mHomePageGreeting, new { @Id = "homeTextPrev" })
+                    @Html.ValidationMessageFor(model => model.mHomePageGreeting, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <hr />
+            <div class="form-group">
+                @Html.LabelFor(model => model.mWelcomeBtnUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.mWelcomeBtnUrl, new SelectList(ViewBag.links, "key", "value", Model.mWelcomeBtnUrl), new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
 
-        <div id="products-page">
-            <div class="pp-title-container"
-                 style="background-image: url(@Url.Content(catBg));"
-                 id="bannerImg-input">
-                <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.defaultBannerImgShader);" class="pp-title-dark-layer">
-                    <h2 style="color: @Model.mdefaultBannerTextColor" id="category-title-input" class="pp-title-text">@Model.mDefaultProductsBannerText</h2>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mPromo1, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.mPromo1, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo1), new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mPromo2, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.mPromo2, new SelectList(ViewBag.promoLinks, "key", "value", Model.mPromo2), new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+
+            <hr />
+
+            <div id="products-page">
+                <div class="pp-title-container"
+                     style="background-image: url(@catBg);"
+                     id="bannerImg-input">
+                    <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.defaultBannerImgShader);" class="pp-title-dark-layer">
+                        <h2 style="color: @Model.mdefaultBannerTextColor" id="category-title-input" class="pp-title-text">@Model.mDefaultProductsBannerText</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
+                    @Html.ValidationMessageFor(model => model.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mDefaultProductsBannerText, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.EditorFor(model => model.mDefaultProductsBannerText, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setCategoryProps()" } })
+                    @Html.ValidationMessageFor(model => model.mDefaultProductsBannerText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.mdefaultBannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.EditorFor(model => model.mdefaultBannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @id = "color", @oninput = "setCategoryProps()" } })
+                    @Html.ValidationMessageFor(model => model.mdefaultBannerTextColor, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.defaultBannerImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-offset-2 col-md-10">
+                    @Html.EditorFor(model => model.defaultBannerImgShader, new { htmlAttributes = new { @class = "form-control", @oninput = "setCategoryProps()", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                    @Html.ValidationMessageFor(model => model.defaultBannerImgShader, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mDefaultProductsBannerText, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                @Html.EditorFor(model => model.mDefaultProductsBannerText, new { htmlAttributes = new { @class = "form-control", @id = "help", @oninput = "setCategoryProps()" } })
-                @Html.ValidationMessageFor(model => model.mDefaultProductsBannerText, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.mdefaultBannerTextColor, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                @Html.EditorFor(model => model.mdefaultBannerTextColor, new { htmlAttributes = new { @class = "form-control", @type = "color", @id = "color", @oninput = "setCategoryProps()" } })
-                @Html.ValidationMessageFor(model => model.mdefaultBannerTextColor, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.defaultBannerImgShader, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                @Html.EditorFor(model => model.defaultBannerImgShader, new { htmlAttributes = new { @class = "form-control", @oninput = "setCategoryProps()", @id = "opacity", @type = "range", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
-                @Html.ValidationMessageFor(model => model.defaultBannerImgShader, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
     }
 </div>
+
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Managers", "Index", "Managers")
 </div>
 
 @section Scripts {
@@ -202,17 +202,28 @@
             }
         }
 
-        function setHomeBannerLogo() {
-            var logoImg = document.getElementById('homeLogo').files[0];
-            var logoDest = document.getElementById('jumbo-logo-prev');
+        function setGreetingImg() {
+            var isSectionEnabled = document.getElementById('greetingImgBtn').checked;
+            var uploadedGreetingImg = document.getElementById('greetingImg').files[0];
+            var greetingImgDestination = document.getElementById('greetingImgDestination');
+            var greetingBoxShader = document.getElementById('greetingShader').value;
 
-            if (logoImg) {
+            document.getElementById('greeting-shade').style.backgroundColor = "rgba(0,0,0," + greetingBoxShader + ")";
+
+            document.getElementById('greeting-img-container').style.display = isSectionEnabled
+                ? "block"
+                : "none";
+
+            if (uploadedGreetingImg && isSectionEnabled) {
                 var reader = new FileReader();
-                reader.readAsDataURL(logoImg);
+                reader.readAsDataURL(uploadedGreetingImg);
 
                 reader.onloadend = function () {
-                    logoDest.src = reader.result;
+                    greetingImgDestination.style.backgroundImage = 'url("' + reader.result + '")';
                 }
+            }
+            else if (!isSectionEnabled) {
+                greetingImgDestination.style.backgroundImage = 'url("")';
             }
         }
 
@@ -221,6 +232,7 @@
             var opacity = document.getElementById('opacity').value;
             var categoryName = document.getElementById('help').value;
             var img = document.getElementById('default_bannerImg').files[0];
+
 
             if (img) {
                 var reader = new FileReader();

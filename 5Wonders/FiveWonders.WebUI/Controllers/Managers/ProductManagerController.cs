@@ -44,10 +44,18 @@ namespace FiveWonders.WebUI.Controllers
         // Form to create a new product
         public ActionResult Create()
         {
-            ProductManagerViewModel viewModel = GetProductManagerVM();
-            viewModel.Product = new Product();
-
-            return View(viewModel);
+            try
+            {
+                ProductManagerViewModel viewModel = GetProductManagerVM();
+                viewModel.Product = new Product();
+                
+                return View(viewModel);
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return RedirectToAction("Index", "CategoryManager");
+            }
         }
 
         // Get form information and store to memory
@@ -69,6 +77,11 @@ namespace FiveWonders.WebUI.Controllers
                 p.Product.mImage = newImageURL;
                 p.Product.mSubCategories = selectedCategories != null ? String.Join(",", selectedCategories) : "" ;
                 p.Product.mCustomLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
+
+                if(p.Product.isTextCustomizable && String.IsNullOrWhiteSpace(p.Product.mCustomText))
+                {
+                    p.Product.mCustomText = "Custom Text:";
+                }
 
                 context.Insert(p.Product);
                 context.Commit();
@@ -142,6 +155,11 @@ namespace FiveWonders.WebUI.Controllers
                     basketService.RemoveItemFromAllBaskets(Id);
                 }
 
+                if (p.Product.isTextCustomizable && String.IsNullOrWhiteSpace(p.Product.mCustomText))
+                {
+                    p.Product.mCustomText = "Custom Text:";
+                }
+
                 // Set Target's properties to new values
                 target.mName = p.Product.mName;
                 target.mPrice = p.Product.mPrice;
@@ -162,7 +180,7 @@ namespace FiveWonders.WebUI.Controllers
                     currentImageFiles.Length != existingImages.Length)
                 {
                     string newImageURL;
-
+                    // TODO UPDATE Update images
                     UpdateImages(Id, existingImages, imageFiles, out newImageURL);
 
                     target.mImage = newImageURL;

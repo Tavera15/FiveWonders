@@ -24,6 +24,8 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<CustomOptionList> customListContext;
         IBasketServices basketServices;
 
+        const int CARDS_PER_PAGE = 12;
+
         public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IRepository<CustomOptionList> customListRepository, IBasketServices basketServices)
         {
             productsContext = productsRepository;
@@ -36,8 +38,8 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         // GET: Product - Displays every products in the store
-        [Route(Name = "/{category?}{subcategory?}{productName?}")]
-        public ActionResult Index(string category, string[] subcategory, string productName)
+        [Route(Name = "/{category?}{subcategory?}{productName?}{page}")]
+        public ActionResult Index(string category, string[] subcategory, string productName, int? page)
         {
             HomePage homePageDefaults = homePageContext.GetCollection().FirstOrDefault();
 
@@ -56,6 +58,11 @@ namespace FiveWonders.WebUI.Controllers
 
             if (subcategory != null && subcategory[0] != null)
             {
+                if(subcategory.Length == 1 && subcategory[0].Contains(","))
+                {
+                    subcategory = subcategory[0].Split(',');
+                }
+
                 foreach (string possibleSubName in subcategory)
                 {
                     SubCategory sub = subCategoryContext.GetCollection()
@@ -69,7 +76,14 @@ namespace FiveWonders.WebUI.Controllers
 
             try
             {
+                int pageNumbers;
                 ProductsListViewModel viewModel = GetPopularizedProductsViewModel(categoryData, subcategoriesData, productName, homePageDefaults);
+                viewModel.products = GetProducts(categoryData, subcategoriesData, productName, page, out pageNumbers);
+
+                ViewBag.CurrentPage = page ?? 1;
+                ViewBag.PageNumbers = pageNumbers;
+                ViewBag.subs = subcategory != null ? String.Join(",", subcategory) : "";
+
                 return View(viewModel);
             }
             catch (Exception e)
@@ -201,9 +215,9 @@ namespace FiveWonders.WebUI.Controllers
             return fixedTitle;
         }
 
-        private Product[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName)
+        private Product[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName, int? page, out int pageNumbers)
         {
-            Product[] results = productsContext.GetCollection().ToArray();
+            Product[] allResults = productsContext.GetCollection().ToArray();
 
             try
             {
@@ -212,28 +226,39 @@ namespace FiveWonders.WebUI.Controllers
                     // Filter by Category
                     if (categoryData != null)
                     {
-                        results = results.Where(p => p.mCategory == categoryData.mID).ToArray();
+                        allResults = allResults.Where(p => p.mCategory == categoryData.mID).ToArray();
                     }
 
                     // Filter by Subs
                     if(subcategoriesData.Count > 0)
                     {
-                        results = results.Where(p => p.mSubCategories.Split(',')
+                        allResults = allResults.Where(p => p.mSubCategories.Split(',')
                             .Any(productSub => subcategoriesData.Any(sub => sub.mID == productSub))).ToArray();
                     }
 
                     // Filter by Product Name Search
                     if(!String.IsNullOrWhiteSpace(productName))
                     {
-                        results = results.Where(p => p.mName.ToLower().Contains(productName.ToLower())).ToArray();
+                        allResults = allResults.Where(p => p.mName.ToLower().Contains(productName.ToLower())).ToArray();
                     }
                 }
+
+                int pageNumber = page ?? 1;
+                pageNumber = pageNumber <= 1 ? 1 : pageNumber;
+
+                Product[] results = (pageNumber) <= 1
+                    ? allResults.Take(CARDS_PER_PAGE).ToArray()
+                    : (allResults.Skip(CARDS_PER_PAGE * (pageNumber - 1)).Take(CARDS_PER_PAGE)).ToArray();
+
+                double rawPageNumbers = ((double)allResults.Length / (double)CARDS_PER_PAGE);
+                pageNumbers = (int)(Math.Ceiling(rawPageNumbers));
 
                 return results.OrderByDescending(p => p.mTimeEntered).ToArray();
             }
             catch(Exception e)
             {
                 _ = e;
+                pageNumbers = 1;
                 return new Product[] { };
             }
         }
@@ -296,7 +321,6 @@ namespace FiveWonders.WebUI.Controllers
                 mImgShaderAmount = productListImgShaderAmount,
                 pageTitle = productsListPageTitle,
                 pageTitleColor = productListPageTitleColor,
-                products = GetProducts(category, subCategories, productNameSearch)
             };
 
             return viewModel;

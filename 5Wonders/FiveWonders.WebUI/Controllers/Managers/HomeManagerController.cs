@@ -142,6 +142,30 @@ namespace FiveWonders.WebUI.Controllers.Managers
             catch(Exception e)
             {
                 _ = e;
+                Dictionary<string, string> links = new Dictionary<string, string>();
+                Dictionary<string, string> promoLinks = new Dictionary<string, string>();
+
+                links.Add("0", "All Products");
+                promoLinks.Add("0", "Empty");
+
+                foreach (Category cat in categoryContext.GetCollection())
+                {
+                    links.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
+                    promoLinks.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
+                }
+
+                foreach (SubCategory sub in subcategoryContext.GetCollection())
+                {
+                    links.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+
+                    if (sub.isEventOrTheme)
+                    {
+                        promoLinks.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+                    }
+                }
+
+                ViewBag.links = links;
+                ViewBag.promoLinks = promoLinks;
                 return View(updatedData);
             }
         }

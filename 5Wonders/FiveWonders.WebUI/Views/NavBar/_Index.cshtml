@@ -1,0 +1,63 @@
+﻿@model Dictionary<string, HashSet<string>>
+
+@if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "Home"
+    && HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString() == "Index"
+    && ViewBag.homePageLogo != null)
+{
+    <div style="padding: 0; text-align: center;">
+        <img src="@Url.Content("~/Content/Home/" + ViewBag.homePageLogo)" style="height: 20rem; width: auto; margin: 0;" />
+    </div>
+}
+
+<div class="navbar navbar-default sticky-top FWonders-navbar" style="padding: 0; margin: 0; top: 0px; z-index: 100; position: sticky !important; border: none; border-bottom: solid black 1px;">
+    <div class="container FWonders-navbar-container FWonders-navbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Five Wonders", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/Products/">All Products</a></li>
+                @foreach (string key in Model.Keys)
+                {
+                    if (Model[key].Count != 0)
+                    {
+                        <li class="dropdown-submenu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">@key</span><span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/products/?category=@key">View All @key</a></li>
+                                @foreach (string sub in Model[key])
+                                {
+                                    <li><a href="/products/?category=@key&subcategory=@sub">@sub</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="/products/?category=@key">@key</a></li>
+                    }
+
+                }
+
+                @if (ViewBag.SubsWithThemes.Length > 0)
+                {
+                    <li class="dropdown-submenu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <span class="nav-label">Themes</span><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            @foreach (var x in ViewBag.SubsWithThemes)
+                            {
+                                <li><a href="/products/?subcategory=@x">@x</a></li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>

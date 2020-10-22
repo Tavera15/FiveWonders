@@ -456,7 +456,7 @@
     <Content Include="Views\SizeChartManager\Delete.cshtml" />
     <Content Include="Views\Products\Item.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
-    <Content Include="Views\NavBar\Index.cshtml" />
+    <Content Include="Views\NavBar\_Index.cshtml" />
     <Content Include="Views\ServicesManager\Index.cshtml" />
     <Content Include="Views\Basket\Index.cshtml" />
     <Content Include="Views\Basket\EditBasketItem.cshtml" />

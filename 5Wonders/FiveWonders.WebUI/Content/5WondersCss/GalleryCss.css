@@ -1,7 +1,6 @@
 ﻿#gallery-page {
     flex-wrap: wrap;
     padding: 2vh;
-    width: 85%;
     margin: 0 auto;
 }
 
@@ -17,10 +16,12 @@
 }
 
 .gallery-img-container {
-    border: 1px solid black;
+    padding: 0 2rem;
+    margin-bottom: 4vh;
 }
 
 .gallery-img {
+    border: 1px solid lightgrey;
     height: 35vh;
     object-fit: contain;
     width: 100%;
@@ -29,7 +30,6 @@
 #gallery-delete-page {
     display: flex;
     flex-direction: column;
-    width: 85%;
     margin: 0 auto;
 }
 

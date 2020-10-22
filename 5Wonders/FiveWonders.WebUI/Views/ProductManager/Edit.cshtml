@@ -74,41 +74,47 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @foreach (var item in Model.subCategories)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       name="selectedCategories"
-                                       value=@item.mID
-                                       @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
-                                @item.mSubCategoryName
-                            </label>
-                        </div>
-                    }
+            @if(Model.subCategories.Count() > 0)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @foreach (var item in Model.subCategories)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="selectedCategories"
+                                           value=@item.mID
+                                           @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                    @item.mSubCategoryName
+                                </label>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @foreach (var item in Model.customOptionLists)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       name="selectedCustomLists"
-                                       value=@item.mID
-                                       @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
-                                @item.mName
-                            </label>
-                        </div>
-                    }
+            @if(Model.customOptionLists.Count() > 0)
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @foreach (var item in Model.customOptionLists)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="selectedCustomLists"
+                                           value=@item.mID
+                                           @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                    @item.mName
+                                </label>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "control-label col-md-2" })

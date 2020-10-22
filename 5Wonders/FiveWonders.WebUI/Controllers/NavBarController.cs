@@ -14,16 +14,18 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subCategoryContext;
         IRepository<Product> productsContext;
+        IRepository<HomePage> homePageContext;
 
-        public NavBarController(IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<Product> productsRepository)
+        public NavBarController(IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<Product> productsRepository, IRepository<HomePage> homePageRepository)
         {
             categoryContext = categoryRepository;
             subCategoryContext = subCategoryRepository;
             productsContext = productsRepository;
+            homePageContext = homePageRepository;
         }
 
         // GET: NavBar
-        public ActionResult Index()
+        public ActionResult _Index()
         {
             // Key is the category - Values are subcategories.
             Dictionary<string, HashSet<string>> navLinks = new Dictionary<string, HashSet<string>>();
@@ -54,6 +56,12 @@ namespace FiveWonders.WebUI.Controllers
                         }
                     }
                 }
+            }
+
+            HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
+            if(homePageData != null && !String.IsNullOrWhiteSpace(homePageData.mHomePageLogoUrl))
+            {
+                ViewBag.homePageLogo = homePageData.mHomePageLogoUrl;
             }
 
             string[] subsWithThemes = (from sub in subCategoryContext.GetCollection().OrderBy(x => x.mSubCategoryName).ToArray()

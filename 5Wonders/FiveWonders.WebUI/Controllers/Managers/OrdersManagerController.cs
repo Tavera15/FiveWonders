@@ -24,48 +24,29 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             emailFilter = !String.IsNullOrWhiteSpace(emailFilter) ? emailFilter.Trim() : "";
             nameFilter = !String.IsNullOrWhiteSpace(nameFilter) ? nameFilter.Trim() : "";
-            FWonderOrder[] processedOrders = { };
 
             // Get all completed orders
             FWonderOrder[] allCompletedOrders = ordersContext.GetCollection()
-                .Where(o => o.paypalRef != null && o.paypalRef.Trim() != string.Empty)
+                .Where(o => o.isCompleted)
                 .OrderByDescending(t => t.mTimeEntered).ToArray();
 
-            // Apply both filters
-            if(!String.IsNullOrWhiteSpace(emailFilter) && !String.IsNullOrWhiteSpace(nameFilter))
+            // Apply filters
+            if(!String.IsNullOrWhiteSpace(emailFilter))
             {
-                FWonderOrder[] emailFilterOrders = allCompletedOrders
-                    .Where(o => o.mCustomerEmail.ToLower() == emailFilter.ToLower()).ToArray();
-
-                FWonderOrder[] nameFilterOrders = allCompletedOrders
-                    .Where(o => o.mCustomerName.ToLower() == nameFilter.ToLower()).ToArray();
-
-                processedOrders = String.IsNullOrWhiteSpace(emailFilter) && String.IsNullOrWhiteSpace(nameFilter)
-                    ? allCompletedOrders
-                    : emailFilterOrders.Intersect(nameFilterOrders).ToArray();
-            }
-            // Filter by email input
-            else if(!String.IsNullOrWhiteSpace(emailFilter))
-            {
-                processedOrders = allCompletedOrders
+                allCompletedOrders = allCompletedOrders
                     .Where(o => o.mCustomerEmail.ToLower() == emailFilter.ToLower()).ToArray();
             }
-            // Filter by name input
-            else if(!String.IsNullOrWhiteSpace(nameFilter))
+
+            if(!String.IsNullOrWhiteSpace(nameFilter))
             {
-                processedOrders = allCompletedOrders
+                allCompletedOrders = allCompletedOrders
                     .Where(o => o.mCustomerName.ToLower() == nameFilter.ToLower()).ToArray();
             }
-            // Both filters are empty
-            else
-            {
-                processedOrders = allCompletedOrders;
-            }
 
-            ViewBag.Title = "Orders";
+            ViewBag.Title = "Orders Manager";
             ViewBag.emailFilter = emailFilter;
             ViewBag.nameFilter = nameFilter;
-            return View(processedOrders);
+            return View(allCompletedOrders);
         }
 
         [ActionName("Index")]
@@ -81,7 +62,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 FWonderOrder order = ordersContext.Find(Id, true);
 
-                if(String.IsNullOrWhiteSpace(order.paypalRef))
+                if(!order.isCompleted)
                 {
                     throw new Exception("Not a completed order");
                 }

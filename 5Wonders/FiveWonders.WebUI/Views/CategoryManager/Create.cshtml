@@ -36,7 +36,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.mImgShaderAmount, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.mImgShaderAmount, new { htmlAttributes = new { @class = "form-control", @type = "range", @oninput = "setColor()", @id = "opacity",  @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
+                    @Html.EditorFor(model => model.mImgShaderAmount, new { htmlAttributes = new { @class = "form-control", @type = "range", @oninput = "setColor()", @id = "opacity", @min = "0", @max = "1", @step = "0.01", @style = "padding: 0;" } })
                     @Html.ValidationMessageFor(model => model.mImgShaderAmount, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -61,6 +61,11 @@
         @Html.ActionLink("Back to List", "Index")
     </div>
 </div>
+
+@section Pagecss{
+    <link href="~/Content/5WondersCss/ProductList.css"
+          rel="stylesheet" type="text/css" />
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

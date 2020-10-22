@@ -20,11 +20,12 @@ namespace FiveWonders.core.Models
         [Display(Name = "Email")]
         public string mCustomerEmail { get; set; }
 
-        public string paypalRef { get; set; }
+        public bool isCompleted { get; set; }
 
         public FWonderOrder()
         {
             mOrderItems = new List<OrderItem>();
+            isCompleted = false;
         }
     }
 }

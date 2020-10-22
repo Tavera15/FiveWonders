@@ -36,7 +36,7 @@
         {
             <div class="@greetingBoxClassName col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
                 <div class="hp-greeting" style="background-image:url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl))">
-                    <div style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="home-page-greeting-shade-cover" style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); ">
                         @Html.Raw(Model.homePageData.mHomePageGreeting)
                         <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;" href="@Model.welcomePageUrl">View Products</a></p>
                     </div>
@@ -157,13 +157,16 @@
                     </div>
                 }
             </div>
-            <a class="btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <a class=" btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+            </div>
         </div>
     </div>
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-services-container" style="margin-bottom: 4vh;">
         <a href="/Home/Contact/" style="text-decoration: none;">
-            <div class="home-services-data" style="background-image: url(@Url.Content("~/Content/Home/Logo.png"));">
+            <div class="home-services-data" style="background-image: url(@Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl));">
                 <div class="contact-img-cover" style="background-color: rgba(0,0,0,.74);">
                     <h1 style="color: lightgoldenrodyellow; text-align: center;">Customize with us!</h1>
                     <p class="btn btn-lg btn-default redi-btn">Contact</p>

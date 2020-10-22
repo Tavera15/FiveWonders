@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    @if(Model.products.Length > 0)
+    @if (Model.products.Length > 0)
     {
         <div class="pp-products-section">
             @{string classTags = "col-lg-3 col-md-4 col-sm-4 col-xs-6";}
@@ -34,6 +34,32 @@
                 </div>
             }
         </div>
+
+        <nav aria-label="Page navigation" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <ul class="pagination">
+                @if(ViewBag.CurrentPage - 1 > 0)
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Products", new { category = Request.Params["category"], subcategory = ViewBag.subs, productName = Request.Params["productName"], page = (ViewBag.CurrentPage - 1)})" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }
+                @for (int i = 0; i < ViewBag.PageNumbers; i++)
+                {
+                    <li><a href="@Url.Action("Index", "Products", new { category = Request.Params["category"], subcategory = ViewBag.subs, productName = Request.Params["productName"], page = (i+1)})">@(i+1)</a></li>
+                }
+
+                @if(ViewBag.CurrentPage + 1 <= ViewBag.PageNumbers)
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Products", new { category = Request.Params["category"], subcategory = ViewBag.subs, productName = Request.Params["productName"], page = (ViewBag.CurrentPage <= 0 ? 1 : ViewBag.CurrentPage + 1)})" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
     }
     else
     {

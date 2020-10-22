@@ -34,7 +34,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 // Get customers past completed orders - Sort them by date (Newest are at top) 
                 FWonderOrder[] allCustomerOrders = ordersContext.GetCollection()
-                    .Where(x => x.mCustomerEmail == customerEmail && !String.IsNullOrEmpty(x.paypalRef))
+                    .Where(x => x.isCompleted)
                     .OrderByDescending(y => y.mTimeEntered).ToArray();
 
                 return View(allCustomerOrders);

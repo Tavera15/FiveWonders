@@ -9,30 +9,7 @@
         @RenderSection("Pagecss", required: false)
     </head>
     <body>
-
-        @if (ViewContext.RouteData.Values["controller"].ToString() == "Home")
-        {
-            <div style="padding: 0; text-align: center;">
-                <img src="@Url.Content("~/Content/Home/Logo.png")" style="height: 20rem; width: auto; margin: 0;" />
-            </div>
-        }
-
-        <div class="navbar navbar-default sticky-top FWonders-navbar" style="padding: 0; margin: 0; top: 0px; z-index: 100; position: sticky !important; border: none; border-bottom: solid black 1px;">
-            <div class="container FWonders-navbar-container FWonders-navbar">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    @Html.ActionLink("Five Wonders", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                </div>
-                <div class="navbar-collapse collapse">
-                    @{Html.RenderAction("Index", "NavBar");}
-                    @Html.Partial("_LoginPartial")
-                </div>
-            </div>
-        </div>
+        @{Html.RenderAction("_Index", "NavBar");}
         <div class="container body-content base-container">
             @RenderBody()
         </div>

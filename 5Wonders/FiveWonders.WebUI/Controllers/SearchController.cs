@@ -10,17 +10,13 @@ using System.Web.Routing;
 
 namespace FiveWonders.WebUI.Controllers
 {
-
-
     public class SearchController : Controller
     {
-        IRepository<Product> productsContext;
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subcategoryContext;
         
-        public SearchController(IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository)
+        public SearchController(IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository)
         {
-            productsContext = productsRepository;
             categoryContext = categoryRepository;
             subcategoryContext = subcategoryRepository;
         }
@@ -34,12 +30,14 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Index(SearchViewModel searchViewModel)
         {
-            RouteValueDictionary parameters = new RouteValueDictionary();
+            RouteValueDictionary parameters = new RouteValueDictionary
+            {
+                ["Category"] = searchViewModel.categoryInput,
+                ["productName"] = searchViewModel.productNameinput,
+                ["page"] = 1
+            };
 
-            parameters["Category"] = searchViewModel.categoryInput;
-            parameters["productName"] = searchViewModel.productNameinput;
-
-            if(searchViewModel.subCategories != null)
+            if (searchViewModel.subCategories != null)
             {
                 for (int i = 0; i < searchViewModel.subCategories.Length; i++)
                 {
@@ -55,12 +53,12 @@ namespace FiveWonders.WebUI.Controllers
             SearchViewModel newSearchViewModel = new SearchViewModel
             {
                 allCategories = categoryContext.GetCollection()
-                .OrderByDescending(x => x.mTimeEntered)
-                .Select(cat => cat.mCategoryName).ToList(),
+                    .OrderByDescending(x => x.mTimeEntered)
+                    .Select(cat => cat.mCategoryName).ToList(),
 
                 allSubcategories = subcategoryContext.GetCollection()
-                .OrderByDescending(x => x.mTimeEntered)
-                .Select(sub => sub.mSubCategoryName).ToList()
+                    .OrderByDescending(x => x.mTimeEntered)
+                    .Select(sub => sub.mSubCategoryName).ToList()
             };
 
             newSearchViewModel.allCategories.Insert(0, "");
