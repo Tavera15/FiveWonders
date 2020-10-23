@@ -99,6 +99,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 }
 
                 sm.mUrl = updatedMedia.mUrl;
+                sm.isCommunicative = updatedMedia.isCommunicative;
 
                 socialMediaContext.Commit();
 

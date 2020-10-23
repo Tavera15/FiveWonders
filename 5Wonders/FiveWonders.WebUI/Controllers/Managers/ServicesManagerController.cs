@@ -27,8 +27,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 mBannerMessage = servicePageData.mBannerMessage,
                 mEmail = servicePageData.mEmail,
-                mFacebookUrl = servicePageData.mFacebookUrl,
-                mInstagramUrl = servicePageData.mInstagramUrl,
                 mName = servicePageData.mName,
                 mPhoneNumber = servicePageData.mPhoneNumber
             };
@@ -48,8 +46,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 target.mName = updatedPage.mName;
                 target.mEmail = updatedPage.mEmail;
                 target.mPhoneNumber = updatedPage.mPhoneNumber;
-                target.mFacebookUrl = updatedPage.mFacebookUrl;
-                target.mInstagramUrl = updatedPage.mInstagramUrl;
 
                 if(updatedPage.mID == target.mID)
                 {

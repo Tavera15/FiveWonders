@@ -7,6 +7,7 @@ using PayPal.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 
@@ -73,7 +74,7 @@ namespace FiveWonders.WebUI.Controllers
             {
                 List<BasketItemViewModel> allBasketItems = basketService.GetBasketItems(HttpContext);
 
-                if (!ModelState.IsValid || allBasketItems.Count == 0)
+                if (!ModelState.IsValid || allBasketItems.Count <= 0)
                     throw new Exception("Order Model State is not valid");
 
                 // Create variables that will be inserted into PayPal Payment object
@@ -183,7 +184,6 @@ namespace FiveWonders.WebUI.Controllers
                     payer = new Payer() { payment_method = "paypal" },
                     transactions = itemTransactions,
                     
-                    // TODO Don't send order Id in parameters - Maybe add a bool if transaction is complete - ENCRYPT
                     redirect_urls = new RedirectUrls()
                     {
                         cancel_url = Url.Action("Cancel", "Checkout", new { orderId = order.mID }, Request.Url.Scheme),
@@ -232,6 +232,26 @@ namespace FiveWonders.WebUI.Controllers
 
                 basketService.ClearBasket(HttpContext);
                 order.isCompleted = true;
+                order.mVerificationId = Guid.NewGuid().ToString();
+
+                orderContext.Commit();
+
+                string adminUrl = "https://localhost:44372/OrdersManager/Details/?Id=" + order.mID;
+                string customerUrl = "https://localhost:44372/Orders/Details/?Id=" + order.mID + "&VerificationId=" + order.mVerificationId;
+
+                System.Diagnostics.Debug.WriteLine("Admin: " + adminUrl);
+                System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
+
+                /*
+                // TODO Send Confirmation to admin and customer...?
+                MailMessage adminMessage = GetFilledMailedMessage(order.mID, "5Wonders Order Confirmation" + order.mID, adminUrl);
+                MailMessage customerMessage = GetFilledMailedMessage(order.mID, "5Wonders Order Confirmation" + order.mID, customerUrl);
+
+                //throw new Exception("stop");
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(message);
+                 */
 
                 return RedirectToAction("ThankYou", "Checkout");
             }
@@ -284,6 +304,21 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult CancelOrder()
         {
             return View();
+        }
+
+        private MailMessage GetFilledMailedMessage(string orderId, string subject, string orderUrl)
+        {
+            // On five wonder order: attach another separate Id in order to validate anonymous people looking at their order
+            
+            MailMessage message = new MailMessage();
+            message.To.Add("");
+            message.From = new MailAddress("");
+            message.Subject = subject + ": " + orderId;
+            message.IsBodyHtml = false;
+            message.Body = "View order details: " + orderUrl;
+
+            throw new Exception("stop");
+
         }
 
         private APIContext GetApiContext()

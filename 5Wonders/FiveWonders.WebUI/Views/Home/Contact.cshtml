@@ -37,11 +37,18 @@
             </div>
         </div>
 
-        <div style="text-align: center;">
-            <h2>We are social</h2>
+        @if(Model.communicativeSocialMedias != null && Model.communicativeSocialMedias.Length > 0)
+        {
+            <div style="text-align: center;">
+                <h2>Social Media</h2>
 
-            @{Html.RenderAction("Index", "SocialMedia", new { Id = "8" });}
-        </div>
+                @foreach(var sm in Model.communicativeSocialMedias)
+                {
+                    <a rel="noopener noreferrer" target="_blank" href="@sm.mUrl"><img style="height: 8vh; width: auto;" src="~/Content/Icons/@sm.m64x64Icon" alt="@sm.mUrl" /></a>
+                }
+
+            </div>
+        }
 
     </div>
 

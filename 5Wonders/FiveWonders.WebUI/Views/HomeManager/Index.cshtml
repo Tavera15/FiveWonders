@@ -5,7 +5,7 @@
         ? Url.Content("~/Content/Home/" + Model.mHomePageLogoUrl)
         : Url.Content("~/Content/Home/Logo.png");
 
-    string homeBg = !String.IsNullOrWhiteSpace(Model.mWelcomeImgUrl)
+    string homeBg = !String.IsNullOrWhiteSpace(Model.mWelcomeImgUrl) && Model.mEnableWelcomeImg
         ? Url.Content("~/Content/Home/" + Model.mWelcomeImgUrl)
         : "";
 
@@ -19,7 +19,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
             <div class="hp-greeting" id="greetingImgDestination" style="background-image:url(@homeBg)">
                 <div class="home-page-greeting-shade-cover" id="greeting-shade" style="background-color: rgba(0,0,0,@Model.welcomeGreetingImgShader);">
-                    <div id="home-prev-text"></div>
+                    <div id="home-prev-text">@Html.Raw(Model.mHomePageGreeting)</div>
                     <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;">View Products</a></p>
                 </div>
             </div>

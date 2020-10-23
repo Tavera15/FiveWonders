@@ -6,7 +6,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-// TODO Only admin
 namespace FiveWonders.WebUI.Controllers
 {
     [Authorize]
@@ -34,7 +33,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 // Get customers past completed orders - Sort them by date (Newest are at top) 
                 FWonderOrder[] allCustomerOrders = ordersContext.GetCollection()
-                    .Where(x => x.isCompleted)
+                    .Where(x => x.isCompleted && x.mCustomerEmail == customer.mEmail)
                     .OrderByDescending(y => y.mTimeEntered).ToArray();
 
                 return View(allCustomerOrders);
@@ -46,11 +45,18 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
-        public ActionResult Details(string Id)
+        [Route(Name = "/{Id}{VerificationId}")]
+        public ActionResult Details(string Id, string VerificationId)
         {
             try
             {
                 FWonderOrder order = ordersContext.Find(Id, true);
+
+                if(String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId)
+                {
+                    throw new Exception("Verification Id does not match");
+                }
+
                 return View(order);
             }
             catch(Exception e)

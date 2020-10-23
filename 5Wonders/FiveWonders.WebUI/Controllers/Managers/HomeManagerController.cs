@@ -17,8 +17,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
         public IRepository<SubCategory> subcategoryContext;
         public IImageStorageService imageStorageSystem;
 
-        // TODO User should be able to select what two categories to promote on Home page
-
         public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext, IImageStorageService imageStorageSystem)
         {
             homeDataContext = homePageRepository;

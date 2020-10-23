@@ -15,5 +15,12 @@ namespace FiveWonders.core.Models
 
         [Display(Name = "Icon")]
         public string m64x64Icon { get; set; }
+
+        public bool isCommunicative { get; set; }
+
+        public SocialMedia()
+        {
+            isCommunicative = true;
+        }
     }
 }

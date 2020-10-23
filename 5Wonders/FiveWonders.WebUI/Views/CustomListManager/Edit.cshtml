@@ -1,54 +1,80 @@
 ﻿@model FiveWonders.core.Models.CustomOptionList
 
-<div class="form-group">
-    <label class="control-label col-md-2">g</label>
-    <div class="col-md-10">
-        <input id="newColor" />
-        <button onclick="AddNewColor()" class="btn btn-primary">Add</button>
+<style>
+    custom-list-page button {
+        font-size: 1.5em;
+        color: #53BDFF;
+        background-color: #fff;
+        outline: 0;
+        border: none;
+    }
+
+    custom-list-page .tasksBoard {
+        background-color: #fff;
+        margin-top: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-right: 40px;
+        /*display: none;*/
+    }
+
+
+    #custom-list-page li {
+        border-bottom: 1px solid #53BDFF;
+        padding-bottom: 15px;
+        padding-top: 15px;
+        font-size: 1.3em;
+        color: #2f4f4f;
+    }
+</style>
+
+<div class="col-lg-12" style="margin-top: 4vh;" id="custom-list-page">
+    <div class="col-lg-4" style="border: solid 1px black;">
+        <h3 style="text-align: center;">Items in list</h3>
+        <div class="form-group col-lg-12" style="margin: 0 auto; text-align:center;">
+            <input style="width: 100%;" id="newColor" />
+            <button onclick="AddNewColor()" class="btn btn-primary">Add</button>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group col-lg-12">
+                <div class="col-md-12">
+                    <div class="color-set-input col-lg-12">
+                        <ul id="set-of-colors"></ul>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.options, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
     </div>
-</div>
 
-<div class="color-set-input">
-    <ul id="set-of-colors"></ul>
-</div>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.mID)
-
-        <div class="form-group">
-            <label class="control-label col-md-2">g</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.options, new { htmlAttributes = new { @class = "form-control", @id = "res", @style = "display: none;" } })
-                @Html.ValidationMessageFor(model => model.options, "", new { @class = "text-danger" })
+        <div class="col-lg-6">
+            <div class="form-group col-lg-12">
+                <div class="col-md-10">
+                    <h3>List Name</h3>
+                    @Html.EditorFor(model => model.mName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.mName, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.mName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.mName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.mName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-lg-12" style="margin: 4vh 0;">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
-        </div>
-    </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+            <div class="col-lg-12">
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+
+        @Html.EditorFor(model => model.options, new { htmlAttributes = new { @class = "form-control", @id = "res", @style = "display: none;" } })
+
+    }
+
 </div>
 
 @section Scripts
@@ -58,8 +84,7 @@
             var newColor = document.getElementById('newColor');
 
             //Is Null or Whitespace
-            if (!(/\S/.test(newColor.value)))
-            {
+            if (!(/\S/.test(newColor.value))) {
                 newColor.value = "";
                 return;
             }
@@ -81,11 +106,12 @@
 
             var colorsChosen = document.getElementById('res').value.split(',');
 
-            for (let i = 0; i < colorsChosen.length; i++)
-            {
+            for (let i = 0; i < colorsChosen.length; i++) {
                 if (colorsChosen[i] === "") { continue; }
 
                 var newBtn = document.createElement("BUTTON");
+                newBtn.classList.add("btn", "btn-danger");
+                newBtn.style.marginLeft = "2rem";
                 newBtn.innerHTML = "Remove";
 
                 newBtn.onclick = function () {
@@ -93,6 +119,7 @@
                 }
 
                 var newLi = document.createElement("li");
+                newLi.style.width = '100%';
 
                 newLi.appendChild(document.createTextNode(colorsChosen[i]));
                 newLi.appendChild(newBtn);

@@ -487,7 +487,7 @@
     <Content Include="Views\SocialMediaManager\Create.cshtml" />
     <Content Include="Views\SocialMediaManager\Edit.cshtml" />
     <Content Include="Views\SocialMediaManager\Delete.cshtml" />
-    <Content Include="Views\SocialMedia\Index.cshtml" />
+    <Content Include="Views\SocialMedia\_Index.cshtml" />
     <Content Include="Views\OrdersManager\Index.cshtml" />
     <Content Include="Views\OrdersManager\Details.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />

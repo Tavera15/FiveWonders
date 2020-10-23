@@ -27,13 +27,5 @@ namespace FiveWonders.core.Models
         [Display(Name = "Email")]
         public string mEmail { get; set; }
         
-        // Todo Remove these Social Medias and put the new version.
-        // Also, only list the cummunicated ones.
-
-        [Display(Name = "Facebook URL")]
-        public string mFacebookUrl { get; set; }
-        
-        [Display(Name = "Instagram URL")]
-        public string mInstagramUrl { get; set; }
     }
 }

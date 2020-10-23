@@ -13,8 +13,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
         IRepository<CustomOptionList> customListContext;
         IRepository<Product> productsContext;
 
-        // TODO Investigate if it is possible to create multiple custom sets. (Color sets, team sets, etc)
-
         public CustomListManagerController(IRepository<CustomOptionList> customListRepository, IRepository<Product> productsRepository)
         {
             customListContext = customListRepository;

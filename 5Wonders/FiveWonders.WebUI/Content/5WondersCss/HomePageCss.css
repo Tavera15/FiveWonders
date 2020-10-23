@@ -5,7 +5,7 @@
 }
 
 .home-page-greeting-container {
-    margin: 1vh 0 4vh;
+    margin: 1vh 0 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap-reverse;
@@ -81,6 +81,7 @@
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
 }
 
 .thing-cover {
@@ -324,7 +325,6 @@
 
     .top-three-products {
         display: flex;
-        flex-direction: row;
     }
 
 }
@@ -332,7 +332,6 @@
 @media (max-width: 768px) and (orientation:portrait) {
 
     .top-three-products {
-        display: inline;
     }
 
     .category-container {

@@ -141,7 +141,6 @@ namespace FiveWonders.WebUI.Controllers
                 string strSelectedSubs = selectedCategories != null ? String.Join(",", selectedCategories) : "";
                 string strSelectedLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
 
-                // TODO Update this for when custom lists get updated
                 bool shouldUpdateBaskets = (target.mPrice != p.Product.mPrice
                                            || target.mSizeChart != p.Product.mSizeChart
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable

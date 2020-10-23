@@ -20,8 +20,9 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Category> categoryContext;
         IRepository<SubCategory> subcategoryContext;
         IRepository<ServicePage> servicePageContext;
+        IRepository<SocialMedia> socialMediaContext;
 
-        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository, IRepository<ServicePage> servicePageRepository)
+        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository, IRepository<ServicePage> servicePageRepository, IRepository<SocialMedia> socialMediaRepository)
         {
             InstagramService = IGService;
             homeContext = homeRepository;
@@ -29,6 +30,7 @@ namespace FiveWonders.WebUI.Controllers
             categoryContext = categoryRepository;
             subcategoryContext = subcategoryRepository;
             servicePageContext = servicePageRepository;
+            socialMediaContext = socialMediaRepository;
         }
 
         public ActionResult Index()
@@ -117,17 +119,7 @@ namespace FiveWonders.WebUI.Controllers
 
         public ActionResult Contact()
         {
-            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault()
-                ?? new ServicePage();
-
-            HomePage homePageData = homeContext.GetCollection().FirstOrDefault() ?? new HomePage();
-
-            ServicePageViewModel viewModel = new ServicePageViewModel()
-            {
-                servicePageData = servicePageData,
-                servicesMessage = new ServicesMessage(),
-                logo = String.IsNullOrEmpty(homePageData.mHomePageLogoUrl) ? "" : homePageData.mHomePageLogoUrl
-            };
+            ServicePageViewModel viewModel = GetContactPageViewModel();
 
             return View(viewModel);
         }
@@ -173,6 +165,24 @@ namespace FiveWonders.WebUI.Controllers
 
                 return View(viewModel);
             }
+        }
+
+        private ServicePageViewModel GetContactPageViewModel()
+        {
+            ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault()
+                ?? new ServicePage();
+
+            HomePage homePageData = homeContext.GetCollection().FirstOrDefault() ?? new HomePage();
+
+            ServicePageViewModel viewModel = new ServicePageViewModel()
+            {
+                servicePageData = servicePageData,
+                servicesMessage = new ServicesMessage(),
+                logo = String.IsNullOrEmpty(homePageData.mHomePageLogoUrl) ? "" : homePageData.mHomePageLogoUrl,
+                communicativeSocialMedias = socialMediaContext.GetCollection().Where(sm => sm.isCommunicative).ToArray()
+            };
+
+            return viewModel;
         }
     }
 }

@@ -12,5 +12,11 @@ namespace FiveWonders.core.ViewModels
         public ServicePage servicePageData { get; set; }
         public ServicesMessage servicesMessage { get; set; }
         public string logo { get; set; }
+        public SocialMedia[] communicativeSocialMedias { get; set; }
+
+        public ServicePageViewModel()
+        {
+            communicativeSocialMedias = new SocialMedia[] { };
+        }
     }
 }

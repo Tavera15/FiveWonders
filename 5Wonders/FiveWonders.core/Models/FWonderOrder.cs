@@ -22,6 +22,8 @@ namespace FiveWonders.core.Models
 
         public bool isCompleted { get; set; }
 
+        public string mVerificationId { get; set; }
+
         public FWonderOrder()
         {
             mOrderItems = new List<OrderItem>();

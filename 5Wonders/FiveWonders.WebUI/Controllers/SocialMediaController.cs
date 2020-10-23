@@ -18,7 +18,7 @@ namespace FiveWonders.WebUI.Controllers
         }
 
         // GET: SocialMedia
-        public ActionResult Index(string Id)
+        public ActionResult _Index(string Id)
         {
             SocialMedia[] allMedias = socialMediaContext.GetCollection().ToArray();
 

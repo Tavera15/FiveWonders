@@ -9,10 +9,12 @@ namespace FiveWonders.core.Models
 {
     public class CustomOptionList : BaseEntity
     {
+        [Display(Name = "List Name")]
         [Required(ErrorMessage = "A unique name is required.")]
         public string mName { get; set; }
 
-        [Required(ErrorMessage = "Colors are required")]
+        [Display(Name = "List Items")]
+        [Required(ErrorMessage = "List Items are required")]
         public string options { get; set; }
     }
 }
