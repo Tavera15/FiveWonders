@@ -47,6 +47,14 @@
                 </div>
             </div>
 
+            @if(ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+            {
+                foreach(string errMsg in ViewBag.errMessages)
+                {
+                    <p class="text-danger">@errMsg</p>
+                }
+            }
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" class="btn btn-default" />

@@ -45,11 +45,14 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [Route(Name = "/{Id}{VerificationId}")]
         public ActionResult Details(string Id, string VerificationId)
         {
             try
             {
+                // TODO If Email is confirmed, make sure they have to login first
+
                 FWonderOrder order = ordersContext.Find(Id, true);
 
                 if(String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId)

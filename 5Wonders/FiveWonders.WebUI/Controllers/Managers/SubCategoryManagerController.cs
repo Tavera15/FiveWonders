@@ -1,8 +1,10 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -42,16 +44,26 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(!ModelState.IsValid || (sub.isEventOrTheme && imageFile == null))
-                {
-                    throw new Exception("Subcategory Model no good");
-                }
+                // Validate inputs
+                SubcategoryValidator subcategoryValidator = new SubcategoryValidator(subCategoryContext, imageFile);
+                ValidationResult validation = subcategoryValidator.Validate(sub);
 
+                if (!validation.IsValid)
+                {
+                    string errMsg = validation.Errors != null && validation.Errors.Count > 0
+                        ? String.Join(",", validation.Errors)
+                        : "A subcategory name or image is missing.";
+
+                    throw new Exception(errMsg);
+                }
+                
+                // Save image if subcategory is an event or theme
                 if(sub.isEventOrTheme && imageFile != null)
                 {
                     string newImgUrl;
                     imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, sub.mID, out newImgUrl);
 
+                    // Link img to sub
                     sub.mImageUrl = newImgUrl;
                 }
 
@@ -62,7 +74,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                _ = e;
+                ViewBag.errMessages = e.Message.Split(',');
                 return View(sub);
             }
         }
@@ -90,30 +102,42 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SubCategory subToEdit = subCategoryContext.Find(Id, true);
 
-                if (!ModelState.IsValid || 
-                    (sub.isEventOrTheme &&
-                        (imageFile == null && String.IsNullOrWhiteSpace(subToEdit.mImageUrl))))
-                {
-                    return View(sub);
-                }
-
-                if(!sub.isEventOrTheme && !String.IsNullOrWhiteSpace(subToEdit.mImageUrl))
-                {
-                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
-                    subToEdit.mImageUrl = "";
-                }
-                
+                // Temporarily Update the subcategory's properties. Will not save if inputs are not valid.
                 subToEdit.mSubCategoryName = sub.mSubCategoryName;
                 subToEdit.isEventOrTheme = sub.isEventOrTheme;
                 subToEdit.mImgShaderAmount = sub.mImgShaderAmount;
                 subToEdit.bannerTextColor = sub.bannerTextColor;
+                
+                // Validate inputs
+                SubcategoryValidator subcategoryValidator = new SubcategoryValidator(subCategoryContext, imageFile);
+                ValidationResult validation = subcategoryValidator.Validate(subToEdit);
 
-                if(imageFile != null)
+                if (!validation.IsValid)
+                {
+                    string[] errMsg = (validation.Errors != null && validation.Errors.Count > 0)
+                        ? validation.Errors.Select(x => x.ErrorMessage).ToArray()
+                        : new string[] { "A subcategory name or image is missing." };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(subToEdit);
+                }
+
+                // Delete img if sub is not event, and has a stored img
+                if (!subToEdit.isEventOrTheme && !String.IsNullOrWhiteSpace(subToEdit.mImageUrl))
                 {
                     imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
+                    subToEdit.mImageUrl = "";
+                }
 
+                // Save img if sub is now an event or theme, and if a new one is being imported
+                if (subToEdit.isEventOrTheme && imageFile != null)
+                {
+                    // Will not do anything if img url is empty
+                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
+                    
+                    // Store new img
                     string newImgUrl;
-                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, sub.mID, out newImgUrl);
+                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, Id, out newImgUrl);
                     subToEdit.mImageUrl = newImgUrl;
                 }
 
@@ -124,7 +148,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 _ = e;
-                return RedirectToAction("Edit", "SubCategoryManager", new { Id = Id});
+                return RedirectToAction("Edit", "SubCategoryManager", new { Id = Id });
             }
         }
 

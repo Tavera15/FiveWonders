@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +34,33 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CustomOptionList colorSet)
+        public ActionResult Create(CustomOptionList customList)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(colorSet);
+                // Validate inputs
+                CustomListValidator categoryValidator = new CustomListValidator(customListContext);
+                ValidationResult validation = categoryValidator.Validate(customList);
+
+                if (!ModelState.IsValid || !validation.IsValid)
+                {
+                    string errMsg = validation.Errors != null && validation.Errors.Count > 0
+                        ? String.Join(",", validation.Errors)
+                        : "A name or options list is missing.";
+
+                    throw new Exception(errMsg);
+                }
+
+                customListContext.Insert(customList);
+                customListContext.Commit();
+
+                return RedirectToAction("Index", "CustomListManager");
             }
-
-            customListContext.Insert(colorSet);
-            customListContext.Commit();
-
-            return RedirectToAction("Index", "CustomListManager");
+            catch(Exception e)
+            {
+                ViewBag.errMessages = e.Message.Split(',');
+                return View(customList);
+            }
         }
 
         public ActionResult Edit(string Id)
@@ -62,19 +79,28 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string Id, CustomOptionList updatedColor)
+        public ActionResult Edit(string Id, CustomOptionList updatedList)
         {
             try
             {
-                if (!ModelState.IsValid)
+                CustomOptionList customListToEdit = customListContext.Find(Id, true);
+
+                customListToEdit.mName = updatedList.mName;
+                customListToEdit.options = updatedList.options;
+
+                // Validate inputs
+                CustomListValidator categoryValidator = new CustomListValidator(customListContext);
+                ValidationResult validation = categoryValidator.Validate(customListToEdit);
+
+                if (!validation.IsValid)
                 {
-                    return View(updatedColor);
+                    string[] errMsg = (validation.Errors != null && validation.Errors.Count > 0)
+                        ? validation.Errors.Select(x => x.ErrorMessage).ToArray()
+                        : new string[] { "A name or options list is missing." };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(customListToEdit);
                 }
-
-                CustomOptionList colorSet = customListContext.Find(Id, true);
-
-                colorSet.mName = updatedColor.mName;
-                colorSet.options = updatedColor.options;
 
                 customListContext.Commit();
 

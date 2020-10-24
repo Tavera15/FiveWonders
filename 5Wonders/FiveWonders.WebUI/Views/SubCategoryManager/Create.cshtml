@@ -56,6 +56,14 @@
                 </div>
             </div>
 
+            @if(ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+            {
+                foreach(string errMsg in ViewBag.errMessages)
+                {
+                    <p class="text-danger">@errMsg</p>
+                }
+            }
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-default" />
@@ -69,39 +77,44 @@
     </div>
 </div>
 
+@section Pagecss{
+    <link href="~/Content/5WondersCss/ProductList.css"
+          rel="stylesheet" type="text/css" />
+}
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-<script>
-    function setColor() {
-        var color = document.getElementById('color').value;
-        var opacity = document.getElementById('opacity').value;
-        var categoryName = document.getElementById('help').value;
-        var img = document.getElementById('file').files[0];
-        var isEventOrTheme = document.getElementById('isEventInput').checked;
-        var eventDivs = document.getElementsByClassName('sub-cat-input-conts');
+    <script>
+        function setColor() {
+            var color = document.getElementById('color').value;
+            var opacity = document.getElementById('opacity').value;
+            var categoryName = document.getElementById('help').value;
+            var img = document.getElementById('file').files[0];
+            var isEventOrTheme = document.getElementById('isEventInput').checked;
+            var eventDivs = document.getElementsByClassName('sub-cat-input-conts');
 
-        for (var div of eventDivs) {
-            div.style.display = isEventOrTheme ? "initial" : "none";
-        }
-
-        if (isEventOrTheme && img) {
-            var reader = new FileReader();
-            reader.readAsDataURL(img);
-
-            reader.onloadend = function () {
-                document.getElementById('bannerImg-input').style.backgroundImage = 'url("' + reader.result + '")';
+            for (var div of eventDivs) {
+                div.style.display = isEventOrTheme ? "initial" : "none";
             }
-        }
-        else if (!isEventOrTheme) {
-            document.getElementById('bannerImg-input').style.backgroundImage = 'url()';
+
+            if (isEventOrTheme && img) {
+                var reader = new FileReader();
+                reader.readAsDataURL(img);
+
+                reader.onloadend = function () {
+                    document.getElementById('bannerImg-input').style.backgroundImage = 'url("' + reader.result + '")';
+                }
+            }
+            else if (!isEventOrTheme) {
+                document.getElementById('bannerImg-input').style.backgroundImage = 'url()';
+            }
+
+            document.getElementById('bannerImg-cover-input').style.backgroundColor = "rgba(0,0,0," + opacity + ")";
+            document.getElementById('category-title-input').innerText = categoryName;
+            document.getElementById('category-title-input').style.color = color;
         }
 
-        document.getElementById('bannerImg-cover-input').style.backgroundColor = "rgba(0,0,0," + opacity + ")";
-        document.getElementById('category-title-input').innerText = categoryName;
-        document.getElementById('category-title-input').style.color = color;
-    }
-
-    setColor();
-</script>
+        setColor();
+    </script>
 }

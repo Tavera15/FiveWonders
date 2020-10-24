@@ -28,7 +28,7 @@
     }
 </style>
 
-<div class="col-lg-12" style="margin-top: 4vh;" id="custom-list-page">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 4vh;" id="custom-list-page">
     <div class="col-lg-4" style="border: solid 1px black;">
         <h3 style="text-align: center;">Items in list</h3>
         <div class="form-group col-lg-12" style="margin: 0 auto; text-align:center;">
@@ -41,7 +41,6 @@
                     <div class="color-set-input col-lg-12">
                         <ul id="set-of-colors"></ul>
                     </div>
-                    @Html.ValidationMessageFor(model => model.options, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -53,20 +52,30 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
             <div class="form-group col-lg-12">
                 <div class="col-md-10">
                     <h3>List Name</h3>
                     @Html.EditorFor(model => model.mName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.mName, "", new { @class = "text-danger" })
                 </div>
             </div>
 
-            <div class="col-lg-12" style="margin: 4vh 0;">
+
+            @if(ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    @foreach(string errMsg in ViewBag.errMessages)
+                    {
+                        <p class="text-danger">@errMsg</p>
+                    }
+                </div>
+            }
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 4vh 0;">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
 
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 @Html.ActionLink("Back to List", "Index")
             </div>
         </div>

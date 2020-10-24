@@ -24,6 +24,8 @@ namespace FiveWonders.Services
 
         public void DeleteImage(EFolderName folder, string currentImageURL, HttpServerUtilityBase Server)
         {
+            if(String.IsNullOrWhiteSpace(currentImageURL)) { return; }
+
             string folderName = GetFolderName(folder);
             string path = Server.MapPath("//Content//" + folderName + "//") + currentImageURL;
 

@@ -41,7 +41,6 @@
                     <div class="color-set-input col-lg-12">
                         <ul id="set-of-colors"></ul>
                     </div>
-                    @Html.ValidationMessageFor(model => model.options, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -58,9 +57,18 @@
                 <div class="col-md-10">
                     <h3>List Name</h3>
                     @Html.EditorFor(model => model.mName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.mName, "", new { @class = "text-danger" })
                 </div>
             </div>
+
+            @if(ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+            {
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    @foreach(string errMsg in ViewBag.errMessages)
+                    {
+                        <p class="text-danger">@errMsg</p>
+                    }
+                </div>
+            }
             
             <div class="col-lg-12" style="margin: 4vh 0;">
                 <input type="submit" value="Create" class="btn btn-default" />

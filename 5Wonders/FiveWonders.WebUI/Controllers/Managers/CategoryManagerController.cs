@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FluentValidation.Results;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -43,16 +44,27 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                // Todo Shouln't create a new category with same name
-                if (!ModelState.IsValid || imageFile == null)
+                // Validate inputs
+                CategoryValidator categoryValidator = new CategoryValidator(categoryContext, imageFile);
+                ValidationResult validation = categoryValidator.Validate(cat);
+
+                if(!validation.IsValid)
                 {
-                    throw new Exception("Category Create model no good");
+                    string errMsg = validation.Errors != null && validation.Errors.Count > 0
+                        ? String.Join(",", validation.Errors)
+                        : "A category name or image is missing.";
+
+                    throw new Exception(errMsg);
                 }
 
-                // Save img, and store its name to category obj.
-                string newImgUrl;
-                imageStorageService.AddImage(EFolderName.Category, Server, imageFile, cat.mID, out newImgUrl);
-                cat.mImgUrL = newImgUrl;
+                // Save Img. This should always happen.
+                if (imageFile != null)
+                {
+                    // Save img, and store its name to category obj.
+                    string newImgUrl;
+                    imageStorageService.AddImage(EFolderName.Category, Server, imageFile, cat.mID, out newImgUrl);
+                    cat.mImgUrL = newImgUrl;
+                }
 
                 // Save to memory
                 categoryContext.Insert(cat);
@@ -62,7 +74,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                _ = e;
+                ViewBag.errMessages = e.Message.Split(',');
                 return View(cat);
             }
         }
@@ -84,30 +96,44 @@ namespace FiveWonders.WebUI.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Category c, string Id, HttpPostedFileBase imageFile)
+        public ActionResult Edit(Category updatedCat, string Id, HttpPostedFileBase imageFile)
         {
             try
             {
+                // Find category to edit
                 Category categoryToEdit = categoryContext.Find(Id, true);
 
-                if (!ModelState.IsValid || (String.IsNullOrWhiteSpace(categoryToEdit.mImgUrL) && imageFile == null))
+                // Temporarily Update the category's properties. Will not save if inputs are not valid.
+                categoryToEdit.mCategoryName = updatedCat.mCategoryName;
+                categoryToEdit.mImgShaderAmount = updatedCat.mImgShaderAmount;
+                categoryToEdit.bannerTextColor = updatedCat.bannerTextColor;
+
+                // Validate inputs
+                CategoryValidator categoryValidator = new CategoryValidator(categoryContext, imageFile);
+                ValidationResult validation = categoryValidator.Validate(categoryToEdit);
+
+                if (!validation.IsValid)
                 {
-                    return View(c);
+                    string[] errMsg = (validation.Errors != null && validation.Errors.Count > 0)
+                        ? validation.Errors.Select(x => x.ErrorMessage).ToArray()
+                        : new string[] { "A category name or image is missing." };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(categoryToEdit);
                 }
 
-                if(imageFile != null)
+                // Save any new image that was selected
+                if (imageFile != null)
                 {
                     string newImgUrl;
                     imageStorageService.DeleteImage(EFolderName.Category, categoryToEdit.mImgUrL, Server);
                     imageStorageService.AddImage(EFolderName.Category, Server, imageFile, Id, out newImgUrl);
 
+                    // Save Url
                     categoryToEdit.mImgUrL = newImgUrl;
                 }
-
-                categoryToEdit.mCategoryName = c.mCategoryName;
-                categoryToEdit.mImgShaderAmount = c.mImgShaderAmount;
-                categoryToEdit.bannerTextColor = c.bannerTextColor;
                 
+                // Save
                 categoryContext.Commit();
 
                 return RedirectToAction("Index", "CategoryManager");
