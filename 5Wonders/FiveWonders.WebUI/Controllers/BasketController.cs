@@ -3,6 +3,7 @@ using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using FiveWonders.WebUI.Models;
+using FluentValidation.Results;
 using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
 using PayPal.Api;
@@ -84,13 +85,6 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(!ModelState.IsValid || viewModel.basketItem.mQuantity <= 0)
-                {
-                    BasketItemViewModel errorViewModel = GetSingleBasketItemViewModel(Id);
-                    errorViewModel.basketItem = viewModel.basketItem;
-                    return View(errorViewModel);
-                }
-
                 BasketItem oldBasketItem = basketItemContext.Find(Id, true);
 
                 BasketItem newBasketItem = new BasketItem()
@@ -106,6 +100,21 @@ namespace FiveWonders.WebUI.Controllers
                     mProductID = oldBasketItem.mProductID,
                     basketID = oldBasketItem.basketID,
                 };
+
+                BasketItemValidator basketItemValidator = new BasketItemValidator(productContext, sizeChartContext, customListContext, viewModel.selectedCustomListOptions);
+                ValidationResult validation = basketItemValidator.Validate(newBasketItem);
+
+                if(!ModelState.IsValid || !validation.IsValid)
+                {
+                    BasketItemViewModel errorViewModel = GetSingleBasketItemViewModel(Id);
+                    errorViewModel.basketItem = viewModel.basketItem;
+                    string[] errMsg = (validation.Errors != null && validation.Errors.Count > 0)
+                        ? validation.Errors.Select(x => x.ErrorMessage).ToArray()
+                        : new string[] { "" };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(errorViewModel);
+                }
 
                 basketService.UpdateBasketItem(HttpContext, newBasketItem);
                 return RedirectToAction("Index", "Basket");
@@ -143,7 +152,9 @@ namespace FiveWonders.WebUI.Controllers
                 SizeChart sizeChart = null;
 
                 if (product.mSizeChart != "0")
+                {
                     sizeChart = sizeChartContext.Find(product.mSizeChart, true);
+                }
 
                 // Get custom lists that may be linked to product
                 Dictionary<string, List<string>> productCustomLists = new Dictionary<string, List<string>>();

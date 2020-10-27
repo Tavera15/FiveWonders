@@ -1,6 +1,7 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +41,18 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                if(!ModelState.IsValid || newIcon == null)
+                newMedia.mUrl = newMedia.mUrl.Trim();
+
+                SocialMediaValidator socialMediaValidator = new SocialMediaValidator(socialMediaContext, newIcon);
+                ValidationResult validation = socialMediaValidator.Validate(newMedia);
+
+                if(!validation.IsValid)
                 {
-                    throw new Exception("Social media Create model no good");
+                    string errMsg = validation.Errors != null && validation.Errors.Count > 0
+                        ? String.Join(",", validation.Errors)
+                        : "A url or a 64x64 pixels icon is missing.";
+
+                    throw new Exception(errMsg);
                 }
 
                 string newIconUrl;
@@ -56,7 +66,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
             }
             catch(Exception e)
             {
-                _ = e;
+                ViewBag.errMessages = e.Message.Split(',');
                 return View(newMedia);
             }
         }
@@ -82,24 +92,32 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                SocialMedia sm = socialMediaContext.Find(Id, true);
+                SocialMedia mediaToEdit = socialMediaContext.Find(Id, true);
 
-                if(!ModelState.IsValid || (String.IsNullOrWhiteSpace(sm.m64x64Icon) && newIcon == null))
+                mediaToEdit.mUrl = updatedMedia.mUrl.Trim();
+                mediaToEdit.isCommunicative = updatedMedia.isCommunicative;
+
+                SocialMediaValidator socialMediaValidator = new SocialMediaValidator(socialMediaContext, newIcon);
+                ValidationResult validation = socialMediaValidator.Validate(mediaToEdit);
+
+                if (!validation.IsValid)
                 {
-                    return View(updatedMedia);
+                    string[] errMsg = validation.Errors != null && validation.Errors.Count > 0
+                        ? validation.Errors.Select(err => err.ErrorMessage).ToArray()
+                        : new string[] { "A url or a 64x64 pixels icon is missing." };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(mediaToEdit);
                 }
 
                 if(newIcon != null)
                 {
-                    imageStorageService.DeleteImage(EFolderName.Icons, sm.m64x64Icon, Server);
+                    imageStorageService.DeleteImage(EFolderName.Icons, mediaToEdit.m64x64Icon, Server);
 
                     string newIconUrl;
                     imageStorageService.AddImage(EFolderName.Icons, Server, newIcon, Id, out newIconUrl);
-                    sm.m64x64Icon = newIconUrl;
+                    mediaToEdit.m64x64Icon = newIconUrl;
                 }
-
-                sm.mUrl = updatedMedia.mUrl;
-                sm.isCommunicative = updatedMedia.isCommunicative;
 
                 socialMediaContext.Commit();
 

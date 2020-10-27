@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FluentValidation.Results;
 
 namespace FiveWonders.WebUI.Controllers
 {
@@ -14,13 +15,17 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<SizeChart> sizeChartContext;
         IRepository<Product> productContext;
+        IRepository<BasketItem> basketItemContext;
         IImageStorageService imageStorageService;
+        IBasketServices basketServices;
 
-        public SizeChartManagerController(IRepository<SizeChart> sizeChartRepository, IRepository<Product> productRepository, IImageStorageService imageStorageService)
+        public SizeChartManagerController(IRepository<SizeChart> sizeChartRepository, IRepository<Product> productRepository, IRepository<BasketItem> basketItemRepository, IImageStorageService imageStorageService, IBasketServices basketServices)
         {
             sizeChartContext = sizeChartRepository;
             productContext = productRepository;
+            basketItemContext = basketItemRepository;
             this.imageStorageService = imageStorageService;
+            this.basketServices = basketServices;
         }
 
         // GET: SizeChartManager
@@ -39,21 +44,42 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Create(SizeChart chart, string[] selectedSizes, HttpPostedFileBase imageFile)
         {
-            if(!ModelState.IsValid || imageFile == null)
+            try
             {
+                // Format chart sizes
+                chart.mSizesToDisplay = selectedSizes != null ? String.Join(",", selectedSizes) : "";
+                
+                // Validate inputs
+                SizeChartValidator sizeChartValidator = new SizeChartValidator(sizeChartContext, imageFile);
+                ValidationResult validation = sizeChartValidator.Validate(chart);
+
+                if (!validation.IsValid)
+                {
+                    string errMsg = validation.Errors != null && validation.Errors.Count > 0
+                            ? String.Join(",", validation.Errors)
+                            : "A category name or image is missing.";
+
+                    throw new Exception(errMsg);
+                }
+
+                // Save image
+                if(imageFile != null)
+                {
+                    string newImageURL;
+                    imageStorageService.AddImage(EFolderName.SizeCharts, Server, imageFile, chart.mID, out newImageURL);
+                    chart.mImageChartUrl = newImageURL;
+                }
+            
+                sizeChartContext.Insert(chart);
+                sizeChartContext.Commit();
+
+                return RedirectToAction("Index", "SizeChartManager");
+            }
+            catch(Exception e)
+            {
+                ViewBag.errMessages = e.Message.Split(',');
                 return View(chart);
             }
-
-            string newImageURL;
-            imageStorageService.AddImage(EFolderName.SizeCharts, Server, imageFile, chart.mID, out newImageURL);
-
-            chart.mImageChartUrl = newImageURL;
-            chart.mSizesToDisplay = String.Join(",", selectedSizes);
-
-            sizeChartContext.Insert(chart);
-            sizeChartContext.Commit();
-
-            return RedirectToAction("Index", "SizeChartManager");
         }
 
         public ActionResult Edit(string Id)
@@ -80,13 +106,27 @@ namespace FiveWonders.WebUI.Controllers
             {
                 SizeChart chartToEdit = sizeChartContext.Find(Id, true);
 
-                if(!ModelState.IsValid || newSelectedSizes == null)
+                // Save copy of old size chart options
+                string[] oldSizes = chartToEdit.mSizesToDisplay.Split(',');
+
+                // Temporarily update Size Chart Object
+                chartToEdit.mChartName = newChart.mChartName;
+                chartToEdit.mSizesToDisplay = newSelectedSizes != null ? String.Join(",", newSelectedSizes) : "";
+
+                // Validate inputs
+                SizeChartValidator sizeChartValidator = new SizeChartValidator(sizeChartContext, newImage);
+                ValidationResult validation = sizeChartValidator.Validate(chartToEdit);
+
+                if(!validation.IsValid)
                 {
-                    throw new Exception("Size Chart Edit Model no good");
+                    string[] errMsg = (validation.Errors != null && validation.Errors.Count > 0)
+                        ? validation.Errors.Select(x => x.ErrorMessage).ToArray()
+                        : new string[] { "A name, size options, or image is missing." };
+
+                    ViewBag.errMessages = errMsg;
+                    return View(chartToEdit);
                 }
 
-                chartToEdit.mChartName = newChart.mChartName;
-                chartToEdit.mSizesToDisplay = String.Join(",", newSelectedSizes);
 
                 if(newImage != null)
                 {
@@ -98,6 +138,32 @@ namespace FiveWonders.WebUI.Controllers
                 }
 
                 sizeChartContext.Commit();
+
+                // Update basket items if necessary
+                bool bUpdateBasketItems = !oldSizes
+                    .All(oldSize => newSelectedSizes.Any(size => size == oldSize));
+
+                if(bUpdateBasketItems)
+                {
+                    // Grab product ids that contain the size chart id
+                    string[] productsWithSizeChart = productContext.GetCollection()
+                        .Where(product => product.mSizeChart == Id).Select(p => p.mID).ToArray();
+
+                    // Grab basket items that contains any product ids selected from above
+                    BasketItem[] basketItemsWithSizeChart = basketItemContext.GetCollection()
+                        .Where(basketItem => productsWithSizeChart.Contains(basketItem.mProductID))
+                        .ToArray();
+
+                    if(basketItemsWithSizeChart != null && basketItemsWithSizeChart.Length > 0)
+                    {
+                        // Grab basket items whose 'size' value does not exist anymore
+                        string[] basketItemsToDelete = basketItemsWithSizeChart
+                            .Where(basketItem => newSelectedSizes.All(size => size != basketItem.mSize))
+                            .Select(b => b.mID).ToArray();
+
+                        basketServices.RemoveMultipleBasketItems(basketItemsToDelete);
+                    }
+                }
 
                 return RedirectToAction("Index", "SizeChartManager");
             }

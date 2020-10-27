@@ -164,9 +164,12 @@ namespace FiveWonders.WebUI.Controllers
                 target.mPrice = p.Product.mPrice;
                 target.mCategory = p.Product.mCategory;
                 target.mSizeChart = p.Product.mSizeChart;
-                target.isTextCustomizable = p.Product.isTextCustomizable;
-                target.mCustomText = p.Product.mCustomText;
                 target.isNumberCustomizable = p.Product.isNumberCustomizable;
+                target.isTextCustomizable = p.Product.isTextCustomizable;
+                target.isDateCustomizable = p.Product.isDateCustomizable;
+                target.isTextCustomizable = p.Product.isTextCustomizable;
+                target.isTimeCustomizable = p.Product.isTimeCustomizable;
+                target.mCustomText = p.Product.mCustomText;
                 target.mHtmlDesc = p.Product.mHtmlDesc;
                 target.mSubCategories = strSelectedSubs;
                 target.mCustomLists = strSelectedLists;

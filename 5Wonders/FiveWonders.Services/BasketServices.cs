@@ -346,5 +346,21 @@ namespace FiveWonders.Services
                 _ = e;
             }
         }
+
+        public void RemoveMultipleBasketItems(string[] basketItemIds)
+        {
+            if(basketItemIds == null || basketItemIds.Length <= 0) { return; }
+ 
+            foreach(string basketItemId in basketItemIds)
+            {
+                BasketItem basketItemToDelete = basketItemsContext.Find(basketItemId);
+
+                if(basketItemToDelete == null) { continue; }
+
+                basketItemsContext.Delete(basketItemToDelete);
+            }
+
+            basketItemsContext.Commit();
+        }
     }
 }
