@@ -29,11 +29,13 @@ namespace FiveWonders.WebUI.Controllers
                 Customer customer = customerContext.GetCollection().FirstOrDefault(x => x.mEmail == customerEmail);
 
                 if (customer == null)
+                {
                     throw new Exception("Orders: Customer not found");
+                }
 
                 // Get customers past completed orders - Sort them by date (Newest are at top) 
                 FWonderOrder[] allCustomerOrders = ordersContext.GetCollection()
-                    .Where(x => x.isCompleted && x.mCustomerEmail == customer.mEmail)
+                    .Where(x => x.isCompleted && x.mCustomerId == customer.mID)
                     .OrderByDescending(y => y.mTimeEntered).ToArray();
 
                 return View(allCustomerOrders);

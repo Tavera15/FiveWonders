@@ -2,6 +2,7 @@
 using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 using PayPal.Api;
 using System;
@@ -72,6 +73,22 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
+                // Get user id, if any, from the customer during checkout
+                string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+
+                // Delete any cancelled or incomplete orders from the customer 
+                if(!String.IsNullOrWhiteSpace(possibleCustomerUserId))
+                {
+                    Customer customer = customerContext.GetCollection()
+                        .FirstOrDefault(c => c.mUserID == possibleCustomerUserId);
+
+                    if(customer != null)
+                    {
+                        ClearExistingCustomerOrders(customer.mID, order.mID);
+                        order.mCustomerId = customer.mID;
+                    }
+                }
+
                 List<BasketItemViewModel> allBasketItems = basketService.GetBasketItems(HttpContext);
 
                 if (!ModelState.IsValid || allBasketItems.Count <= 0)
@@ -205,6 +222,8 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                System.Diagnostics.Debug.WriteLine(e.InnerException.Message);
                 _ = e;
                 return RedirectToAction("Index", "Checkout");
             }
@@ -319,6 +338,49 @@ namespace FiveWonders.WebUI.Controllers
 
             throw new Exception("stop");
 
+        }
+
+        private void ClearExistingCustomerOrders(string customerId, string orderId)
+        {
+            if(!String.IsNullOrWhiteSpace(customerId))
+            {
+                FWonderOrder[] ordersToDelete = orderContext.GetCollection()
+                    .Where(fwo => !fwo.isCompleted && fwo.mCustomerId == customerId && fwo.mID != orderId)
+                    .ToArray();
+
+                if(ordersToDelete.Length > 0)
+                {
+                    foreach(FWonderOrder order in ordersToDelete)
+                    {
+                        string tempOrderId = order.mID;
+                        FWonderOrder orderToDelete = orderContext.Find(tempOrderId);
+                        orderToDelete.mOrderItems.Clear();
+
+                        if(orderToDelete == null) { continue; }
+
+                        orderContext.Delete(orderToDelete);
+                        orderContext.Commit();
+
+                        OrderItem[] orderItemsToDelete = orderItemContext.GetCollection()
+                            .Where(item => item.mBaseOrderID == tempOrderId).ToArray();
+
+                        if(orderItemsToDelete.Length > 0)
+                        {
+                            foreach(OrderItem item in orderItemsToDelete)
+                            {
+                                OrderItem orderItemToDelete = orderItemContext.Find(item.mID);
+
+                                if(orderItemToDelete == null) { continue; }
+
+                                orderItemContext.Delete(orderItemToDelete);
+                            }
+
+                            orderItemContext.Commit();
+                        }
+                    }
+
+                }
+            }
         }
 
         private APIContext GetApiContext()

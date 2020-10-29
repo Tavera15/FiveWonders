@@ -35,7 +35,7 @@
         @if (Model.homePageData.mEnableWelcomeImg)
         {
             <div class="@greetingBoxClassName col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
-                <div class="hp-greeting" style="background-image:url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl))">
+                <div class="hp-greeting" style="background-image:url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl));">
                     <div class="home-page-greeting-shade-cover" style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); ">
                         @Html.Raw(Model.homePageData.mHomePageGreeting)
                         <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;" href="@Model.welcomePageUrl">View Products</a></p>

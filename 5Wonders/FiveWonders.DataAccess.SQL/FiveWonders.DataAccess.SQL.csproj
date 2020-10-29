@@ -61,6 +61,10 @@
     <Compile Include="Migrations\202010230719516_socialMediaIsCommunicative.Designer.cs">
       <DependentUpon>202010230719516_socialMediaIsCommunicative.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202010290222123_ordersContainCustomerId.cs" />
+    <Compile Include="Migrations\202010290222123_ordersContainCustomerId.Designer.cs">
+      <DependentUpon>202010290222123_ordersContainCustomerId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -84,6 +88,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010230719516_socialMediaIsCommunicative.resx">
       <DependentUpon>202010230719516_socialMediaIsCommunicative.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202010290222123_ordersContainCustomerId.resx">
+      <DependentUpon>202010290222123_ordersContainCustomerId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

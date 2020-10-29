@@ -4,6 +4,7 @@
     padding: 0 2vw;
     min-width: 33rem;
     max-width: 100%;
+
 }
 
 .fw-card-a:hover {
@@ -125,7 +126,7 @@
     .fw-card{
         border: 1.5px solid black;
     }
-    
+     
 }
 
 
@@ -134,5 +135,21 @@
         min-width: unset;
         max-width: unset;
         width: calc(100% / 3);
+    }
+}
+
+@media (max-width: 767px) {
+    .fw-card-container {
+        min-width: unset;
+        max-width: unset;
+        width: calc(100%/2);
+    }
+}
+
+@media(max-width: 480px) {
+    .fw-card-container {
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
     }
 }

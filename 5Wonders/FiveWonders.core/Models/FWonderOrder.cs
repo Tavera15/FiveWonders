@@ -24,10 +24,13 @@ namespace FiveWonders.core.Models
 
         public string mVerificationId { get; set; }
 
+        public string mCustomerId { get; set; }
+
         public FWonderOrder()
         {
             mOrderItems = new List<OrderItem>();
             isCompleted = false;
+            mCustomerId = "";
         }
     }
 }

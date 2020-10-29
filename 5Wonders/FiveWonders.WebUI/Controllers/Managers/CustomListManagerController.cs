@@ -73,8 +73,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                CustomOptionList colorSet = customListContext.Find(Id, true);
-                return View(colorSet);
+                CustomOptionList customList = customListContext.Find(Id, true);
+                return View(customList);
             }
             catch (Exception e)
             {
@@ -136,11 +136,11 @@ namespace FiveWonders.WebUI.Controllers.Managers
                         foreach(BasketItem item in basketItemsWithCustomListId)
                         {
                             // Deserialize its Custom List Opts...
-                            Dictionary<string, string> deserializedListOpts 
-                                = JsonConvert.DeserializeObject<Dictionary<string, string>>(item.mCustomListOptions);
+                            Dictionary<string, string> deserializedListOpts =
+                                JsonConvert.DeserializeObject<Dictionary<string, string>>(item.mCustomListOptions);
 
                             // and store the basket items that contain values that don't exist anymore
-                            if (!updatedList.options.Contains(deserializedListOpts[Id]))
+                            if (!updatedList.options.Split(',').Any(opt => opt == deserializedListOpts[Id]))
                             {
                                 basketItemsToDelete.Add(item.mID);
                             }
@@ -151,12 +151,10 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     }
                 }
 
-
                 return RedirectToAction("Index", "CustomListManager");
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 _ = e;
                 return RedirectToAction("Edit", "CustomListManager", new { Id = Id });
             }
