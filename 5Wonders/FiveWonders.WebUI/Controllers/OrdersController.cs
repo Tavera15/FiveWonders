@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,9 +58,33 @@ namespace FiveWonders.WebUI.Controllers
 
                 FWonderOrder order = ordersContext.Find(Id, true);
 
-                if(String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId)
+                if (!order.isCompleted || String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId)
                 {
-                    throw new Exception("Verification Id does not match");
+                    throw new Exception("Order not accessible.");
+                }
+
+                string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+
+                // Order is linked with customer
+                // Check that the right customer is logged in.
+                if (!String.IsNullOrWhiteSpace(order.mCustomerId))
+                {
+                    Customer customer = customerContext.GetCollection()
+                        .FirstOrDefault(c => c.mUserID == possibleCustomerUserId);
+
+                    if (customer == null || order.mCustomerId != customer.mID)
+                    {
+                        throw new Exception("Order not accessible.");
+                    }
+                }
+                else
+                {
+                    // Order is not linked with customer
+                    // Check that no customer is logged in.
+                    if(!String.IsNullOrWhiteSpace(possibleCustomerUserId))
+                    {
+                        throw new Exception("Order not accessible.");
+                    }
                 }
 
                 return View(order);
@@ -67,7 +92,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 _ = e;
-                return RedirectToAction("Index", "Orders");
+                return HttpNotFound();
             }
         }
     }

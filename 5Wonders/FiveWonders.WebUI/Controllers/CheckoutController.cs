@@ -57,7 +57,6 @@ namespace FiveWonders.WebUI.Controllers
                     }
                 }
 
-                ViewBag.basketItems = allItems;
                 return View(order);
             }
             catch (Exception e)
@@ -93,6 +92,8 @@ namespace FiveWonders.WebUI.Controllers
 
                 if (!ModelState.IsValid || allBasketItems.Count <= 0)
                     throw new Exception("Order Model State is not valid");
+
+                order.mCustomerEmail = order.mCustomerEmail.Trim();
 
                 // Create variables that will be inserted into PayPal Payment object
                 ItemList paypalItems = new ItemList();
@@ -223,18 +224,25 @@ namespace FiveWonders.WebUI.Controllers
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
-                System.Diagnostics.Debug.WriteLine(e.InnerException.Message);
                 _ = e;
-                return RedirectToAction("Index", "Checkout");
+                return View(order);
             }
         }
 
         [Route("Confirm/{paymentId}/{payerId}/{orderId}")]
         public ActionResult Confirm(string paymentId, string payerId, string orderId)
         {
+            FWonderOrder order = null;
+
             try
             {
-                FWonderOrder order = orderContext.Find(orderId, true);
+                order = orderContext.Find(orderId, true);
+
+                if(order.isCompleted)
+                {
+                    throw new Exception("Order already completed.");
+                }
+                
                 APIContext apiContext = GetApiContext();
 
                 PaymentExecution paymentExecution = new PaymentExecution()
@@ -249,36 +257,44 @@ namespace FiveWonders.WebUI.Controllers
 
                 Payment executedPayment = payment.Execute(apiContext, paymentExecution);
 
-                basketService.ClearBasket(HttpContext);
                 order.isCompleted = true;
                 order.mVerificationId = Guid.NewGuid().ToString();
-
                 orderContext.Commit();
 
-                string adminUrl = "https://localhost:44372/OrdersManager/Details/?Id=" + order.mID;
-                string customerUrl = "https://localhost:44372/Orders/Details/?Id=" + order.mID + "&VerificationId=" + order.mVerificationId;
-
-                System.Diagnostics.Debug.WriteLine("Admin: " + adminUrl);
-                System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
-
-                /*
-                // TODO Send Confirmation to admin and customer...?
-                MailMessage adminMessage = GetFilledMailedMessage(order.mID, "5Wonders Order Confirmation" + order.mID, adminUrl);
-                MailMessage customerMessage = GetFilledMailedMessage(order.mID, "5Wonders Order Confirmation" + order.mID, customerUrl);
-
-                //throw new Exception("stop");
-
-                SmtpClient smtp = new SmtpClient();
-                smtp.Send(message);
-                 */
-
-                return RedirectToAction("ThankYou", "Checkout");
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return RedirectToAction("Cancel", "Checkout", new { orderId = orderId });
             }
+
+            try
+            {
+                basketService.ClearBasket(HttpContext);
+                string adminUrl = "https://localhost:44372/OrdersManager/Details/?Id=" + order.mID;
+                string customerUrl = "https://localhost:44372/Orders/Details/?Id=" + order.mID + "&VerificationId=" + order.mVerificationId;
+
+                System.Diagnostics.Debug.WriteLine("Admin: " + adminUrl);
+                System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
+
+                // TODO Send Confirmation to admin and customer...?
+                MailMessage adminMessage = GetFilledMailedMessage(order.mID, adminUrl, "");
+                MailMessage customerMessage = GetFilledMailedMessage(order.mID, customerUrl, order.mCustomerEmail);
+
+                /*
+                //throw new Exception("stop");
+
+                SmtpClient smtp = new SmtpClient();
+                smtp.Send(adminMessage);
+                smtp.Send(customerMessage);
+                 */
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+            
+            return RedirectToAction("ThankYou", "Checkout");
         }
 
         public ActionResult ThankYou()
@@ -325,19 +341,19 @@ namespace FiveWonders.WebUI.Controllers
             return View();
         }
 
-        private MailMessage GetFilledMailedMessage(string orderId, string subject, string orderUrl)
+        private MailMessage GetFilledMailedMessage(string orderId, string orderUrl, string sendTo)
         {
             // On five wonder order: attach another separate Id in order to validate anonymous people looking at their order
             
             MailMessage message = new MailMessage();
-            message.To.Add("");
-            message.From = new MailAddress("");
-            message.Subject = subject + ": " + orderId;
+            message.Subject = "5 Wonders Order Confirmation: " + orderId;
             message.IsBodyHtml = false;
             message.Body = "View order details: " + orderUrl;
 
-            throw new Exception("stop");
+            message.To.Add(sendTo);
+            message.From = new MailAddress("");
 
+            return message;
         }
 
         private void ClearExistingCustomerOrders(string customerId, string orderId)

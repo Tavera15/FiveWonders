@@ -95,6 +95,10 @@
     </table>
 }
 
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@if(User.Identity.IsAuthenticated)
+{
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+

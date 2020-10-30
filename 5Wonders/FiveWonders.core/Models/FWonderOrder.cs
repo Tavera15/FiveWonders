@@ -11,12 +11,12 @@ namespace FiveWonders.core.Models
     {
         public virtual ICollection<OrderItem> mOrderItems { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "A name is required.")]
         [Display(Name = "Full Name")]
         public string mCustomerName { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "An Email address is required.")]
+        [EmailAddress(ErrorMessage = "Invalid Email address.")]
         [Display(Name = "Email")]
         public string mCustomerEmail { get; set; }
 

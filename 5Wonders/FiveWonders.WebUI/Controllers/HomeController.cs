@@ -138,9 +138,9 @@ namespace FiveWonders.WebUI.Controllers
                 }
 
                 string customerSection = "<h4>Customer Info</h4>";
-                string fixedCustomerName = "<p>Name: " + viewModel.servicesMessage.mCustomerName + "</p>";
-                string fixedCustomerPhone = "<p>Phone Number: " + viewModel.servicesMessage.mPhoneNumber + "</p>";
-                string fixedCustomerEmail = "<p>Email: " + viewModel.servicesMessage.mEmail + "</p>";
+                string fixedCustomerName = "<p>Name: " + viewModel.servicesMessage.mCustomerName.Trim() + "</p>";
+                string fixedCustomerPhone = "<p>Phone Number: " + viewModel.servicesMessage.mPhoneNumber.Trim() + "</p>";
+                string fixedCustomerEmail = "<p>Email: " + viewModel.servicesMessage.mEmail.Trim() + "</p>";
 
                 MailMessage message = new MailMessage();
                 message.To.Add("");
