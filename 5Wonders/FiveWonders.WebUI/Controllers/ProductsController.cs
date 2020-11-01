@@ -44,9 +44,6 @@ namespace FiveWonders.WebUI.Controllers
         {
             HomePage homePageDefaults = homePageContext.GetCollection().FirstOrDefault();
 
-            if (homePageDefaults == null)
-                return HttpNotFound();
-
             // Read all input
             List<SubCategory> subcategoriesData = new List<SubCategory>();
             Category categoryData = null;
@@ -78,7 +75,7 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 int pageNumbers;
-                ProductsListViewModel viewModel = GetPopularizedProductsViewModel(categoryData, subcategoriesData, productName, homePageDefaults);
+                ProductsListViewModel viewModel = GetPopularizedProductsViewModel(categoryData, subcategoriesData, homePageDefaults);
                 viewModel.products = GetProducts(categoryData, subcategoriesData, productName, page, out pageNumbers);
 
                 ViewBag.CurrentPage = page ?? 1;
@@ -165,7 +162,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 _ = e;
-                return RedirectToAction("Item", "Products", new { Id = Id });
+                return HttpNotFound();
             }
         }
 
@@ -299,37 +296,56 @@ namespace FiveWonders.WebUI.Controllers
             return pageTitle;
         }
 
-        private ProductsListViewModel GetPopularizedProductsViewModel(Category category, List<SubCategory> subCategories, string productNameSearch, HomePage homePageDefaults)
+        private ProductsListViewModel GetPopularizedProductsViewModel(Category category, List<SubCategory> subCategories, HomePage homePageDefaults)
         {
-            string folderName = "Home";
-            string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
-            float productListImgShaderAmount = homePageDefaults.defaultBannerImgShader;
-            string productListPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
-            string productsListPageTitle = GetPageTitle(category, subCategories, homePageDefaults.mDefaultProductsBannerText);
+            ProductsListViewModel viewModel = null;
 
-            if (subCategories.Count == 1 && subCategories[0].isEventOrTheme)
+            try
             {
-                folderName = "SubcategoryImages";
-                productsListbannerImg = subCategories[0].mImageUrl;
-                productListImgShaderAmount = subCategories[0].mImgShaderAmount;
-                productListPageTitleColor = subCategories[0].bannerTextColor;
-            }
-            else if(category != null)
-            {
-                folderName = "CategoryImages";
-                productsListbannerImg = category.mImgUrL;
-                productListImgShaderAmount = category.mImgShaderAmount;
-                productListPageTitleColor = category.bannerTextColor;
-            }
+                if(homePageDefaults == null)
+                {
+                    throw new Exception("Home Page defaults null.");
+                }
 
-            ProductsListViewModel viewModel = new ProductsListViewModel()
+                string folderName = "Home";
+                string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
+                float productListImgShaderAmount = homePageDefaults.defaultBannerImgShader;
+                string productListPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
+                string productsListPageTitle = GetPageTitle(category, subCategories, homePageDefaults.mDefaultProductsBannerText);
+
+                if (subCategories.Count == 1 && subCategories[0].isEventOrTheme)
+                {
+                    folderName = "SubcategoryImages";
+                    productsListbannerImg = subCategories[0].mImageUrl;
+                    productListImgShaderAmount = subCategories[0].mImgShaderAmount;
+                    productListPageTitleColor = subCategories[0].bannerTextColor;
+                }
+                else if(category != null)
+                {
+                    folderName = "CategoryImages";
+                    productsListbannerImg = category.mImgUrL;
+                    productListImgShaderAmount = category.mImgShaderAmount;
+                    productListPageTitleColor = category.bannerTextColor;
+                }
+
+                viewModel = new ProductsListViewModel()
+                {
+                    folderName = folderName,
+                    imgUrl = productsListbannerImg,
+                    mImgShaderAmount = productListImgShaderAmount,
+                    pageTitle = productsListPageTitle,
+                    pageTitleColor = productListPageTitleColor,
+                };
+            }
+            catch(Exception e)
             {
-                folderName = folderName,
-                imgUrl = productsListbannerImg,
-                mImgShaderAmount = productListImgShaderAmount,
-                pageTitle = productsListPageTitle,
-                pageTitleColor = productListPageTitleColor,
-            };
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                viewModel = new ProductsListViewModel()
+                {
+                    pageTitle = "Welcome",
+                    pageTitleColor = "#34495E"
+                };
+            }
 
             return viewModel;
         }

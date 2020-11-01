@@ -24,7 +24,7 @@
                     @foreach (var imgFileName in Model)
                     {
                         string itemClassTag = carouselImgIndex++ == 0 ? "item active" : "item";
-                        <div class="@itemClassTag img-test"
+                        <div class="@itemClassTag gallery-carousel-img"
                              style="background-image: url(@Url.Content("~/Content/GalleryImages/" + imgFileName.mImageFile));">
                         </div>
                     }

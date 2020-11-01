@@ -1,0 +1,17 @@
+﻿@model FiveWonders.core.Models.HomePage
+
+@{
+    string logoImg = (Model != null && !String.IsNullOrWhiteSpace(Model.mHomePageLogoUrl))
+        ? Model.mHomePageLogoUrl
+        : "";
+}
+
+<div style="min-height: 90vh; display: flex; justify-content: center; flex-direction: column;">
+    <div style="width: 100%; min-height: 75vh; justify-content: center; display: flex; flex-direction: column;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 0 auto; flex-direction: column; text-align: center;">
+            <h1 style="font-size: 8rem; color: black;">404</h1>
+            <h1 style="font-size: 8rem; color: black;">Page not found...</h1>
+            <img alt="logo" src="~/Content/Home/@logoImg" style="margin: 0 auto; height: 24rem; width: auto;" />
+        </div>
+    </div>
+</div>

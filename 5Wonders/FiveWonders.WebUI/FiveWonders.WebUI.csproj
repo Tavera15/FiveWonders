@@ -197,6 +197,7 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\BasketController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
+    <Compile Include="Controllers\ErrorsController.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\Managers\AccountController.cs" />
     <Compile Include="Controllers\Managers\CategoryManagerController.cs" />
@@ -414,6 +415,7 @@
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\TinyMce_Client\WYSIWYG.js" />
     <Content Include="Scripts\TinyMce_Client\WYSIWYG_email.js" />
+    <Content Include="StaticPages\HtmlPage1.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -498,6 +500,7 @@
     <Content Include="Views\CustomListManager\Create.cshtml" />
     <Content Include="Views\CustomListManager\Edit.cshtml" />
     <Content Include="Views\CustomListManager\Delete.cshtml" />
+    <Content Include="Views\Errors\PageNotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

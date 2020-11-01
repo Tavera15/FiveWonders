@@ -13,7 +13,7 @@ namespace FiveWonders.WebUI.Controllers
 {
     public class GalleryController : Controller
     {
-        const int IMGS_PER_PAGE = 4;
+        const int IMGS_PER_PAGE = 12;
 
         public IInstagramService InstagramService; 
 

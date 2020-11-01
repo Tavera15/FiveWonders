@@ -23,7 +23,7 @@ namespace FiveWonders.core.Models
         [Display(Name = "Home Page Button Url")]
         public string mWelcomeBtnUrl { get; set; }
 
-        [Display(Name = "Home Page Logo")]
+        [Display(Name = "Website Logo")]
         public string mHomePageLogoUrl { get; set; }
 
         [Display(Name = "Home Greeting Greeting")]

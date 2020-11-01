@@ -61,7 +61,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 _ = e;
                return View(updatedPage);
             }
-            
         }
     }
 }

@@ -1,8 +1,14 @@
 ﻿@model FiveWonders.core.ViewModels.ProductsListViewModel
 
+@{ 
+    string bannerImg = !String.IsNullOrWhiteSpace(Model.folderName) && !String.IsNullOrWhiteSpace(Model.imgUrl)
+        ? @Url.Content("~/Content/" + Model.folderName + "/" + Model.imgUrl)
+        : "";
+}
+
 <div id="products-page">
     <div class="pp-title-container"
-         style="background-image: url(@Url.Content("~/Content/" + Model.folderName + "/" + Model.imgUrl));">
+         style="background-image: url(@bannerImg);">
         <div style="background-color: rgba(0,0,0, @Model.mImgShaderAmount);" class="pp-title-dark-layer">
             <h2 class="pp-title-text" style="color: @Model.pageTitleColor">@Model.pageTitle</h2>
         </div>

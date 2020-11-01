@@ -16,13 +16,20 @@
 }
 
 .gallery-img-container {
-    padding: 0 2rem;
     margin-bottom: 4vh;
 }
 
+.gallery-carousel-img{
+    height: 55vh;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
 .gallery-img {
+    padding: 2rem;
     border: 1px solid lightgrey;
-    height: 35vh;
+    height: 40vh;
     object-fit: contain;
     width: 100%;
 }
@@ -44,8 +51,20 @@
     margin-right: auto;
 }
 
+@media (max-width: 1400px) {
+
+    .gallery-carousel-img{
+        height: 45rem;
+    }
+
+    .gallery-img{
+        height: 30rem;
+    }
+}
+
 @media (max-width: 768px) {
     #gallery-page {
         width: 100%;
     }
+
 }

@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace FiveWonders.WebUI.Controllers.Managers
 {
+    [Authorize(Roles = "FWondersAdmin")]
     public class CustomListManagerController : Controller
     {
         IRepository<CustomOptionList> customListContext;

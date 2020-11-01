@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -30,32 +31,10 @@ namespace FiveWonders.WebUI.Controllers.Managers
         {
             try
             {
-                HomePage home = homeDataContext.GetCollection().FirstOrDefault() ?? new HomePage();
-                Dictionary<string, string> links = new Dictionary<string, string>();
-                Dictionary<string, string> promoLinks = new Dictionary<string, string>();
-
-                links.Add("0", "All Products");
-                promoLinks.Add("0", "Empty");
-
-                foreach(Category cat in categoryContext.GetCollection())
-                {
-                    links.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
-                    promoLinks.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
-                }
-
-                foreach (SubCategory sub in subcategoryContext.GetCollection())
-                {
-                    links.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
-                    
-                    if(sub.isEventOrTheme)
-                    {
-                        promoLinks.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
-                    }
-                }
-
-                ViewBag.links = links;
-                ViewBag.promoLinks = promoLinks;
-                return View(home);
+                HomePageManagerViewModel viewModel = GetFilledViewModel();
+                viewModel.homePagedata = homeDataContext.GetCollection().FirstOrDefault() ?? new HomePage();
+                
+                return View(viewModel);
             }
             catch(Exception e)
             {
@@ -66,24 +45,24 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Index(HomePage updatedData, HttpPostedFileBase homeLogo, HttpPostedFileBase homeImg, HttpPostedFileBase default_bannerImg, string[] checkedCarouselImgs, HttpPostedFileBase[] newCarouselImgs)
+        public ActionResult Index(HomePageManagerViewModel updatedDataViewModel, HttpPostedFileBase homeLogo, HttpPostedFileBase homeImg, HttpPostedFileBase default_bannerImg, string[] checkedCarouselImgs, HttpPostedFileBase[] newCarouselImgs)
         {
             try
             {
                 if (!ModelState.IsValid)
                     throw new Exception("Home Manager model not good");
 
-                HomePage existingData = homeDataContext.GetCollection().FirstOrDefault() ?? updatedData;
+                HomePage existingData = homeDataContext.GetCollection().FirstOrDefault() ?? updatedDataViewModel.homePagedata;
                 
-                existingData.mWelcomeBtnUrl = updatedData.mWelcomeBtnUrl;
-                existingData.mdefaultBannerTextColor = updatedData.mdefaultBannerTextColor;
-                existingData.mDefaultProductsBannerText = updatedData.mDefaultProductsBannerText;
-                existingData.mHomePageGreeting = updatedData.mHomePageGreeting;
-                existingData.defaultBannerImgShader = updatedData.defaultBannerImgShader;
-                existingData.mPromo1 = updatedData.mPromo1;
-                existingData.mPromo2 = updatedData.mPromo2;
-                existingData.welcomeGreetingImgShader = updatedData.welcomeGreetingImgShader;
-                existingData.mEnableWelcomeImg = updatedData.mEnableWelcomeImg;
+                existingData.mWelcomeBtnUrl = updatedDataViewModel.homePagedata.mWelcomeBtnUrl;
+                existingData.mdefaultBannerTextColor = updatedDataViewModel.homePagedata.mdefaultBannerTextColor;
+                existingData.mDefaultProductsBannerText = updatedDataViewModel.homePagedata.mDefaultProductsBannerText;
+                existingData.mHomePageGreeting = updatedDataViewModel.homePagedata.mHomePageGreeting;
+                existingData.defaultBannerImgShader = updatedDataViewModel.homePagedata.defaultBannerImgShader;
+                existingData.mPromo1 = updatedDataViewModel.homePagedata.mPromo1;
+                existingData.mPromo2 = updatedDataViewModel.homePagedata.mPromo2;
+                existingData.welcomeGreetingImgShader = updatedDataViewModel.homePagedata.welcomeGreetingImgShader;
+                existingData.mEnableWelcomeImg = updatedDataViewModel.homePagedata.mEnableWelcomeImg;
                 
                 if(homeLogo != null)
                 {
@@ -122,13 +101,12 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     || (checkedCarouselImgs == null && savedCarouselImgs != null)
                     || (savedCarouselImgs != null && savedCarouselImgs.Length != checkedCarouselImgs.Length))
                 {
-
                     string newCarouselImgUrl;
                     imageStorageSystem.UpdateImages(Server, EFolderName.Home, savedCarouselImgs, checkedCarouselImgs, newCarouselImgs, out newCarouselImgUrl, "carousel-");
                     existingData.mCarouselImgs = newCarouselImgUrl;
                 }
 
-                if (existingData.mID == updatedData.mID)
+                if (existingData.mID == updatedDataViewModel.homePagedata.mID)
                 {
                     homeDataContext.Insert(existingData);
                 }
@@ -140,32 +118,45 @@ namespace FiveWonders.WebUI.Controllers.Managers
             catch(Exception e)
             {
                 _ = e;
-                Dictionary<string, string> links = new Dictionary<string, string>();
-                Dictionary<string, string> promoLinks = new Dictionary<string, string>();
+                HomePageManagerViewModel errorViewModel = GetFilledViewModel();
+                errorViewModel.homePagedata = updatedDataViewModel.homePagedata;
 
-                links.Add("0", "All Products");
-                promoLinks.Add("0", "Empty");
-
-                foreach (Category cat in categoryContext.GetCollection())
-                {
-                    links.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
-                    promoLinks.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
-                }
-
-                foreach (SubCategory sub in subcategoryContext.GetCollection())
-                {
-                    links.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
-
-                    if (sub.isEventOrTheme)
-                    {
-                        promoLinks.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
-                    }
-                }
-
-                ViewBag.links = links;
-                ViewBag.promoLinks = promoLinks;
-                return View(updatedData);
+                return View(errorViewModel);
             }
+        }
+
+        private HomePageManagerViewModel GetFilledViewModel()
+        {
+
+            Dictionary<string, string> links = new Dictionary<string, string>();
+            Dictionary<string, string> promoLinks = new Dictionary<string, string>();
+
+            links.Add("0", "All Products");
+            promoLinks.Add("0", "Empty");
+
+            foreach (Category cat in categoryContext.GetCollection())
+            {
+                links.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
+                promoLinks.Add(cat.mID, "/products/?category=" + cat.mCategoryName);
+            }
+
+            foreach (SubCategory sub in subcategoryContext.GetCollection())
+            {
+                links.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+
+                if (sub.isEventOrTheme)
+                {
+                    promoLinks.Add(sub.mID, "/products/?subcategory=" + sub.mSubCategoryName);
+                }
+            }
+
+            HomePageManagerViewModel viewModel = new HomePageManagerViewModel()
+            {
+                btnRediLinks = links,
+                promoLinks = promoLinks
+            };
+
+            return viewModel;
         }
     }
 }

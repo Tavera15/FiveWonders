@@ -23,7 +23,6 @@ body {
 }
 
 .base-container {
-    width: 100%;
     width: 85vw;
     background-color: rgba(0,0,0,0);
     border-bottom-left-radius: 25px;
@@ -51,7 +50,6 @@ body {
     }
     .base-container {
         width: 100%;
-        padding: 0;
     }
 }
 

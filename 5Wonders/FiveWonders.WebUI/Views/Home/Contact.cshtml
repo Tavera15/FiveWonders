@@ -37,12 +37,12 @@
             </div>
         </div>
 
-        @if(Model.communicativeSocialMedias != null && Model.communicativeSocialMedias.Length > 0)
+        @if (Model.communicativeSocialMedias != null && Model.communicativeSocialMedias.Length > 0)
         {
             <div style="text-align: center;">
                 <h2>Social Media</h2>
 
-                @foreach(var sm in Model.communicativeSocialMedias)
+                @foreach (var sm in Model.communicativeSocialMedias)
                 {
                     <a rel="noopener noreferrer" target="_blank" href="@sm.mUrl"><img style="height: 8vh; width: auto;" src="~/Content/Icons/@sm.m64x64Icon" alt="@sm.mUrl" /></a>
                 }
@@ -61,7 +61,7 @@
             <h2 style="margin: 0 0 2vh;">5 Wonders Balloons</h2>
             <div class="col-lg-12" style="border-top: black solid 1px;">
                 <img style="width: auto; height: 20vh;"
-                        src="~/Content/Home/Logo.png" alt="logo" />
+                     src="~/Content/Home/Logo.png" alt="logo" />
             </div>
 
             <div class="service-data col-lg-12">

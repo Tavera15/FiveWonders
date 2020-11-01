@@ -22,8 +22,9 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<Product> productContext;
         IRepository<OrderItem> orderItemContext;
         IRepository<CustomOptionList> customListContext;
+        IRepository<HomePage> homePageContext;
 
-        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<Product> productsRepository, IRepository<OrderItem> orderItemRepository, IRepository<CustomOptionList> customListRepository)
+        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<Product> productsRepository, IRepository<OrderItem> orderItemRepository, IRepository<CustomOptionList> customListRepository, IRepository<HomePage> homePageRepository)
         {
             basketService = services;
             orderContext = orderRepository;
@@ -31,6 +32,7 @@ namespace FiveWonders.WebUI.Controllers
             productContext = productsRepository;
             orderItemContext = orderItemRepository;
             customListContext = customListRepository;
+            homePageContext = homePageRepository;
         }
 
         // GET: Checkout
@@ -223,7 +225,6 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
                 _ = e;
                 return View(order);
             }
@@ -264,7 +265,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
                 return RedirectToAction("Cancel", "Checkout", new { orderId = orderId });
             }
 
@@ -291,7 +292,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
             
             return RedirectToAction("ThankYou", "Checkout");
@@ -299,7 +300,8 @@ namespace FiveWonders.WebUI.Controllers
 
         public ActionResult ThankYou()
         {
-            return View();
+            HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
+            return View(homePageData);
         }
 
         public ActionResult Cancel(string orderId)
@@ -330,7 +332,7 @@ namespace FiveWonders.WebUI.Controllers
             }
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                _ = e;
             }
 
             return RedirectToAction("CancelOrder", "Checkout");

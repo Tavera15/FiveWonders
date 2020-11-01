@@ -127,7 +127,6 @@ namespace FiveWonders.WebUI.Controllers
                     return View(chartToEdit);
                 }
 
-
                 if(newImage != null)
                 {
                     string newImageURL;
@@ -220,6 +219,5 @@ namespace FiveWonders.WebUI.Controllers
                 return RedirectToAction("Delete", "SizeChartManager", new { Id = Id });
             }
         }
-
     }
 }
