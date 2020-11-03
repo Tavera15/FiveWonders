@@ -44,7 +44,8 @@
 }
 
 .pp-card-container {
-    margin: 0 0 4rem;
+    margin: 0 0 2rem;
+    padding: 0 1vw;
 }
 
 @media(max-width: 1400px) {
@@ -71,6 +72,7 @@
 @media (max-width: 735px) {
     .pp-card-container {
         width: calc(100%/2);
+        padding: 0 2rem 2rem;
     }
 }
 
@@ -79,6 +81,7 @@
         min-width: unset;
         max-width: unset;
         width: 100%;
+        padding: 2rem;
     }
 }
 
