@@ -59,11 +59,12 @@
     margin-bottom: 4vh;
     display: flex;
     flex-direction: column;
-    border: 1px solid lightgray;
-    border-radius: 25px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
     background-color: blanchedalmond;
     background-color: rgba(240,248,255, .54);
     background-color: aliceblue;
+    background-color: white;
     text-align: center;
 }
 
@@ -228,6 +229,13 @@
     padding: 0;
 }
 
+.home-gallery-one-of-four-container {
+    border: solid white 2px;
+    display: flex;
+    padding: 1rem;
+    margin: 0;
+}
+
 .home-gallery-group-img {
     align-self: center;
     width: 100%;
@@ -367,5 +375,15 @@
         width: 100%;
         margin-bottom: 1rem;
     }
-    
+}
+
+@media(max-width: 480px){
+    .home-gallery-one-of-four-container {
+        border: solid white 2px;
+        display: flex;
+        padding: 1rem;
+        margin: 0;
+        width: 100%;
+    }
+
 }

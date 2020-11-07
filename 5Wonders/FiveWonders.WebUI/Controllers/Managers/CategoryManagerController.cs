@@ -15,12 +15,14 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<Category> categoryContext;
         IRepository<Product> productsContext;
+        IRepository<HomePage> homePageContext;
         IImageStorageService imageStorageService;
 
-        public CategoryManagerController(IRepository<Category> categoryRepository, IRepository<Product> productsRepository, IImageStorageService imageStorageService)
+        public CategoryManagerController(IRepository<Category> categoryRepository, IRepository<Product> productsRepository, IRepository<HomePage> homePageRepository, IImageStorageService imageStorageService)
         {
             categoryContext = categoryRepository;
             productsContext = productsRepository;
+            homePageContext = homePageRepository;
             this.imageStorageService = imageStorageService;
         }
 
@@ -151,11 +153,17 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Category categoryToDelete = categoryContext.Find(Id, true);
+                HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
 
                 Product[] productsWithCategory = productsContext.GetCollection()
                     .Where(x => x.mCategory == categoryToDelete.mID).ToArray();
 
+                bool isAPromoOnHomePage = homePageData != null && (homePageData.mPromo1 == Id || homePageData.mPromo2 == Id);
+                bool isHomePageRedirectBtn = homePageData != null && homePageData.mWelcomeBtnUrl == Id;
+
                 ViewBag.productsWithCategory = productsWithCategory;
+                ViewBag.isAPromoOnHomePage = isAPromoOnHomePage;
+                ViewBag.isHomePageRedirectBtn = isHomePageRedirectBtn;
                 return View(categoryToDelete);
             }
             catch(Exception e)
@@ -172,12 +180,15 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Category categoryToDelete = categoryContext.Find(Id, true);
+                HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
 
                 bool bItemsWithCat = productsContext.GetCollection().Any(p => p.mCategory == Id);
+                bool isAPromoOnHomePage = homePageData != null && (homePageData.mPromo1 == Id || homePageData.mPromo2 == Id);
+                bool isHomePageRedirectBtn = homePageData != null && homePageData.mWelcomeBtnUrl == Id;
 
-                if(bItemsWithCat)
+                if(bItemsWithCat || isAPromoOnHomePage || isHomePageRedirectBtn)
                 {
-                    throw new Exception("Products contain targeted category");
+                    throw new Exception("Products contain targeted category, and/or category is currently promoted on the Home Page.");
                 }
 
                 imageStorageService.DeleteImage(EFolderName.Category, categoryToDelete.mImgUrL, Server);

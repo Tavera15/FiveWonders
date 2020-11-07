@@ -16,13 +16,15 @@ namespace FiveWonders.WebUI.Controllers
     {
         IRepository<SubCategory> subCategoryContext;
         IRepository<Product> productContext;
+        IRepository<HomePage> homePageContext;
         IImageStorageService imageStorageService;
 
         // GET: SubCategoryManager
-        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository, IImageStorageService imageStorageService)
+        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository, IRepository<HomePage> homePageRepository, IImageStorageService imageStorageService)
         {
             subCategoryContext = subcategoryRepository;
             productContext = productRepository;
+            homePageContext = homePageRepository;
             this.imageStorageService = imageStorageService;
         }
 
@@ -158,12 +160,18 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id, true);
+                HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
 
                 Product[] productsWithSub = productContext.GetCollection()
                     .Where(p => !String.IsNullOrEmpty(p.mSubCategories) 
                     && p.mSubCategories.Contains(subToDelete.mID)).ToArray();
 
+                bool isAPromoOnHomePage = homePageData != null && (homePageData.mPromo1 == Id || homePageData.mPromo2 == Id);
+                bool isHomePageRedirectBtn = homePageData != null && homePageData.mWelcomeBtnUrl == Id;
+
                 ViewBag.productsWithSub = productsWithSub.ToArray();
+                ViewBag.isAPromoOnHomePage = isAPromoOnHomePage;
+                ViewBag.isHomePageRedirectBtn = isHomePageRedirectBtn;
                 return View(subToDelete);
             }
             catch(Exception e)
@@ -180,13 +188,17 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 SubCategory subToDelete = subCategoryContext.Find(Id, true);
+                HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
 
                 bool bItemsWithSub = productContext.GetCollection()
                     .Any(p => p.mSubCategories.Contains(Id));
 
-                if (bItemsWithSub)
+                bool isAPromoOnHomePage = homePageData != null && (homePageData.mPromo1 == Id || homePageData.mPromo2 == Id);
+                bool isHomePageRedirectBtn = homePageData != null && homePageData.mWelcomeBtnUrl == Id;
+
+                if (bItemsWithSub || isAPromoOnHomePage || isHomePageRedirectBtn)
                 {
-                    throw new Exception("Products contain target subcategory.");
+                    throw new Exception("Products contain target subcategory, and/or category is currently promoted on the Home Page.");
                 }
 
                 imageStorageService.DeleteImage(EFolderName.Subcategory, subToDelete.mImageUrl, Server);

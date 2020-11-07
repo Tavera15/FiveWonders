@@ -44,8 +44,8 @@
 }
 
 .pp-card-container {
-    margin: 0 0 2rem;
-    padding: 0 1vw;
+    margin: 0 0 4rem;
+    padding: 0 2rem;
 }
 
 @media(max-width: 1400px) {
@@ -67,6 +67,12 @@
     #products-page {
         width: 100%;
     }
+    .pp-title-text{
+        font-size: 9rem;
+    }
+    .pp-fw-card-img {
+        height: 30rem;
+    }
 }
 
 @media (max-width: 735px) {
@@ -76,12 +82,22 @@
     }
 }
 
+@media(max-width: 540px) {
+    .pp-fw-card-img{
+        height: 20rem;
+    }
+}
+
 @media(max-width: 480px) {
     .pp-card-container {
         min-width: unset;
         max-width: unset;
         width: 100%;
         padding: 2rem;
+    }
+
+    .pp-fw-card-img{
+        height: 30rem;
     }
 }
 

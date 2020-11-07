@@ -12,9 +12,14 @@
     <div>
         <hr />
 
-        @if (ViewBag.productsWithCategory.Length != 0)
+        @if (ViewBag.productsWithCategory.Length != 0 || ViewBag.isAPromoOnHomePage || ViewBag.isHomePageRedirectBtn)
         {
             <h3>Can't delete category <strong>@Html.DisplayFor(model => model.mCategoryName)</strong></h3>
+        }
+
+        @if (ViewBag.productsWithCategory.Length != 0)
+        {
+            <br />
             <h2>Update the Category field for the following products:</h2>
 
             <table>
@@ -29,8 +34,24 @@
             </table>
         }
 
+        @if (ViewBag.isAPromoOnHomePage)
+        {
+            <br />
+            <h2>Category is currently promoted on the Home Page.</h2>
+            <p>Remove the Category as a category to promote on the Home Page Manager.</p>
+            <a href="/HomeManager/">Go to Home Page Manager</a>
+        }
+
+        @if (ViewBag.isHomePageRedirectBtn)
+        {
+            <br />
+            <h2>Category is currently promoted as the Home Page's Greeting button.</h2>
+            <p>Remove the Category from the Home Page Manager's Button Url.</p>
+            <a href="/HomeManager/">Go to Home Page Manager</a>
+        }
+
         <div class="form-actions no-color">
-            @if (ViewBag.productsWithCategory.Length == 0)
+            @if (ViewBag.productsWithCategory.Length == 0 && !ViewBag.isAPromoOnHomePage && !ViewBag.isHomePageRedirectBtn)
             {
                 using (Html.BeginForm())
                 {
