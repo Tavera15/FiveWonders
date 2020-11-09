@@ -130,6 +130,11 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
+                if(!viewModel.servicePageData.mEnableForm)
+                {
+                    throw new Exception("Message Submission is not allowed.");
+                }
+
                 if (!ModelState.IsValid || viewModel.servicesMessage == null ||
                     String.IsNullOrWhiteSpace(viewModel.servicesMessage.mSubject) ||
                     String.IsNullOrWhiteSpace(viewModel.servicesMessage.mContent))

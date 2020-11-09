@@ -14,6 +14,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Banner Message")]
         public string mBannerMessage { get; set; }
 
+        [Display(Name = "Enable Message Form?")]
+        public bool mEnableForm { get; set; }
+
         [Required]
         [Display(Name = "Owner Name")]
         public string mName { get; set; }

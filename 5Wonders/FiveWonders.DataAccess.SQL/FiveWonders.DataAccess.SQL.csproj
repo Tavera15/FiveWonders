@@ -65,6 +65,10 @@
     <Compile Include="Migrations\202010290222123_ordersContainCustomerId.Designer.cs">
       <DependentUpon>202010290222123_ordersContainCustomerId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011090426585_contactFormIsToggable.cs" />
+    <Compile Include="Migrations\202011090426585_contactFormIsToggable.Designer.cs">
+      <DependentUpon>202011090426585_contactFormIsToggable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -91,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010290222123_ordersContainCustomerId.resx">
       <DependentUpon>202010290222123_ordersContainCustomerId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011090426585_contactFormIsToggable.resx">
+      <DependentUpon>202011090426585_contactFormIsToggable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

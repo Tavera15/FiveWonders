@@ -28,7 +28,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 mBannerMessage = servicePageData.mBannerMessage,
                 mEmail = servicePageData.mEmail,
                 mName = servicePageData.mName,
-                mPhoneNumber = servicePageData.mPhoneNumber
+                mPhoneNumber = servicePageData.mPhoneNumber,
+                mEnableForm = servicePageData.mEnableForm
             };
 
             return View(servicePageWithDiffId);
@@ -46,6 +47,7 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 target.mName = updatedPage.mName;
                 target.mEmail = updatedPage.mEmail;
                 target.mPhoneNumber = updatedPage.mPhoneNumber;
+                target.mEnableForm = updatedPage.mEnableForm;
 
                 if(updatedPage.mID == target.mID)
                 {
