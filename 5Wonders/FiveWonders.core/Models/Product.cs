@@ -14,6 +14,9 @@ namespace FiveWonders.core.Models
         [Display(Name = "Name")]
         public string mName { get; set; }
 
+        [Display(Name = "Is Visible?")]
+        public bool isDisplayed { get; set; }
+
         [Display(Name = "Description")]
         [AllowHtml]
         public string mHtmlDesc { get; set; }
@@ -55,6 +58,7 @@ namespace FiveWonders.core.Models
 
         public Product()
         {
+            isDisplayed = true;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace FiveWonders.WebUI.Controllers.Managers
     public class OrdersManagerController : Controller
     {
         IRepository<FWonderOrder> ordersContext;
+        IRepository<OrderItem> orderItemContext;
 
-        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository)
+        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository, IRepository<OrderItem> orderItemRepository)
         {
             ordersContext = ordersRepository;
+            orderItemContext = orderItemRepository;
         }
 
         // GET: OrdersManager
@@ -72,6 +75,29 @@ namespace FiveWonders.WebUI.Controllers.Managers
             catch(Exception e)
             {
                 _ = e;
+                return HttpNotFound();
+            }
+        }
+
+        [Route(Name = "/{Id}{baseOrderId}")]
+        public ActionResult OrderItemDetails(string Id, string baseOrderId)
+        {
+            try
+            {
+                OrderItem orderItem = orderItemContext.Find(Id, true);
+
+                if(orderItem.mBaseOrderID != baseOrderId)
+                {
+                    throw new Exception("Order Item Base Order Id does not match.");
+                }
+
+                Dictionary<string, string> customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts);
+
+                ViewBag.customLists = customLists;
+                return View(orderItem);
+            }
+            catch(Exception e)
+            {
                 return HttpNotFound();
             }
         }

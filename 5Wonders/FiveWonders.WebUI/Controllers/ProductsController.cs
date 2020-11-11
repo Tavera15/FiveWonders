@@ -98,6 +98,11 @@ namespace FiveWonders.WebUI.Controllers
             {
                 ProductOrderViewModel viewModel = GetProductOrderViewModel(Id);
 
+                if(!viewModel.product.isDisplayed)
+                {
+                    throw new Exception("Product is not available.");
+                }
+
                 ViewBag.Title = viewModel.product.mName;
                 return View(viewModel);
             }
@@ -118,6 +123,11 @@ namespace FiveWonders.WebUI.Controllers
                 Product productToBuy = productsContext.Find(Id, true);
                 item.product = productToBuy;
                 item.productOrder.mProductID = Id;
+
+                if(!productToBuy.isDisplayed)
+                {
+                    throw new Exception("Product is not available.");
+                }
 
                 // If an input is not valid, return to the item page with warnings and customer selections
                 BasketItemValidator basketItemValidator = new BasketItemValidator(productsContext, sizeChartContext, customListContext, item.selectedCustomListOptions);
@@ -155,6 +165,12 @@ namespace FiveWonders.WebUI.Controllers
             try
             {
                 Product product = productsContext.Find(Id, true);
+
+                if (!product.isDisplayed)
+                {
+                    throw new Exception("Product is not available.");
+                }
+
                 SizeChart chart = sizeChartContext.Find(product.mSizeChart, true);
 
                 return View(chart);
@@ -164,42 +180,6 @@ namespace FiveWonders.WebUI.Controllers
                 _ = e;
                 return HttpNotFound();
             }
-        }
-
-        private Product[] GetProductsWithCategory(string categoryName)
-        {
-            Category category = categoryContext.GetCollection()
-                .FirstOrDefault(x => x.mCategoryName.ToLower() == categoryName.ToLower());
-
-            if (category == null)
-            {
-                throw new Exception("No products contain the category: " + categoryName);
-            }
-
-            Product[] productsWithCategory = productsContext.GetCollection()
-                .Where(x => x.mCategory == category.mID)
-                .OrderByDescending(w => w.mTimeEntered)
-                .ToArray();
-
-            return productsWithCategory;
-        }
-
-        private Product[] GetProductsWithSub(string subName)
-        {
-            SubCategory sub = subCategoryContext.GetCollection()
-                .FirstOrDefault(x => x.mSubCategoryName.ToLower() == subName.ToLower());
-
-            if (sub == null)
-            {
-                throw new Exception("No products contain the subcategory: " + subName);
-            }
-
-            Product[] productsWithSub = productsContext.GetCollection()
-                .Where(prod => prod.mSubCategories.Contains(sub.mID))
-                .OrderByDescending(p => p.mTimeEntered)
-                .ToArray();
-
-            return productsWithSub;
         }
 
         private string GetProductsListPageTitle(string input)
@@ -222,7 +202,7 @@ namespace FiveWonders.WebUI.Controllers
 
         private Product[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName, int? page, out int pageNumbers)
         {
-            Product[] allResults = productsContext.GetCollection().ToArray();
+            Product[] allResults = productsContext.GetCollection().Where(p => p.isDisplayed).ToArray();
 
             try
             {

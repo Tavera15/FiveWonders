@@ -1,0 +1,89 @@
+﻿@model FiveWonders.core.Models.OrderItem
+
+<div style="padding: 2rem;">
+    <h4>Order Item</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.mProductName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mProductName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mSize)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mCustomTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mCustomListOpts)
+        </dt>
+
+        <dd>
+            <ul></ul>
+
+            <ul>
+                @foreach(var listOption in ViewBag.customLists.Keys)
+                {
+                    <li>
+                        @listOption: @ViewBag.customLists[listOption]
+                    </li>
+                }
+            </ul>
+        </dd>
+
+    </dl>
+</div>

@@ -1,6 +1,7 @@
 ﻿using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace FiveWonders.WebUI.Controllers
     {
         public IRepository<FWonderOrder> ordersContext;
         public IRepository<Customer> customerContext;
+        public IRepository<OrderItem> orderItemContext;
 
-        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository)
+        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository, IRepository<OrderItem> orderItemRepository)
         {
             ordersContext = ordersRepository;
             customerContext = customerRepository;
+            orderItemContext = orderItemRepository;
         }
 
         // GET: Orders
@@ -92,6 +95,56 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 _ = e;
+                return HttpNotFound();
+            }
+        }
+
+        [AllowAnonymous]
+        [Route(Name = "/{Id}{VerificationId}{baseOrderId}")]
+        public ActionResult OrderItemDetails(string Id, string VerificationId, string baseOrderId)
+        {
+            try
+            {
+                FWonderOrder order = ordersContext.Find(baseOrderId, true);
+                OrderItem orderItem = orderItemContext.Find(Id, true);
+
+                if (!order.isCompleted || String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId
+                    || orderItem.mBaseOrderID != order.mID)
+                {
+                    throw new Exception("Order Item not accessible.");
+                }
+
+                string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+
+                // Order is linked with customer
+                // Check that the right customer is logged in.
+                if (!String.IsNullOrWhiteSpace(order.mCustomerId))
+                {
+                    Customer customer = customerContext.GetCollection()
+                        .FirstOrDefault(c => c.mUserID == possibleCustomerUserId);
+
+                    if (customer == null || order.mCustomerId != customer.mID)
+                    {
+                        throw new Exception("Order not accessible.");
+                    }
+                }
+                else
+                {
+                    // Order is not linked with customer
+                    // Check that no customer is logged in.
+                    if (!String.IsNullOrWhiteSpace(possibleCustomerUserId))
+                    {
+                        throw new Exception("Order not accessible.");
+                    }
+                }
+
+                Dictionary<string, string> customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts);
+
+                ViewBag.customLists = customLists;
+                return View(orderItem);
+            }
+            catch(Exception e)
+            {
                 return HttpNotFound();
             }
         }

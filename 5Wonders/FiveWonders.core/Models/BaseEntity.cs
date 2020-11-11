@@ -10,7 +10,10 @@ namespace FiveWonders.core.Models
     public abstract class BaseEntity
     {
         [Key]
+        [Display(Name = "ID")]
         public string mID { get; set; }
+
+        [Display(Name = "Time Entered")]
         public DateTime mTimeEntered { get; private set; }
 
         public BaseEntity()

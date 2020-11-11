@@ -57,7 +57,7 @@ namespace FiveWonders.WebUI.Controllers
                 ? "../content/home/" + pic
                 : "";
 
-            Product[] allProductsSorted = productsContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToArray();
+            Product[] allProductsSorted = productsContext.GetCollection().Where(p => p.isDisplayed).OrderByDescending(x => x.mTimeEntered).ToArray();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(5).ToList();
 
@@ -130,7 +130,9 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                if(!viewModel.servicePageData.mEnableForm)
+                ServicePage servicePageData = servicePageContext.GetCollection().FirstOrDefault();
+
+                if(servicePageData == null || !servicePageData.mEnableForm)
                 {
                     throw new Exception("Message Submission is not allowed.");
                 }
@@ -155,7 +157,7 @@ namespace FiveWonders.WebUI.Controllers
                 message.Body = viewModel.servicesMessage.mContent
                     + "<br />" + customerSection + fixedCustomerName + fixedCustomerEmail + fixedCustomerPhone;
 
-                throw new Exception("stop");
+                //throw new Exception("stop");
 
                 SmtpClient smtp = new SmtpClient();
                 smtp.Send(message);

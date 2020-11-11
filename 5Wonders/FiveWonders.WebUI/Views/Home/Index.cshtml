@@ -127,42 +127,45 @@
         </div>
     </div>
 
-    <div class="col-lg-12 section-top-three">
-        <div class="thing-cover">
+    @if(Model.top3Products.Count > 0)
+    {
+        <div class="col-lg-12 section-top-three">
+            <div class="thing-cover">
 
-            <h1>Latest Products</h1>
+                <h1>Latest Products</h1>
 
-            <div class="top-three-products">
-                @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-4"; }
+                <div class="top-three-products">
+                    @{string classTags = "col-lg-4 col-md-4 col-sm-4 col-xs-4"; }
 
-                @for (int i = 0; i < Model.top3Products.Count; i++)
-                {
-                    var product = Model.top3Products[i];
-                    string[] currentImageFiles = product.mImage.Split(',');
-                    string firstImage = currentImageFiles[0];
+                    @for (int i = 0; i < Model.top3Products.Count; i++)
+                    {
+                        var product = Model.top3Products[i];
+                        string[] currentImageFiles = product.mImage.Split(',');
+                        string firstImage = currentImageFiles[0];
 
-                    <div class="@classTags fw-card-container">
-                        <a href="/products/item/@product.mID" class="fw-card-a">
-                            <div class="fw-product-container">
-                                <div class="fw-card">
-                                    <h3 class="fw-card-title">@product.mName</h3>
-                                    <img alt="@product.mName"
-                                         src="@Url.Content("~/Content/ProductImages/" + firstImage)"
-                                         class="fw-card-img" />
-                                    <h4 class="fw-card-price">$@product.mPrice</h4>
-                                    <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                        <div class="@classTags fw-card-container">
+                            <a href="/products/item/@product.mID" class="fw-card-a">
+                                <div class="fw-product-container">
+                                    <div class="fw-card">
+                                        <h3 class="fw-card-title">@product.mName</h3>
+                                        <img alt="@product.mName"
+                                             src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                             class="fw-card-img" />
+                                        <h4 class="fw-card-price">$@product.mPrice</h4>
+                                        <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                }
-            </div>
+                            </a>
+                        </div>
+                    }
+                </div>
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <a class=" btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <a class=" btn btn-primary btn-lg redi-btn" href="@Url.Action("Index", "Products")">View All Products</a>
+                </div>
             </div>
         </div>
-    </div>
+    }
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-services-container" style="margin-bottom: 4vh;">
         <a href="/Home/Contact/" style="text-decoration: none;">
@@ -200,6 +203,9 @@
                                 </div>
                             </div>
                         }
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align: center;">
+                        <p class=" btn btn-primary btn-lg redi-btn">View Gallery</p>
                     </div>
                 </a>
             </div>

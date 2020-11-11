@@ -501,6 +501,8 @@
     <Content Include="Views\CustomListManager\Edit.cshtml" />
     <Content Include="Views\CustomListManager\Delete.cshtml" />
     <Content Include="Views\Errors\PageNotFound.cshtml" />
+    <Content Include="Views\Orders\OrderItemDetails.cshtml" />
+    <Content Include="Views\OrdersManager\OrderItemDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

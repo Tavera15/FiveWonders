@@ -3,29 +3,52 @@
     ViewBag.Title = "Manage";
 }
 
-<h2>@ViewBag.Title.</h2>
+<div style="padding: 2rem;">
 
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            ]
-        </dd>
-        <dt>Past Orders:</dt>
-        <dd>
-            [ @Html.ActionLink("View Orders", "Index", "Orders") ]
-        </dd>
-    </dl>
+    <p class="text-success">@ViewBag.StatusMessage</p>
+
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">
+        @if (Model.HasPassword)
+        {
+
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 1rem;">
+                <a href="@Url.Action("ChangePassword", "Manage")">
+                    <div style="padding: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 20rem; border: 1px solid lightgrey;">
+                        <h3 style="padding: 0; text-align: center;">Change Password</h3>
+                    </div>
+                </a>
+            </div>
+
+        }
+        else
+        {
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 1rem;">
+                <a href="@Url.Action("SetPassword", "Manage")">
+                    <div style="padding: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 20rem; border: 1px solid lightgrey;">
+                        <h3 style="padding: 0; text-align: center;">Create Password</h3>
+                    </div>
+                </a>
+            </div>
+        }
+
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 1rem;">
+            <a href="@Url.Action("Index", "Orders")">
+                <div style="padding: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 20rem; border: 1px solid lightgrey;">
+                    <h3 style="padding: 0; text-align: center;">View Orders</h3>
+                </div>
+            </a>
+        </div>
+
+        @if(!User.IsInRole("FWondersAdmin"))
+        {
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding: 1rem;">
+                <a href="@Url.Action("Contact", "Home")">
+                    <div style="padding: 0; width: 100%; display: flex; justify-content: center; align-items: center; height: 20rem; border: 1px solid lightgrey;">
+                        <h3 style="padding: 0; text-align: center;">Contact Us</h3>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
 </div>

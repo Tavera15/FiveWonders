@@ -284,11 +284,11 @@ namespace FiveWonders.WebUI.Controllers
 
                 /*
                 //throw new Exception("stop");
+                 */
 
                 SmtpClient smtp = new SmtpClient();
                 smtp.Send(adminMessage);
                 smtp.Send(customerMessage);
-                 */
             }
             catch(Exception e)
             {

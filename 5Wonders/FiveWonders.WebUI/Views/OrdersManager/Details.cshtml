@@ -1,11 +1,11 @@
 ﻿@model FiveWonders.core.Models.FWonderOrder
 
-<div>
-    <h4>FWonderOrder</h4>
+<div style="padding: 2rem;">
+    <h4>Order ID: @Model.mID</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.mTimeEntered)
+            Time Purchased
         </dt>
 
         <dd>
@@ -49,13 +49,10 @@
                 Size
             </td>
             <td>
-                Custom Text
-            </td>
-            <td>
-                Custom Number
-            </td>
-            <td>
                 Total Price
+            </td>
+            <td>
+                Additional Details
             </td>
         </tr>
 
@@ -75,13 +72,10 @@
                     @item.mSize
                 </td>
                 <td>
-                    @item.mCustomText
-                </td>
-                <td>
-                    @item.mCustomNumber
-                </td>
-                <td>
                     @String.Format("{0:c}", (item.mPrice * item.mQuantity))
+                </td>
+                <td>
+                    @Html.ActionLink("View Order Item", "OrderItemDetails", new { Id = item.mID, baseOrderId = Model.mID})
                 </td>
             </tr>
         }

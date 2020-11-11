@@ -142,6 +142,7 @@ namespace FiveWonders.WebUI.Controllers
                 string strSelectedLists = selectedCustomLists != null ? String.Join(",", selectedCustomLists) : "";
 
                 bool shouldUpdateBaskets = (target.mPrice != p.Product.mPrice
+                                           || target.isDisplayed != p.Product.isDisplayed
                                            || target.mSizeChart != p.Product.mSizeChart
                                            || target.isNumberCustomizable != p.Product.isNumberCustomizable
                                            || target.isTextCustomizable != p.Product.isTextCustomizable
@@ -173,6 +174,7 @@ namespace FiveWonders.WebUI.Controllers
                 target.mHtmlDesc = p.Product.mHtmlDesc;
                 target.mSubCategories = strSelectedSubs;
                 target.mCustomLists = strSelectedLists;
+                target.isDisplayed = p.Product.isDisplayed;
 
                 // If new images were selected, update Target's Image property 
                 string[] currentImageFiles = target.mImage.Split(',');
@@ -182,8 +184,7 @@ namespace FiveWonders.WebUI.Controllers
                     currentImageFiles.Length != existingImages.Length)
                 {
                     string newImageURL;
-                    // TODO UPDATE Update images
-                    UpdateImages(Id, existingImages, imageFiles, out newImageURL);
+                    imageStorageService.UpdateImages(Server, EFolderName.Products, currentImageFiles, existingImages, imageFiles, out newImageURL, Id);
 
                     target.mImage = newImageURL;
                 }
@@ -262,39 +263,6 @@ namespace FiveWonders.WebUI.Controllers
                 _ = e;
                 return RedirectToAction("Delete", "ProductManager", new { Id = Id });
             }
-        }
-
-        private void UpdateImages(string Id, string[] existingImages, HttpPostedFileBase[] newImageFiles, out string newImageURL)
-        {
-            // Get current product images
-            string[] productImgs = context.Find(Id).mImage.Split(',');
-
-            // Delete images that were not checkboxed
-            string[] imagesToDelete = (existingImages == null) 
-                ? productImgs
-                : productImgs.Where(img => !existingImages.Contains(img)).ToArray();
-
-            imageStorageService.DeleteMultipleImages(EFolderName.Products, imagesToDelete, Server);
-
-            // Initialize - Either new List or with images that were checkboxed
-            List<string> allFileNames = existingImages != null 
-                ? existingImages.ToList() 
-                : new List<string>();
-
-            // Add new images to folder, and store it's file name to List from above
-            if(newImageFiles != null && newImageFiles[0] != null)
-            {
-                foreach (HttpPostedFileBase file in newImageFiles)
-                {
-                    string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-                    string fileName = Id + fileNameWithoutSpaces;
-                    file.SaveAs(Server.MapPath("//Content//ProductImages//") + fileName);
-                    allFileNames.Add(fileName);
-                }
-            }
-
-            newImageURL = String.Join(",", allFileNames);
         }
 
         private ProductManagerViewModel GetProductManagerVM()
