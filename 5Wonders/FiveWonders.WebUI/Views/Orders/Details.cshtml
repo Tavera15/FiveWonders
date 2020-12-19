@@ -75,7 +75,7 @@
                     @String.Format("{0:c}", (item.mPrice * item.mQuantity))
                 </td>
                 <td>
-                    @Html.ActionLink("View Order Item", "OrderItemDetails", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })
+                    @Html.ActionLink("View Item", "OrderItemDetails", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })
                 </td>
             </tr>
         }

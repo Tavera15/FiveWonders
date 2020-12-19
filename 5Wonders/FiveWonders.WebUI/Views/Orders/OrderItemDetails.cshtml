@@ -1,17 +1,9 @@
 ﻿@model FiveWonders.core.Models.OrderItem
 
 <div style="padding: 2rem;">
-    <h4>Order Item</h4>
+    <h4>@Model.mProductName</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.mProductName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mProductName)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.mPrice)
         </dt>
@@ -68,22 +60,25 @@
             @Html.DisplayFor(model => model.mCustomTime)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.mCustomListOpts)
-        </dt>
+        @if(ViewBag.customLists != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.mCustomListOpts)
+            </dt>
 
-        <dd>
-            <ul></ul>
+            <dd>
+                <ul></ul>
 
-            <ul>
-                @foreach (var listOption in ViewBag.customLists.Keys)
-                {
-                    <li>
-                        @listOption: @ViewBag.customLists[listOption]
-                    </li>
-                }
-            </ul>
-        </dd>
+                    <ul>
+                        @foreach (var listOption in ViewBag.customLists.Keys)
+                        {
+                            <li>
+                                @listOption: @ViewBag.customLists[listOption]
+                            </li>
+                        }
+                    </ul>
+            </dd>
+        }
 
     </dl>
 </div>
