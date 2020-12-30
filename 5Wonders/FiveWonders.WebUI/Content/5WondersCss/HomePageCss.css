@@ -14,7 +14,7 @@
 
 .hp-greeting-box {
     display: flex;
-    border: 1px solid lightgray;
+    border: 1px solid white;
     flex-direction: column;
     justify-content: center;
     min-height: 50vh;
@@ -53,6 +53,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    border: 2px solid white;
 }
 
 .section-top-three {
@@ -112,6 +113,7 @@
     align-items: center;
     justify-content: center;
     min-height: 27vh;
+    border: solid 1px white;
 }
 
 .category-container {
@@ -164,6 +166,7 @@
 }
 
 .home-services-data {
+    border: solid 1px white;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -230,7 +233,6 @@
 }
 
 .home-gallery-one-of-four-container {
-    border: solid white 2px;
     display: flex;
     padding: 1rem;
     margin: 0;
