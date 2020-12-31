@@ -12,7 +12,7 @@ namespace FiveWonders.core.ViewModels
     public class HomePageViewModel
     {
         public HomePage homePageData { get; set; }
-        public List<Product> top3Products { get; set; }
+        public List<ProductData> top3Products { get; set; }
         public List<GalleryImg> top3IGPosts { get; set; }
         public Promo promo1 { get; set; }
         public Promo promo2 { get; set; }
@@ -26,5 +26,11 @@ namespace FiveWonders.core.ViewModels
         public string promoName { get; set; }
         public float promoImgShader { get; set; }
         public string promoNameColor { get; set; }
+    }
+
+    public class ProductData
+    {
+        public Product product { get; set; }
+        public string productCategoryName { get; set; }
     }
 }

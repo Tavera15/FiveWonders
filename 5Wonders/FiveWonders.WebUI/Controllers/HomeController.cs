@@ -58,8 +58,29 @@ namespace FiveWonders.WebUI.Controllers
                 : "";
 
             Product[] allProductsSorted = productsContext.GetCollection().Where(p => p.isDisplayed).OrderByDescending(x => x.mTimeEntered).ToArray();
-            List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(5).ToList();
+            List<Product> top3Products = allProductsSorted.Take(3).ToList();
+            List<ProductData> top3ProductsData = new List<ProductData>();
+
+            foreach(Product p in top3Products)
+            {
+                try
+                {
+                    Category cat = categoryContext.Find(p.mCategory, true);
+
+                    ProductData productData = new ProductData();
+                    productData.product = p;
+                    productData.productCategoryName = cat.mCategoryName;
+
+                    top3ProductsData.Add(productData);
+                }
+                catch(Exception e)
+                {
+                    top3ProductsData = new List<ProductData>();
+                    break;
+                }
+                
+            }
 
             Promo promo1 = new Promo();
             Promo promo2 = new Promo();
@@ -109,7 +130,7 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             homeViewModel.homePageData = homeData;
-            homeViewModel.top3Products = top3Products;
+            homeViewModel.top3Products = top3ProductsData;
             homeViewModel.top3IGPosts = top4GalleryImgs;
             homeViewModel.promo1 = promo1;
             homeViewModel.promo2 = promo2;

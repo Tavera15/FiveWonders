@@ -17,23 +17,32 @@
     @if (Model.products.Length > 0)
     {
         <div class="pp-products-section">
-            @{string classTags = "col-lg-3 col-md-4 col-sm-6 col-xs-6";}
+            @{string classTags = "col-lg-4 col-md-6 col-sm-6 col-xs-6";}
 
-            @foreach (var product in Model.products)
+            @for (int i = 0; i < Model.products.Length; i++)
             {
-                string[] currentImageFiles = product.mImage.Split(',');
+                FiveWonders.core.ViewModels.ProductData product = Model.products[i];
+                string[] currentImageFiles = product.product.mImage.Split(',');
                 string firstImage = currentImageFiles[0];
 
                 <div class="@classTags pp-card-container">
-                    <a href="/products/item/@product.mID" class="fw-card-a">
+                    <a href="/products/item/@product.product.mID" class="fw-card-a">
                         <div class="fw-product-container">
-                            <div class="fw-card" style="box-shadow: none;">
-                                <h3 class="fw-card-title">@product.mName</h3>
-                                <img src="@Url.Content("~/Content/ProductImages/" + firstImage)"
-                                     alt="@product.mName"
-                                     class="fw-card-img pp-fw-card-img" />
-                                <h4 class="fw-card-price">$@product.mPrice</h4>
-                                <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                            <div class="fw-card" style="padding:1rem; background-color:rgba(253,253,253,1); border-radius: 10px;">
+                                <div style="border: solid 1px lightgrey; background-color: white;">
+
+                                    <div style="display: flex; flex-direction:row; justify-content:space-between; padding: 0 1.5rem;">
+                                        <h4 class="fw-card-price" style="text-align: left; font-weight: normal;">@product.productCategoryName</h4>
+                                        <h4 class="fw-card-price" style="text-align:right;">$@product.product.mPrice</h4>
+                                    </div>
+
+                                    <img alt="@product.product.mName"
+                                            src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                            class="fw-card-img"/>
+
+                                    <h3 class="fw-card-title">@product.product.mName</h3>
+                                    <p class="btn btn-primary btn-lg fw-card-btn">View Product</p>
+                                </div>
                             </div>
                         </div>
                     </a>

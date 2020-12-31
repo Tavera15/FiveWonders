@@ -200,7 +200,7 @@ namespace FiveWonders.WebUI.Controllers
             return fixedTitle;
         }
 
-        private Product[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName, int? page, out int pageNumbers)
+        private ProductData[] GetProducts(Category categoryData, List<SubCategory> subcategoriesData, string productName, int? page, out int pageNumbers)
         {
             Product[] allResults = productsContext.GetCollection().Where(p => p.isDisplayed).ToArray();
 
@@ -238,13 +238,25 @@ namespace FiveWonders.WebUI.Controllers
                 double rawPageNumbers = ((double)allResults.Length / (double)CARDS_PER_PAGE);
                 pageNumbers = (int)(Math.Ceiling(rawPageNumbers));
 
-                return results.OrderByDescending(p => p.mTimeEntered).ToArray();
+                List<ProductData> productData = new List<ProductData>();
+
+                foreach(Product p in results)
+                {
+                    Category cat = categoryContext.Find(p.mCategory, true);
+                    ProductData pd = new ProductData();
+                    pd.product = p;
+                    pd.productCategoryName = cat.mCategoryName;
+
+                    productData.Add(pd);
+                }
+
+                return productData.OrderByDescending(p => p.product.mTimeEntered).ToArray();
             }
             catch(Exception e)
             {
                 _ = e;
                 pageNumbers = 1;
-                return new Product[] { };
+                return new ProductData[] { };
             }
         }
 

@@ -9,7 +9,7 @@ namespace FiveWonders.core.ViewModels
 {
     public class ProductsListViewModel
     {
-        public Product[] products { get; set; }
+        public ProductData[] products { get; set; }
         public string pageTitle { get; set; }
         public string pageTitleColor { get; set; }
         public string imgUrl { get; set; }

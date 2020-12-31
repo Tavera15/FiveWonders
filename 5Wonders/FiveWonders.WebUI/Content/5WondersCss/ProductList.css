@@ -75,9 +75,9 @@
     }
 }
 
-@media (max-width: 735px) {
+@media (max-width: 640px) {
     .pp-card-container {
-        width: calc(100%/2);
+        width: calc(100%/1);
         padding: 0 2rem 2rem;
     }
 }
