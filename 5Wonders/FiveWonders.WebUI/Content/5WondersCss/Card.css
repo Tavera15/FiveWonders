@@ -19,6 +19,9 @@
     width: 100%;
     box-shadow: rgba(0,0,0,.4) 7px 7px;
     font-family: oswald;
+    padding: 1rem;
+    background-color: rgba(253,253,253,1);
+    border-radius: 10px;
 }
 
 .fw-card:hover {
@@ -31,7 +34,7 @@
     background-color: inherit;
     color: #242526;
     text-align: center;
-
+    padding: 0 1rem;
     display:  flex;
     flex-direction: column;
     justify-content: center;
@@ -53,6 +56,16 @@
     background-color: inherit;
 }
 
+.fw-card-price-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+}
+
+.fw-card-a:hover .fw-card-price-container {
+}
+
 .fw-card-price {
     padding: 1.5rem 0;
     margin: 0;
@@ -64,6 +77,7 @@
 .fw-card-btn {
     width: 100%;
     color: white;
+    border: solid #242526 1px;
     border-radius: 0;
     background-color: rgb(90, 185, 162);
     transition: .24s ease-in-out;

@@ -1,7 +1,6 @@
 ﻿#item-page {
     display: flex;
     flex-direction: row;
-    padding: 2vh;
     padding: 0;
     flex-wrap: wrap;
     min-height: 100vh;
@@ -12,6 +11,21 @@
 .carousel-inner {
     height: 60vh;
     background-color: inherit !important;
+}
+
+label{
+    font-size: 1.2em;
+    width: 100%;
+    justify-content: center;
+    display: inline-block;
+    flex-direction: column;
+    text-align: center;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    text-align: center;
 }
 
 
@@ -26,18 +40,17 @@
 
 .item-data-container {
     margin: 0;
-    border: solid 1px lightgrey;
-    border: none;
 }
 
 .item-data {
     text-align: center;
-    padding: 0 2rem;
+    background-color: rgba(253,253,253,1);
+    padding: 0 1rem;
 }
 
 .item-data-name {
-    margin: 2rem 0;
     font-weight: bold;
+    padding: 0 1rem;
 }
 
 .item-data-price {
@@ -198,7 +211,6 @@
     }
 
     .ip-customization-container{
-        margin: 0 -2rem 2rem;
     }
 
     .item-data-desc-container {
