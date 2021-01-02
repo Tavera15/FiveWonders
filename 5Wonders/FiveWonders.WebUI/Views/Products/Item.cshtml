@@ -39,6 +39,16 @@
                 <span class="sr-only">Next</span>
             </a>
         </div>
+
+        @if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
+        {
+            <div class="col-lg-7 col-md-12 col-sm-12 ip-top-desc">
+                <h3 style="font-weight: bold; text-decoration: underline;">Description</h3>
+                <div class="item-data-tiny">
+                    @Html.Raw(Model.product.mHtmlDesc)
+                </div>
+            </div>
+        }
     </div>
 
     <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
@@ -68,11 +78,11 @@
 
                         if (Model.sizeChart != null)
                         {
-                            <div class="ip-customization-container" style="border: none; margin: 0;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; flex-direction: column; margin: 0 0 2rem; padding: 0;">
 
-                                <div class="form-group">
+                                <div class="form-group" style="padding: 0; margin: 0;">
                                     @Html.LabelFor(model => (model.productOrder.mSize), htmlAttributes: new { @class = "control-label" })
-                                    @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { @style = "margin: 0 auto; width: 100%;" } )
+                                    @Html.DropDownListFor(model => model.productOrder.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { @style = "margin: 0 auto; width: 100%;" })
                                     <div class="ip-sizachart-data">
                                         <h4 style="text-align: center;"><a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a></h4>
                                     </div>
@@ -80,9 +90,14 @@
                             </div>
                         }
 
+                        <div class="ip-add-to-cart-btn-container">
+                            <input type="submit" value="Add to Cart" class="btn btn-primary ip-add-to-cart-btn" />
+                        </div>
+
                         if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable || Model.product.isDateCustomizable || Model.product.isTimeCustomizable || Model.listOptions.Count > 0)
                         {
                             <div class="ip-customization-container">
+                                <h3 style="font-weight: bold; text-align: center; margin: 1rem 0 5rem;">Customization</h3>
 
                                 @if (Model.product.isTextCustomizable)
                                 {
@@ -104,7 +119,7 @@
                                 {
                                     <div class="form-group">
                                         <label class="control-label">Custom Date:</label>
-                                        @Html.EditorFor(model => model.productOrder.customDate, "", new { htmlAttributes = new { @type = "date", @style="margin: 0 auto; width: 100%;" } })
+                                        @Html.EditorFor(model => model.productOrder.customDate, "", new { htmlAttributes = new { @type = "date", @style = "margin: 0 auto; width: 100%;" } })
                                     </div>
                                 }
 
@@ -113,9 +128,6 @@
                                     <div class="form-group">
                                         <label class="control-label">Custom Time:</label>
                                         @Html.EditorFor(model => model.productOrder.customTime, "", new { htmlAttributes = new { @placeholder = "0:00 - 12:59", @style = "margin: 0 auto; width: 100%;" } })
-                                        <div class="col-md-10">
-                                            @Html.ValidationMessageFor(model => model.productOrder.customTime, "", new { @class = "text-danger" })
-                                        </div>
                                     </div>
                                 }
 
@@ -126,11 +138,8 @@
                                     foreach (var key in Model.listOptions.Keys)
                                     {
                                         <div class="form-group">
-                                            <label class="control-label col-md-2">@Model.customListNames[i++]</label>
-                                            <div class="col-md-10">
-                                                @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { htmlAttributes = new { } })
-                                                @Html.ValidationMessageFor(model => model.productOrder.mCustomListOptions, "", new { @class = "text-danger" })
-                                            </div>
+                                            <label class="control-label">@Model.customListNames[i++]</label>
+                                            @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { @style = "margin: 0 auto; width: 100%;" })
                                         </div>
                                     }
                                 }
@@ -141,7 +150,7 @@
 
                         if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
                         {
-                            <div class="col-lg-12, col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
                                 @foreach (string errMsg in ViewBag.errMessages)
                                 {
                                     <p class="text-danger">@errMsg</p>
@@ -149,28 +158,22 @@
                             </div>
                         }
 
-                        <div class="ip-add-to-cart-btn-container">
-                            <input type="submit" value="Add to Cart" class="btn btn-primary ip-add-to-cart-btn" />
-                        </div>
-
-
                     }
 
                 </div>
             </div>
         </div>
-
-        @if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
-        {
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <h3 style="font-weight: bold; text-decoration: underline;">Description</h3>
-                <div class="item-data-tiny">
-                    @Html.Raw(Model.product.mHtmlDesc)
-                </div>
-            </div>
-        }
-
     </div>
+
+    @if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
+    {
+        <div class="col-lg-7 col-md-12 col-sm-12 ip-bottom-desc">
+            <h3 style="font-weight: bold; text-decoration: underline;">Description</h3>
+            <div class="item-data-tiny">
+                @Html.Raw(Model.product.mHtmlDesc)
+            </div>
+        </div>
+    }
 
 </div>
 

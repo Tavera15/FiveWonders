@@ -57,21 +57,36 @@
 }
 
 .fw-card-price-container {
+    background: rgb(90,185,162);
+    background: linear-gradient(132deg, rgb(240, 128, 98) 64%, rgba(255,255,255,1) 64%);
+}
+
+.fw-card-price-container-cover {
+    padding: 0 1.5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 1.5rem;
+    margin: 0;
+    background-size: contain;
+    width: 100%;
+    background-color: rgba(255,255,255,1);
+    transition: .24s ease-in-out;
 }
 
-.fw-card-a:hover .fw-card-price-container {
+.fw-card-a:hover .fw-card-price-container-cover {
+    background-color: rgba(255,255,255,0);
+}
+
+.fw-card-a:hover .fw-card-category{
+    color:white;
 }
 
 .fw-card-price {
     padding: 1.5rem 0;
     margin: 0;
     color: #242526;
-    font-weight:bold;
-    background-color: inherit;
+    font-weight: bold;
+    transition: .24s ease-in-out;
 }
 
 .fw-card-btn {
@@ -81,6 +96,20 @@
     border-radius: 0;
     background-color: rgb(90, 185, 162);
     transition: .24s ease-in-out;
+}
+
+.basket-card-btn {
+    width: 100%;
+    color: white;
+    border: solid #242526 1px;
+    border-radius: 0;
+}
+
+.basket-card-btn a{
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    border: solid red 1px;
 }
 
 .fw-card-a:hover .fw-card-btn {
