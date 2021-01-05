@@ -219,8 +219,6 @@ namespace FiveWonders.WebUI.Controllers
                    createdPayment.links.FirstOrDefault(
                        x => x.rel.Equals("approval_url", StringComparison.OrdinalIgnoreCase));
 
-                // TODO Send confirmation to admins
-
                 return Redirect(approvalUrl.href);
             }
             catch (Exception e)
@@ -279,7 +277,7 @@ namespace FiveWonders.WebUI.Controllers
                 System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
 
                 // TODO Send Confirmation to admin and customer...?
-                MailMessage adminMessage = GetFilledMailedMessage(order.mID, adminUrl, "");
+                MailMessage adminMessage = GetFilledMailedMessage(order.mID, adminUrl, "admin email");
                 MailMessage customerMessage = GetFilledMailedMessage(order.mID, customerUrl, order.mCustomerEmail);
 
                 /*
@@ -353,7 +351,7 @@ namespace FiveWonders.WebUI.Controllers
             message.Body = "View order details: " + orderUrl;
 
             message.To.Add(sendTo);
-            message.From = new MailAddress("");
+            message.From = new MailAddress("middle email");
 
             return message;
         }

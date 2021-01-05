@@ -216,7 +216,7 @@
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 15px;
-    border: solid #242526 1px;
+    border: solid lightgrey 1px;
 }
 
 .home-gallery-solo-img {
@@ -365,7 +365,7 @@
 @media(max-width: 540px)
 {
     .img-test {
-        height: 30rem;
+        height: 35rem;
     }
 }
 

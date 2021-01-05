@@ -1,120 +1,180 @@
 ﻿@model FiveWonders.core.ViewModels.BasketItemViewModel
 
-<h4>@Model.product.mName</h4>
-<hr />
+@{
+    string[] imageFiles = Model.product.mImage.Split(',');
+    string firstImage = imageFiles[0];
+    string todaysDate = DateTime.Now.ToString("MM-dd-yyyy");
+}
 
-<div class="form-group" style="text-align: center;">
-    @Html.LabelFor(model => model.basketItem.mQuantity)
-
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 1rem; display: flex; flex-direction: row; justify-content: center;">
-        <input onclick="handleQuantity(-1)" type="image" width="32" height="32" src="~/Content/Icons/MinusRed32.png" />
-        <h3 id="quantityDisplay" style="margin: auto 20px;">@Model.basketItem.mQuantity</h3>
-        <input onclick="handleQuantity(1)" type="image" width="32" height="32" src="~/Content/Icons/PlusGreen32.png" />
-    </div>
-</div>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <input name="basketItem.mQuantity" id="quantityInput" type="number" min="1" step="1" value="@Model.basketItem.mQuantity" style="display:none; " />
-
-
-        @if (Model.sizeChart != null)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.basketItem.mSize, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.basketItem.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(','), Model.basketItem.mSize), new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.basketItem.mSize, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (Model.product.isTextCustomizable)
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2">@Model.product.mCustomText</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.basketItem.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.basketItem.mCustomText, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (Model.product.isNumberCustomizable)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.basketItem.mCustomNum, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.basketItem.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0-99" } })
-                    @Html.ValidationMessageFor(model => model.basketItem.mCustomNum, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (!String.IsNullOrWhiteSpace(Model.product.mCustomLists))
-        {
-            int i = 0;
-
-            foreach (var key in Model.listOptions.Keys)
-            {
-                <div class="form-group">
-                    <label class="control-label col-md-2">@Model.customListNames[i++]</label>
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key], Model.selectedCustomListOptions[key]), new { htmlAttributes = new { } })
-                        @Html.ValidationMessageFor(model => model.basketItem.mCustomListOptions, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            }
-        }
-
-        @if (Model.product.isDateCustomizable)
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2">Custom Date:</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.basketItem.customDate, "", new { htmlAttributes = new { @type = "date" } })
-                    @Html.ValidationMessageFor(model => model.basketItem.customDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (Model.product.isTimeCustomizable)
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2">Custom Time:</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.basketItem.customTime, "", new { htmlAttributes = new { @placeholder = "ie. 04:00" } })
-                    @Html.ValidationMessageFor(model => model.basketItem.customTime, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        }
-
-        @if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
-        {
-            <div class="col-lg-12, col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
-                @foreach (string errMsg in ViewBag.errMessages)
+<div id="item-page">
+    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                @for (int i = 0; i < imageFiles.Length; i++)
                 {
-                    <p class="text-danger">@errMsg</p>
+                    string liClassTag = i == 0 ? "active" : "";
+
+                    <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
+                }
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                @for (int i = 0; i < imageFiles.Length; i++)
+                {
+                    string itemClassTag = i == 0 ? "item active" : "item";
+
+                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]));"></div>
                 }
             </div>
-        }
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        @if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
+        {
+            <div class="col-lg-7 col-md-12 col-sm-12 ip-top-desc">
+                <h3 style="font-weight: bold; text-decoration: underline;">Description</h3>
+                <div class="item-data-tiny">
+                    @Html.Raw(Model.product.mHtmlDesc)
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
+
+        <div class="item-data">
+            <div class="item-data-inner">
+
+                <h1 class="item-data-name">@Model.product.mName</h1>
+                <h3 class="item-data-price">$@Model.product.mPrice</h3>
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 3rem;">
+                    @Html.LabelFor(model => model.basketItem.mQuantity)
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; flex-direction: row; justify-content: center; align-items: baseline;">
+                        <input onclick="handleQuantity(-1)" type="image" width="32" height="32" src="~/Content/Icons/MinusRed32.png" />
+                        <h3 id="quantityDisplay" style="margin: auto 20px;">@Model.basketItem.mQuantity</h3>
+                        <input onclick="handleQuantity(1)" type="image" width="32" height="32" src="~/Content/Icons/PlusGreen32.png" />
+                    </div>
+                </div>
+
+                <div class="item-data-form">
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+
+                        if (Model.sizeChart != null)
+                        {
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; flex-direction: column; margin: 0 0 2rem; padding: 0;">
+
+                                <div class="form-group" style="padding: 0; margin: 0;">
+                                    @Html.LabelFor(model => (model.basketItem.mSize), htmlAttributes: new { @class = "control-label" })
+                                    @Html.DropDownListFor(model => model.basketItem.mSize, new SelectList(Model.sizeChart.mSizesToDisplay.Split(',')), new { @style = "margin: 0 auto; width: 100%;" })
+                                    <div class="ip-sizachart-data">
+                                        <h4 style="text-align: center;"><a href="@Url.Action("SizeChart", "Products", new {Id = Model.product.mID })" rel="noopener noreferrer" target="_blank">(View Size Chart)</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="ip-add-to-cart-btn-container">
+                            <input type="submit" value="Update Item" class="btn btn-primary ip-add-to-cart-btn" />
+                        </div>
+
+                        if (Model.product.isTextCustomizable || Model.product.isNumberCustomizable || Model.product.isDateCustomizable || Model.product.isTimeCustomizable || Model.listOptions.Count > 0)
+                        {
+                            <div class="ip-customization-container">
+                                <h3 style="font-weight: bold; text-align: center; margin: 1rem 0 5rem;">Customization</h3>
+
+                                @if (Model.product.isTextCustomizable)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label">@Model.product.mCustomText</label>
+                                        @Html.EditorFor(model => model.basketItem.mCustomText, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                                    </div>
+                                }
+
+                                @if (Model.product.isNumberCustomizable)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label">Custom Number:</label>
+                                        @Html.EditorFor(model => model.basketItem.mCustomNum, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0-99", @style = "margin: 0 auto; width: 100%;" } })
+                                    </div>
+                                }
+
+                                @if (Model.product.isDateCustomizable)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label">Custom Date:</label>
+                                        @Html.EditorFor(model => model.basketItem.customDate, "", new { htmlAttributes = new { @type = "date", @style = "margin: 0 auto; width: 100%;" } })
+                                    </div>
+                                }
+
+                                @if (Model.product.isTimeCustomizable)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label">Custom Time:</label>
+                                        @Html.EditorFor(model => model.basketItem.customTime, "", new { htmlAttributes = new { @placeholder = "0:00 - 12:59", @style = "margin: 0 auto; width: 100%;" } })
+                                    </div>
+                                }
+
+                                @if (Model.listOptions.Count > 0)
+                                {
+                                    int i = 0;
+
+                                    foreach (var key in Model.listOptions.Keys)
+                                    {
+                                        <div class="form-group">
+                                            <label class="control-label">@Model.customListNames[i++]</label>
+                                            @Html.DropDownListFor(model => model.selectedCustomListOptions[key], new SelectList(Model.listOptions[key]), new { @style = "margin: 0 auto; width: 100%;" })
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        <input name="basketItem.mQuantity" id="quantityInput" type="number" min="1" step="1" value="@Model.basketItem.mQuantity" style="display:none; " />
+
+                        if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+                        {
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
+                                @foreach (string errMsg in ViewBag.errMessages)
+                                {
+                                    <p class="text-danger">@errMsg</p>
+                                }
+                            </div>
+                        }
+
+                    }
+
+                </div>
             </div>
         </div>
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
+    @if (!String.IsNullOrWhiteSpace(Model.product.mHtmlDesc))
+    {
+        <div class="col-lg-7 col-md-12 col-sm-12 ip-bottom-desc">
+            <h3 style="font-weight: bold; text-decoration: underline;">Description</h3>
+            <div class="item-data-tiny">
+                @Html.Raw(Model.product.mHtmlDesc)
+            </div>
+        </div>
+    }
+
 </div>
 
 @section Scripts {
@@ -138,7 +198,7 @@
 
     <script>
         $(document).ready(function () {
-            var date_input = $('input[name="basketItem.customDate"]');
+            var date_input = $('input[name="productOrder.customDate"]'); //our date input has the name "date"
             var options = {
                 format: 'mm/dd/yyyy',
                 container: 'body',
@@ -149,4 +209,10 @@
             date_input.datepicker(options);
         })
     </script>-->
+}
+
+@section Pagecss
+{
+    <link href="~/Content/5WondersCss/ItemPage.css"
+          rel="stylesheet" type="text/css" />
 }

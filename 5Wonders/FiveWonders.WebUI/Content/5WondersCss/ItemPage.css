@@ -4,7 +4,7 @@
     padding: 0;
     flex-wrap: wrap;
     min-height: 100vh;
-    width: 85%;
+    width: 90%;
     margin: 0 auto;
 }
 
@@ -46,6 +46,12 @@ label{
 .item-data {
     text-align: center;
     background-color: rgba(253,253,253,1);
+}
+
+.item-data-inner {
+    border: solid lightgrey 1px;
+    background-color: white;
+    min-height: 100vh;
 }
 
 .item-data-name {
@@ -164,6 +170,14 @@ label{
     .ip-bottom-desc {
         display: block;
     }
+
+    .item-data-container {
+        padding: 0;
+    }
+
+    .item-data-inner{
+        min-height: unset;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -173,10 +187,6 @@ label{
 
     .ip-product-img {
         width: 100%;
-    }
-
-    .item-data-container {
-        padding: 0;
     }
 
     .item-data {

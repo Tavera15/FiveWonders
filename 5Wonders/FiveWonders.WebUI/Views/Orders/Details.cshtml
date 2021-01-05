@@ -29,7 +29,6 @@
         </dd>
 
     </dl>
-</div>
 
 @if (Model != null)
 {
@@ -46,12 +45,6 @@
                 Quantity
             </td>
             <td>
-                Size
-            </td>
-            <td>
-                Total Price
-            </td>
-            <td>
                 Additional Details
             </td>
         </tr>
@@ -63,16 +56,10 @@
                     @item.mProductName
                 </td>
                 <td>
-                    @item.mPrice
+                    $@item.mPrice
                 </td>
                 <td>
                     @item.mQuantity
-                </td>
-                <td>
-                    @item.mSize
-                </td>
-                <td>
-                    @String.Format("{0:c}", (item.mPrice * item.mQuantity))
                 </td>
                 <td>
                     @Html.ActionLink("View Item", "OrderItemDetails", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })
@@ -95,4 +82,5 @@
         @Html.ActionLink("Back to List", "Index")
     </p>
 }
+</div>
 
