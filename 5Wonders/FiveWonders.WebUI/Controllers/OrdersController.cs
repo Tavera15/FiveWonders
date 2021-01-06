@@ -1,4 +1,5 @@
 ﻿using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
@@ -16,12 +17,14 @@ namespace FiveWonders.WebUI.Controllers
         public IRepository<FWonderOrder> ordersContext;
         public IRepository<Customer> customerContext;
         public IRepository<OrderItem> orderItemContext;
+        public IRepository<Product> productContext;
 
-        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository, IRepository<OrderItem> orderItemRepository)
+        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productRepository)
         {
             ordersContext = ordersRepository;
             customerContext = customerRepository;
             orderItemContext = orderItemRepository;
+            productContext = productRepository;
         }
 
         // GET: Orders
@@ -57,36 +60,32 @@ namespace FiveWonders.WebUI.Controllers
         {
             try
             {
-                // TODO If Email is confirmed, make sure they have to login first
-
                 FWonderOrder order = ordersContext.Find(Id, true);
 
-                if (!order.isCompleted || String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId)
+                if (!order.isCompleted || VerificationId != order.mVerificationId)
                 {
                     throw new Exception("Order not accessible.");
                 }
-
-                string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
                 // Order is linked with customer
                 // Check that the right customer is logged in.
                 if (!String.IsNullOrWhiteSpace(order.mCustomerId))
                 {
+                    string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+                    
+                    // User is not logged in
+                    if(String.IsNullOrWhiteSpace(possibleCustomerUserId))
+                    {
+                        return RedirectToAction("Login", "Account", new { returnUrl = Request.RawUrl });
+                    }
+
                     Customer customer = customerContext.GetCollection()
                         .FirstOrDefault(c => c.mUserID == possibleCustomerUserId);
 
+                    // Wrong customer is logged in
                     if (customer == null || order.mCustomerId != customer.mID)
                     {
-                        throw new Exception("Order not accessible.");
-                    }
-                }
-                else
-                {
-                    // Order is not linked with customer
-                    // Check that no customer is logged in.
-                    if(!String.IsNullOrWhiteSpace(possibleCustomerUserId))
-                    {
-                        throw new Exception("Order not accessible.");
+                        throw new Exception("Access denied");
                     }
                 }
 
@@ -108,40 +107,48 @@ namespace FiveWonders.WebUI.Controllers
                 FWonderOrder order = ordersContext.Find(baseOrderId, true);
                 OrderItem orderItem = orderItemContext.Find(Id, true);
 
-                if (!order.isCompleted || String.IsNullOrWhiteSpace(order.mVerificationId) || VerificationId != order.mVerificationId
-                    || orderItem.mBaseOrderID != order.mID)
+                if (!order.isCompleted || VerificationId != order.mVerificationId)
                 {
                     throw new Exception("Order Item not accessible.");
                 }
-
-                string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
                 // Order is linked with customer
                 // Check that the right customer is logged in.
                 if (!String.IsNullOrWhiteSpace(order.mCustomerId))
                 {
+                    string possibleCustomerUserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+
+                    // User is not logged in
+                    if (String.IsNullOrWhiteSpace(possibleCustomerUserId))
+                    {
+                        return RedirectToAction("Login", "Account", new { returnUrl = Request.RawUrl });
+                    }
+
                     Customer customer = customerContext.GetCollection()
                         .FirstOrDefault(c => c.mUserID == possibleCustomerUserId);
 
+                    // Wrong customer is logged in
                     if (customer == null || order.mCustomerId != customer.mID)
                     {
-                        throw new Exception("Order not accessible.");
+                        throw new Exception("Access denied");
                     }
                 }
-                else
+
+                Product product = productContext.Find(orderItem.mProductID);
+
+                OrderItemViewModel OIviewModel = new OrderItemViewModel()
                 {
-                    // Order is not linked with customer
-                    // Check that no customer is logged in.
-                    if (!String.IsNullOrWhiteSpace(possibleCustomerUserId))
-                    {
-                        throw new Exception("Order not accessible.");
-                    }
-                }
+                    orderItem = orderItem,
+                    verificationId = order.mVerificationId,
+                    productImages = product != null && !String.IsNullOrWhiteSpace(product.mImage) 
+                        ? product.mImage.Split(',') 
+                        : new string[] { }
+                };
 
                 Dictionary<string, string> customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts);
 
                 ViewBag.customLists = customLists;
-                return View(orderItem);
+                return View(OIviewModel);
             }
             catch(Exception e)
             {

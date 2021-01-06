@@ -30,57 +30,56 @@
 
     </dl>
 
-@if (Model != null)
-{
-    <table class="table">
+    @if (Model != null)
+    {
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pp-products-section">
+            @{string classTags = "col-lg-4 col-md-6 col-sm-6 col-xs-12";}
+            
+            @foreach (var item in Model.mOrderItems)
+            {
 
-        <tr>
-            <td>
-                Product Name
-            </td>
-            <td>
-                Product Price
-            </td>
-            <td>
-                Quantity
-            </td>
-            <td>
-                Additional Details
-            </td>
-        </tr>
+                <div class="@classTags pp-card-container">
+                    <div class="fw-product-container">
+                        <a href="@Url.Action("OrderItemDetails", "Orders", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })" style="text-decoration: none;">
+                            <div class="fw-card">
+                                <div style="border: solid 1px lightgrey; background-color: white;">
 
-        @foreach (var item in Model.mOrderItems)
-        {
-            <tr>
-                <td>
-                    @item.mProductName
-                </td>
-                <td>
-                    $@item.mPrice
-                </td>
-                <td>
-                    @item.mQuantity
-                </td>
-                <td>
-                    @Html.ActionLink("View Item", "OrderItemDetails", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })
-                </td>
-            </tr>
-        }
+                                    <h3 class="fw-card-title">@item.mProductName</h3>
 
-        <tr>
-            <td>
-                @String.Format("Total Paid: ({0} items): {1:c}", (from q in Model.mOrderItems select q.mQuantity).Sum(), (from p in Model.mOrderItems select p.mPrice * p.mQuantity).Sum())
-            </td>
-        </tr>
+                                    <hr />
 
-    </table>
-}
+                                    <div class="fw-card-price-container-cover">
+                                        <h4 class="fw-card-price fw-card-category" style="text-align: left; font-weight: normal;">Qty: @item.mQuantity</h4>
+                                        <h4 class="fw-card-price" style="text-align:right; font-weight: normal;">Price: $@item.mPrice</h4>
+                                    </div>
 
-@if(User.Identity.IsAuthenticated)
-{
-    <p>
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-}
+                                    <div style="display: flex; flex-direction: row;">
+                                        <p href="@Url.Action("OrderItemDetails", "Orders", new { Id = item.mID, baseOrderId = Model.mID, VerificationId = Model.mVerificationId })" class="btn btn-lg basket-card-btn" style="color: black;">View Item Details</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
 </div>
 
+@section Pagecss
+{
+    <link href="~/Content/5WondersCss/Card.css"
+          rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/5WondersCss/ProductList.css"
+          rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/5WondersCss/BasketPage.css" rel="stylesheet" />
+}

@@ -1,84 +1,120 @@
-﻿@model FiveWonders.core.Models.OrderItem
+﻿@model FiveWonders.core.ViewModels.OrderItemViewModel
 
 <div style="padding: 2rem;">
-    <h4>@Model.mProductName</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.mPrice)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mPrice)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mQuantity)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mQuantity)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mSize)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mSize)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mCustomText)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mCustomText)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mCustomNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mCustomNumber)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mCustomDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mCustomDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.mCustomTime)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mCustomTime)
-        </dd>
-
-        @if(ViewBag.customLists != null)
+    <div style="display: flex; flex-direction: row; flex-wrap:wrap;">
+        @if (Model.productImages != null)
         {
-            <dt>
-                @Html.DisplayNameFor(model => model.mCustomListOpts)
-            </dt>
-
-            <dd>
-                <ul></ul>
-
-                    <ul>
-                        @foreach (var listOption in ViewBag.customLists.Keys)
+            <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        @for (int i = 0; i < Model.productImages.Length; i++)
                         {
-                            <li>
-                                @listOption: @ViewBag.customLists[listOption]
-                            </li>
+                            string liClassTag = i == 0 ? "active" : "";
+
+                            <li data-target="#myCarousel" data-slide-to="@i" class="@liClassTag"></li>
                         }
-                    </ul>
-            </dd>
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                        @for (int i = 0; i < Model.productImages.Length; i++)
+                        {
+                            string itemClassTag = i == 0 ? "item active" : "item";
+
+                            <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @Model.productImages[i]));"></div>
+                        }
+                    </div>
+
+                    <!-- Left and right controls -->
+                    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
         }
 
-    </dl>
+        <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
+
+            <div class="item-data">
+                <div class="item-data-inner" style="min-height: unset;">
+
+                    <h1 class="item-data-name">@Model.orderItem.mProductName</h1>
+                    <hr />
+
+                    <div class="form-group">
+                        <label class="control-label">Unit Price:</label>
+                        $@Html.DisplayFor(model => model.orderItem.mPrice, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Quantity:</label>
+                        @Html.DisplayFor(model => model.orderItem.mQuantity, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => (model.orderItem.mSize), htmlAttributes: new { @class = "control-label" })
+                        @Html.DisplayFor(model => model.orderItem.mSize, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    </div>
+
+                    <div class="ip-customization-container">
+
+                        <div class="form-group">
+                            <label class="control-label">Custom Text:</label>
+                            @Html.DisplayFor(model => model.orderItem.mCustomText, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Custom Number:</label>
+                            @Html.DisplayFor(model => model.orderItem.mCustomNumber, new { htmlAttributes = new { @type = "number", @min = "0", @step = "1", @value = "0", placeholder = "0-99", @style = "margin: 0 auto; width: 100%;" } })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Custom Date:</label>
+                            @Html.DisplayFor(model => model.orderItem.mCustomDate, "", new { htmlAttributes = new { @type = "date", @style = "margin: 0 auto; width: 100%;" } })
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Custom Time:</label>
+                            @Html.DisplayFor(model => model.orderItem.mCustomTime, "", new { htmlAttributes = new { @placeholder = "0:00 - 12:59", @style = "margin: 0 auto; width: 100%;" } })
+                        </div>
+
+                        @if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+                        {
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
+                                @foreach (string errMsg in ViewBag.errMessages)
+                                {
+                                    <p class="text-danger">@errMsg</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>
+            @Html.ActionLink("Back to Order", "Details", new { Id = Model.orderItem.mBaseOrderID, VerificationId = Model.verificationId})
+        </p>
+    }
+
 </div>
+
+@section Scripts {
+    <!-- Include jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+}
+
+@section Pagecss
+{
+    <link href="~/Content/5WondersCss/ItemPage.css"
+          rel="stylesheet" type="text/css" />
+}
