@@ -228,9 +228,11 @@ namespace FiveWonders.WebUI.Controllers
                     }
                 }
 
+                // Calculate page number using input from url
                 int pageNumber = page ?? 1;
                 pageNumber = pageNumber <= 1 ? 1 : pageNumber;
 
+                // Generate the products per page using 'page number' variable
                 Product[] results = (pageNumber) <= 1
                     ? allResults.Take(CARDS_PER_PAGE).ToArray()
                     : (allResults.Skip(CARDS_PER_PAGE * (pageNumber - 1)).Take(CARDS_PER_PAGE)).ToArray();

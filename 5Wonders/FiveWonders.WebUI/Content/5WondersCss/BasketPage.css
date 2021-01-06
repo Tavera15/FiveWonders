@@ -6,6 +6,11 @@
 
 }
 
+.bp-card-container {
+    margin: 0 0 4rem;
+    padding: 0 2rem;
+}
+
 .bp-basket-items-section {
     display: flex;
     flex-direction: column;
@@ -18,6 +23,12 @@
     flex-direction: column;
     border: solid 1px lightgrey;
     min-height: 100vh;
+}
+
+@media(min-width: 2000px){
+    .bp-card-container{
+        width:calc(100%/3);
+    }
 }
 
 @media (max-width: 1300px){

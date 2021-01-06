@@ -48,6 +48,12 @@
     padding: 0 2rem;
 }
 
+@media(min-width: 1800px){
+    .pp-card-container{
+        width: 25%;
+    }
+}
+
 @media(max-width: 1400px) {
     .pp-products-section {
         padding: 0;

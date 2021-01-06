@@ -37,10 +37,9 @@
     padding: 0 1rem;
     display:  flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     height: 2.5em; /* (Number of lines you want visible) * (line-height) */
     line-height: 1.2em;
-
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 2; /* number of lines to show */
