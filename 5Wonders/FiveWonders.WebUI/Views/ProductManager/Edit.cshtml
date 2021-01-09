@@ -48,161 +48,135 @@
         {
             @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
+        <div class="form-horizontal col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <h4>@Model.Product.mName</h4>
             <hr />
+
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.isDisplayed, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.isDisplayed, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.isDisplayed, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.mHtmlDesc, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.TextAreaFor(model => model.Product.mHtmlDesc, new { @Id = "desc" })
-                </div>
+                @Html.LabelFor(model => model.Product.isDisplayed, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.isDisplayed, new { htmlAttributes = new { @class = "form-control", @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.isDisplayed, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName", Model.Product.mCategory), new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+                @Html.LabelFor(model => model.Product.mHtmlDesc, htmlAttributes: new { @class = "" })
+                @Html.TextAreaFor(model => model.Product.mHtmlDesc, new { @Id = "desc", @style="margin: 0 auto; width: 100%;" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName", Model.Product.mCategory), new { @style = "margin: 0 auto; width: 100%;" })
             </div>
 
             @if (Model.subCategories.Count() > 0)
             {
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @foreach (var item in Model.subCategories)
-                        {
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"
-                                           name="selectedCategories"
-                                           value=@item.mID
-                                           @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
-                                    @item.mSubCategoryName
-                                </label>
-                            </div>
-                        }
-                    </div>
+                    @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "" })
+
+                    @foreach (var item in Model.subCategories)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"
+                                       name="selectedCategories"
+                                       value=@item.mID
+                                       @if (Model.Product.mSubCategories.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                @item.mSubCategoryName
+                            </label>
+                        </div>
+                    }
                 </div>
             }
 
             @if (Model.customOptionLists.Count() > 0)
             {
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @foreach (var item in Model.customOptionLists)
-                        {
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox"
-                                           name="selectedCustomLists"
-                                           value=@item.mID
-                                           @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
-                                    @item.mName
-                                </label>
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
+                    @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "" })
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName", Model.Product.mSizeChart), new { htmlAttributes = new { @class = "form-control" } })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label col-md-2" style="font-weight: bold;">Existing Images</label>
-                <div class="col-md-10">
-                    @foreach (string image in imageFiles)
+                    @foreach (var item in Model.customOptionLists)
                     {
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox"
-                                       name="existingImages"
-                                       value=@image
-                                       @{ <text> checked </text>  } />
-                                @image
+                                       name="selectedCustomLists"
+                                       value=@item.mID
+                                       @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                @item.mName
                             </label>
                         </div>
                     }
                 </div>
+            }
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "" })
+                @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName", Model.Product.mSizeChart), new { @style = "margin: 0 auto; width: 100%;" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-offset-2 col-md-10">
-                    <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
-                </div>
+                <label class="" style="font-weight: bold;">Existing Images</label>
+                
+                @foreach (string image in imageFiles)
+                {
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                    name="existingImages"
+                                    value=@image
+                                    @{ <text> checked </text>  } />
+                            @image
+                        </label>
+                    </div>
+                }
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { } })
-                    @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
-                </div>
+                <label>New Images</label>
+                <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" style="margin: 0 auto; width: 100%;" />
+                @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { } })
-                    @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.isDateCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.isDateCustomizable, new { htmlAttributes = new { } })
-                    @Html.ValidationMessageFor(model => model.Product.isDateCustomizable, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.isTimeCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Product.isTimeCustomizable, new { htmlAttributes = new { } })
-                    @Html.ValidationMessageFor(model => model.Product.isTimeCustomizable, "", new { @class = "text-danger" })
-                </div>
+                @Html.LabelFor(model => model.Product.isDateCustomizable, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.isDateCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.isDateCustomizable, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Product.isTimeCustomizable, htmlAttributes: new { @class = "" })
+                @Html.EditorFor(model => model.Product.isTimeCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                @Html.ValidationMessageFor(model => model.Product.isTimeCustomizable, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">

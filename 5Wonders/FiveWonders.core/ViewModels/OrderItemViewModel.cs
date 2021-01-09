@@ -9,8 +9,9 @@ namespace FiveWonders.core.ViewModels
 {
     public class OrderItemViewModel
     {
+        public FWonderOrder order { get; set; }
         public OrderItem orderItem { get; set; }
         public string[] productImages { get; set; }
-        public string verificationId { get; set; }
+        public Dictionary<string, string> customLists { get; set; }
     }
 }

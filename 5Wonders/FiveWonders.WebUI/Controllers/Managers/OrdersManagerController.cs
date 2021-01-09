@@ -1,4 +1,5 @@
 ﻿using FiveWonders.core.Models;
+using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
 using Newtonsoft.Json;
 using System;
@@ -14,11 +15,13 @@ namespace FiveWonders.WebUI.Controllers.Managers
     {
         IRepository<FWonderOrder> ordersContext;
         IRepository<OrderItem> orderItemContext;
+        IRepository<Product> productsContext;
 
-        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository, IRepository<OrderItem> orderItemRepository)
+        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productsRepository)
         {
             ordersContext = ordersRepository;
             orderItemContext = orderItemRepository;
+            productsContext = productsRepository;
         }
 
         // GET: OrdersManager
@@ -85,16 +88,24 @@ namespace FiveWonders.WebUI.Controllers.Managers
             try
             {
                 OrderItem orderItem = orderItemContext.Find(Id, true);
+                FWonderOrder order = ordersContext.Find(baseOrderId, true);
 
                 if(orderItem.mBaseOrderID != baseOrderId)
                 {
                     throw new Exception("Order Item Base Order Id does not match.");
                 }
 
-                Dictionary<string, string> customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts);
+                Product product = productsContext.Find(orderItem.mProductID);
 
-                ViewBag.customLists = customLists;
-                return View(orderItem);
+                OrderItemViewModel viewModel = new OrderItemViewModel()
+                {
+                    order = order,
+                    orderItem = orderItem,
+                    productImages = product.mImage.Split(','),
+                    customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts),
+                };
+
+                return View(viewModel);
             }
             catch(Exception e)
             {

@@ -6,9 +6,6 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.mID)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.mTimeEntered)
         </th>
         <th>
@@ -25,9 +22,6 @@
 
 @foreach (var item in Model) {
 <tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.mID)
-    </td>
     <td>
         @Html.DisplayFor(modelItem => item.mTimeEntered)
     </td>

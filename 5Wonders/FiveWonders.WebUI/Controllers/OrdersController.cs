@@ -138,16 +138,14 @@ namespace FiveWonders.WebUI.Controllers
 
                 OrderItemViewModel OIviewModel = new OrderItemViewModel()
                 {
+                    order = order,
                     orderItem = orderItem,
-                    verificationId = order.mVerificationId,
+                    customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts),
                     productImages = product != null && !String.IsNullOrWhiteSpace(product.mImage) 
                         ? product.mImage.Split(',') 
                         : new string[] { }
                 };
 
-                Dictionary<string, string> customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts);
-
-                ViewBag.customLists = customLists;
                 return View(OIviewModel);
             }
             catch(Exception e)

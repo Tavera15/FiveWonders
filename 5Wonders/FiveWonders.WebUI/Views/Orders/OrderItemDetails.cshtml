@@ -1,6 +1,37 @@
 ﻿@model FiveWonders.core.ViewModels.OrderItemViewModel
 
+@*Customers Orders side*@
+
 <div style="padding: 2rem;">
+    <h4>Order ID: @Model.orderItem.mBaseOrderID</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Time Purchased
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.order.mTimeEntered)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.order.mCustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.order.mCustomerName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.order.mCustomerEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.order.mCustomerEmail)
+        </dd>
+
+    </dl>
+
     <div style="display: flex; flex-direction: row; flex-wrap:wrap;">
         @if (Model.productImages != null)
         {
@@ -57,7 +88,7 @@
                         @Html.DisplayFor(model => model.orderItem.mQuantity, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 2rem;">
                         @Html.LabelFor(model => (model.orderItem.mSize), htmlAttributes: new { @class = "control-label" })
                         @Html.DisplayFor(model => model.orderItem.mSize, "", new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
                     </div>
@@ -84,15 +115,20 @@
                             @Html.DisplayFor(model => model.orderItem.mCustomTime, "", new { htmlAttributes = new { @placeholder = "0:00 - 12:59", @style = "margin: 0 auto; width: 100%;" } })
                         </div>
 
-                        @if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
-                        {
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 2rem 0; padding: 2rem; border: solid red 1px;">
-                                @foreach (string errMsg in ViewBag.errMessages)
-                                {
-                                    <p class="text-danger">@errMsg</p>
-                                }
-                            </div>
-                        }
+                        <div class="form-group">
+                            <label class="control-label">Additional Customizations:</label>
+                            @if (Model.customLists != null && Model.customLists.Count > 0)
+                            {
+                                <ul style="list-style-type: none;">
+                                    @foreach (var listOption in Model.customLists.Keys)
+                                    {
+                                        <li>
+                                            @listOption: @Model.customLists[listOption]
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,7 +138,7 @@
     @if (User.Identity.IsAuthenticated)
     {
         <p>
-            @Html.ActionLink("Back to Order", "Details", new { Id = Model.orderItem.mBaseOrderID, VerificationId = Model.verificationId})
+            @Html.ActionLink("Back to Order", "Details", new { Id = Model.orderItem.mBaseOrderID, VerificationId = Model.order.mVerificationId })
         </p>
     }
 
