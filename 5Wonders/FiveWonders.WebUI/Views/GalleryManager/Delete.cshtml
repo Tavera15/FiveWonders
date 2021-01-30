@@ -17,7 +17,8 @@
 
 
     <div class="gallery-delete-img-container">
-        <img class="gallery-delete-img" alt="@Model.mImageFile" src="@Url.Content("~/Content/GalleryImages/" + Model.mImageFile) " />
+        @{ string x = Model.mImageType + Convert.ToBase64String(Model.mImage);}
+        <img class="gallery-delete-img" alt="@Model.mID" src="@x" />
     </div>
 
 </div>

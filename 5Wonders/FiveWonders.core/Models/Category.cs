@@ -18,7 +18,7 @@ namespace FiveWonders.core.Models
         public string mCategoryName { get; set; }
 
         [Display(Name = "Image")]
-        public string mImgUrL { get; set; }
+        public byte[] mImage { get; set; }
 
         [Display(Name = "Banner Image Shade Amount")]
         [Range(0, 1)]
@@ -26,6 +26,8 @@ namespace FiveWonders.core.Models
 
         [Display(Name = "Banner Text Color")]
         public string bannerTextColor { get; set; }
+
+        public string mImageType { get; set; }
 
         public Category()
         {
@@ -49,9 +51,9 @@ namespace FiveWonders.core.Models
                 .Must((cat, categoryName) => IsUniqueName(categoryName, cat.mID))
                     .WithMessage("Category Name must be a unique name.");
 
-            RuleFor(category => category.mImgUrL)
+            RuleFor(category => category.mImage)
                 .Cascade(CascadeMode.Stop)
-                .Must((cat, imageUrl) => willHaveImg(cat.mImgUrL, imgFile))
+                .Must((cat, imageUrl) => willHaveImg(cat.mImage, imgFile))
                     .WithMessage("Image is missing.");
         }
 
@@ -67,9 +69,9 @@ namespace FiveWonders.core.Models
             return !allCategories.Any(cat => cat.mCategoryName.ToLower() == mCategoryName.ToLower() && cat.mID != mID);
         }
 
-        private bool willHaveImg(string mImgUrL, HttpPostedFileBase imgFile)
+        private bool willHaveImg(byte[] storedImg, HttpPostedFileBase imgFile)
         {
-            return !String.IsNullOrEmpty(mImgUrL) || imgFile != null;
+            return storedImg != null || imgFile != null;
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿@model FiveWonders.core.ViewModels.BasketItemViewModel
 
 @{
-    string[] imageFiles = Model.product.mImage.Split(',');
-    string firstImage = imageFiles[0];
-    string todaysDate = DateTime.Now.ToString("MM-dd-yyyy");
+    var imageFiles = Model.productImages;
 }
 
 <div id="item-page">
@@ -11,7 +9,7 @@
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                @for (int i = 0; i < imageFiles.Length; i++)
+                @for (int i = 0; i < imageFiles.Count; i++)
                 {
                     string liClassTag = i == 0 ? "active" : "";
 
@@ -21,11 +19,11 @@
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-                @for (int i = 0; i < imageFiles.Length; i++)
+                @for (int i = 0; i < imageFiles.Count; i++)
                 {
                     string itemClassTag = i == 0 ? "item active" : "item";
-
-                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]));"></div>
+                    string imgSrc = imageFiles[i].mImageType + Convert.ToBase64String(imageFiles[i].mImage);
+                    <div class="@itemClassTag img-test" style="background-image: url(@imgSrc);"></div>
                 }
             </div>
 

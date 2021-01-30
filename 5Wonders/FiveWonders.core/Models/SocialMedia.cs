@@ -18,7 +18,8 @@ namespace FiveWonders.core.Models
         public string mUrl { get; set; }
 
         [Display(Name = "Icon")]
-        public string m64x64Icon { get; set; }
+        public byte[] mIcon { get; set; }
+        public string mIconType { get; set; }
 
         public bool isCommunicative { get; set; }
 
@@ -43,14 +44,14 @@ namespace FiveWonders.core.Models
                 .Must((sm, smUrl) => isUniqueUrl(smUrl, sm.mID))
                     .WithMessage("Social Media Url must be unique.");
 
-            RuleFor(socialMedia => socialMedia.m64x64Icon)
-                .Must((sm, imgUrl) => willHaveImg(imgUrl, imgFile))
+            RuleFor(socialMedia => socialMedia.mIcon)
+                .Must((sm, img) => willHaveImg(img, imgFile))
                     .WithMessage("A 64x64 pixels icon is missing.");
         }
 
-        private bool willHaveImg(string imgUrl, HttpPostedFileBase imgFile)
+        private bool willHaveImg(byte[] img, HttpPostedFileBase imgFile)
         {
-            return !String.IsNullOrWhiteSpace(imgUrl) || imgFile != null;
+            return img != null || imgFile != null;
         }
 
         private bool isUniqueUrl(string url, string Id)

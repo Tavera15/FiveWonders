@@ -11,7 +11,9 @@ namespace FiveWonders.core.Models
     public class HomePage : BaseEntity
     {
         [Display(Name = "Home Page Welcome Image")]
-        public string mWelcomeImgUrl { get; set; }
+        public byte[] mWelcomeImgID { get; set; }
+        public string mWelcomeImgType { get; set; }
+
 
         [Display(Name = "Enable Greeting Image")]
         public bool mEnableWelcomeImg { get; set; }
@@ -23,8 +25,11 @@ namespace FiveWonders.core.Models
         [Display(Name = "Home Page Button Url")]
         public string mWelcomeBtnUrl { get; set; }
 
+
         [Display(Name = "Website Logo")]
-        public string mHomePageLogoUrl { get; set; }
+        public byte[] mWebsiteLogo { get; set; }
+        public string mWebsiteLogoImgType { get; set; }
+
 
         [Display(Name = "Home Greeting Greeting")]
         [AllowHtml]
@@ -37,16 +42,21 @@ namespace FiveWonders.core.Models
         [Display(Name = "Category 2 to promote")]
         public string mPromo2 { get; set; }
 
+
         [Display(Name = "Carousel Images")]
-        public string mCarouselImgs { get; set; }
+        public string mCarouselImgIDs { get; set; }
+
 
         [Required(ErrorMessage = "A Banner text is required for Product List.")]
         [Display(Name = "Default Banner Text")]
         public string mDefaultProductsBannerText { get; set; }
 
+
         [Display(Name = "Default Banner Image")]
-        public string mDefaultProductListImgUrl { get; set; }
-        
+        public byte[] mDefaultProductListImg { get; set; }
+        public string mDefaultProductListImgType { get; set; }
+
+
         [Display(Name = "Default Banner Image Shader")]
         [Range(0, 1)]
         public float defaultBannerImgShader { get; set; }
@@ -56,8 +66,8 @@ namespace FiveWonders.core.Models
 
         public HomePage()
         {
-            defaultBannerImgShader = 0.4f;
-            mdefaultBannerTextColor = "white";
+            defaultBannerImgShader = 0.0f;
+            mdefaultBannerTextColor = "black";
             mEnableWelcomeImg = true;
         }
     }

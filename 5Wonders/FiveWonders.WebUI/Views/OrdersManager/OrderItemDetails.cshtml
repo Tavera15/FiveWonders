@@ -33,7 +33,15 @@
     </dl>
 
     <div style="display: flex; flex-direction: row; flex-wrap:wrap;">
-        @if (Model.productImages != null)
+        @{ 
+            bool bHasImages = Model.productImages != null && Model.productImages.Length > 0;
+
+            string addClassTag = bHasImages
+                ? ""
+                : "col-lg-push-7";
+        }
+
+        @if (bHasImages)
         {
             <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12" style="padding: 0;">
                 <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -51,9 +59,10 @@
                     <div class="carousel-inner" role="listbox">
                         @for (int i = 0; i < Model.productImages.Length; i++)
                         {
+                            string imgSrc = Model.productImages[i].mImageType + Convert.ToBase64String(Model.productImages[i].mImage);
                             string itemClassTag = i == 0 ? "item active" : "item";
 
-                            <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @Model.productImages[i]));"></div>
+                            <div class="@itemClassTag img-test" style="background-image: url(@imgSrc);"></div>
                         }
                     </div>
 
@@ -70,7 +79,7 @@
             </div>
         }
 
-        <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
+        <div class="@addClassTag col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
 
             <div class="item-data">
                 <div class="item-data-inner" style="min-height: unset;">

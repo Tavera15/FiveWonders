@@ -5,7 +5,7 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>SocialMedia</h4>
+        <h4>Social Media</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.mID)
@@ -19,10 +19,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.m64x64Icon, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.mIcon, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="file" id="file" name="newIcon" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.m64x64Icon, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.mIcon, "", new { @class = "text-danger" })
             </div>
         </div>
 

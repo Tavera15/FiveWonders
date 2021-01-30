@@ -12,9 +12,8 @@
                 @{string classTags = "col-lg-6 col-md-6 col-sm-6 col-xs-12";}
                 @foreach (var item in Model)
                 {
-                    string[] currentImageFiles = item.product.mImage.Split(',');
-                    string firstImage = currentImageFiles[0];
-
+                    var currentImageFiles = item.productImages[0];
+                    string firstImage = currentImageFiles.mImageType + Convert.ToBase64String(currentImageFiles.mImage);
 
                     <div class="@classTags bp-card-container">
                         <div class="fw-product-container">
@@ -22,7 +21,7 @@
                                 <div style="border: solid 1px lightgrey; background-color: white;">
 
                                     <img alt="@item.product.mName"
-                                         src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                         src="@firstImage"
                                          class="fw-card-img" />
 
                                     <h3 class="fw-card-title">@item.product.mName</h3>

@@ -217,7 +217,7 @@ namespace FiveWonders.core.Models
             {
                 Product product = productsContext.Find(productId, true);
 
-                if(String.IsNullOrWhiteSpace(selectedSize) && product.mSizeChart == "0")
+                if(String.IsNullOrWhiteSpace(selectedSize) && String.IsNullOrWhiteSpace(product.mSizeChart))
                 {
                     return true;
                 }

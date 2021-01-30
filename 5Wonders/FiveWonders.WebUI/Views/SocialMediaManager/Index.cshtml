@@ -12,7 +12,7 @@
             @Html.DisplayNameFor(model => model.mUrl)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.m64x64Icon)
+            @Html.DisplayNameFor(model => model.mIcon)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.isCommunicative)
@@ -21,6 +21,10 @@
     </tr>
 
 @foreach (var item in Model) {
+    string iconSrc = item.mIcon != null
+        ? item.mIconType + Convert.ToBase64String(item.mIcon)
+        : "";
+
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.mTimeEntered)
@@ -29,7 +33,7 @@
             @Html.DisplayFor(modelItem => item.mUrl)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.m64x64Icon)
+            <img alt="@item.mID" src="@iconSrc" style="height: 25px; width: auto;" />
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.isCommunicative)

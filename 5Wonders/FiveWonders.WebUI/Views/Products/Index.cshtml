@@ -1,9 +1,7 @@
 ﻿@model FiveWonders.core.ViewModels.ProductsListViewModel
 
 @{ 
-    string bannerImg = !String.IsNullOrWhiteSpace(Model.folderName) && !String.IsNullOrWhiteSpace(Model.imgUrl)
-        ? @Url.Content("~/Content/" + Model.folderName + "/" + Model.imgUrl)
-        : "";
+    string bannerImg = Model.imageType + Convert.ToBase64String(Model.image);
 }
 
 <div id="products-page">
@@ -22,8 +20,8 @@
             @for (int i = 0; i < Model.products.Length; i++)
             {
                 FiveWonders.core.ViewModels.ProductData product = Model.products[i];
-                string[] currentImageFiles = product.product.mImage.Split(',');
-                string firstImage = currentImageFiles[0];
+                var firstImage = product.firstImage;
+                string imgSrc = firstImage.mImageType + Convert.ToBase64String(firstImage.mImage);
 
                 <div class="@classTags pp-card-container">
                     <a href="/products/item/@product.product.mID" class="fw-card-a">
@@ -39,7 +37,7 @@
                                     </div>
 
                                     <img alt="@product.product.mName"
-                                            src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                            src="@imgSrc"
                                             class="fw-card-img"/>
 
                                     <h3 class="fw-card-title">@product.product.mName</h3>
@@ -81,7 +79,7 @@
     else
     {
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h2>No Products found that match search criteria.</h2>
+            <h2>No products found that match search criteria.</h2>
         </div>
     }
 </div>

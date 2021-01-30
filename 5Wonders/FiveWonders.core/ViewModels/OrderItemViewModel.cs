@@ -11,7 +11,7 @@ namespace FiveWonders.core.ViewModels
     {
         public FWonderOrder order { get; set; }
         public OrderItem orderItem { get; set; }
-        public string[] productImages { get; set; }
+        public ProductImage[] productImages { get; set; }
         public Dictionary<string, string> customLists { get; set; }
     }
 }

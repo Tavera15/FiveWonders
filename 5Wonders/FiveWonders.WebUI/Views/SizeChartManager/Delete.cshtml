@@ -1,5 +1,8 @@
 ﻿@model FiveWonders.core.Models.SizeChart
 
+@{
+    string x = Model.mImageType + Convert.ToBase64String(Model.mImage);
+}
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
@@ -31,14 +34,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.mImageChartUrl)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.mImageChartUrl)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.mSizesToDisplay)
         </dt>
 
@@ -49,6 +44,14 @@
                     <li>@Html.DisplayFor(model => size)</li>
                 }
             </ul>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mImage)
+        </dt>
+
+        <dd>
+            <img alt="@Model.mChartName" style="height: 100px; width: auto;" src="@x" />
         </dd>
 
     </dl>
@@ -70,13 +73,13 @@
     }
 
     <div class="form-actions no-color">
-        @if(ViewBag.productsWithSizeChart.Length == 0)
+        @if (ViewBag.productsWithSizeChart.Length == 0)
         {
             using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
 
-                <input type="submit" value="Delete" class="btn btn-default" />
+                <input type="submit" value="Delete" class="btn btn-danger" />
             }
         }
         @Html.ActionLink("Back to List", "Index")

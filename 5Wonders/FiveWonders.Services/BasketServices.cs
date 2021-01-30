@@ -19,17 +19,19 @@ namespace FiveWonders.Services
         IRepository<BasketItem> basketItemsContext;
         IRepository<Customer> customerContext;
         IRepository<FWonderOrder> orderContext;
+        IRepository<ProductImage> productImageContext;
 
         public const string basketCookieName = "FiveWondersBasket";
         public const double cookieDuration = 30;        // In Days ex. 30 days
 
-        public BasketServices(IRepository<Product> productsRepository, IRepository<Basket> basketRepository, IRepository<Customer> customerRepository, IRepository<BasketItem> basketItemsRepository, IRepository<FWonderOrder> orderRepository)
+        public BasketServices(IRepository<Product> productsRepository, IRepository<Basket> basketRepository, IRepository<Customer> customerRepository, IRepository<BasketItem> basketItemsRepository, IRepository<FWonderOrder> orderRepository, IRepository<ProductImage> productImageRepository)
         {
             productsContext = productsRepository;
             basketContext = basketRepository;
             customerContext = customerRepository;
             basketItemsContext = basketItemsRepository;
             orderContext = orderRepository;
+            productImageContext = productImageRepository;
         }
 
         public void AddToBasket(HttpContextBase httpContext, BasketItem item)
@@ -95,20 +97,25 @@ namespace FiveWonders.Services
         public List<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext)
         {
             Basket basket = GetBasket(httpContext, true);
+            List<BasketItemViewModel> res = new List<BasketItemViewModel>();
 
-            // Gets Basket Items where the Product ID matches the Product ID that's stored in Basket Item object
-            var items = (from b in basket.mBasket
-                            join p in productsContext.GetCollection() on b.mProductID equals p.mID
-                            select new BasketItemViewModel()
-                            {
-                                basketItemID = b.mID,
-                                product = p,
-                                basketItem = b,
-                                productID = p.mID
-                            }
-                            ).ToList();
-                
-            return items;
+            foreach(var basketItem in basket.mBasket)
+            {
+                Product product = productsContext.Find(basketItem.mProductID);
+                string[] productImgIDs = product.mImageIDs.Split(',');
+
+                BasketItemViewModel newItemVM = new BasketItemViewModel();
+                newItemVM.product = productsContext.Find(basketItem.mProductID);
+                newItemVM.productID = basketItem.mProductID;
+                newItemVM.basketItem = basketItem;
+                newItemVM.basketItemID = basketItem.mID;
+                newItemVM.productImages = productImageContext.GetCollection()
+                    .Where(img => productImgIDs.Contains(img.mID)).ToList();
+
+                res.Add(newItemVM);
+            }
+
+            return res;
         }
 
         public void UpdateBasketItem(HttpContextBase httpContext, BasketItem newBasketItem)

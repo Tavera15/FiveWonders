@@ -23,11 +23,12 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SubCategory> subCategoryContext;
         IRepository<HomePage> homePageContext;
         IRepository<CustomOptionList> customListContext;
+        IRepository<ProductImage> productImageContext;
         IBasketServices basketServices;
 
         const int CARDS_PER_PAGE = 12;
 
-        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IRepository<CustomOptionList> customListRepository, IBasketServices basketServices)
+        public ProductsController(IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subCategoryRepository, IRepository<HomePage> homePageRepository, IRepository<CustomOptionList> customListRepository, IRepository<ProductImage> productImageRepository, IBasketServices basketServices)
         {
             productsContext = productsRepository;
             sizeChartContext = sizeChartsRepository;
@@ -35,6 +36,7 @@ namespace FiveWonders.WebUI.Controllers
             subCategoryContext = subCategoryRepository;
             homePageContext = homePageRepository;
             customListContext = customListRepository;
+            productImageContext = productImageRepository;
             this.basketServices = basketServices;
         }
 
@@ -248,11 +250,12 @@ namespace FiveWonders.WebUI.Controllers
                     ProductData pd = new ProductData();
                     pd.product = p;
                     pd.productCategoryName = cat.mCategoryName;
+                    pd.firstImage = productImageContext.Find(p.mImageIDs.Split(',')[0]);
 
                     productData.Add(pd);
                 }
 
-                return productData.OrderByDescending(p => p.product.mTimeEntered).ToArray();
+                return productData.ToArray();
             }
             catch(Exception e)
             {
@@ -301,31 +304,32 @@ namespace FiveWonders.WebUI.Controllers
                     throw new Exception("Home Page defaults null.");
                 }
 
-                string folderName = "Home";
-                string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
+                string productsListbannerImgType = "";
+                //string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
+                byte[] productsListbannerImg = new byte[] { };
                 float productListImgShaderAmount = homePageDefaults.defaultBannerImgShader;
                 string productListPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
                 string productsListPageTitle = GetPageTitle(category, subCategories, homePageDefaults.mDefaultProductsBannerText);
 
                 if (subCategories.Count == 1 && subCategories[0].isEventOrTheme)
                 {
-                    folderName = "SubcategoryImages";
-                    productsListbannerImg = subCategories[0].mImageUrl;
+                    productsListbannerImgType = subCategories[0].mImageType;
+                    productsListbannerImg = subCategories[0].mImage;
                     productListImgShaderAmount = subCategories[0].mImgShaderAmount;
                     productListPageTitleColor = subCategories[0].bannerTextColor;
                 }
                 else if(category != null)
                 {
-                    folderName = "CategoryImages";
-                    productsListbannerImg = category.mImgUrL;
+                    productsListbannerImgType = category.mImageType;
+                    productsListbannerImg = category.mImage;
                     productListImgShaderAmount = category.mImgShaderAmount;
                     productListPageTitleColor = category.bannerTextColor;
                 }
 
                 viewModel = new ProductsListViewModel()
                 {
-                    folderName = folderName,
-                    imgUrl = productsListbannerImg,
+                    imageType = productsListbannerImgType,
+                    image = productsListbannerImg,
                     mImgShaderAmount = productListImgShaderAmount,
                     pageTitle = productsListPageTitle,
                     pageTitleColor = productListPageTitleColor,
@@ -348,11 +352,16 @@ namespace FiveWonders.WebUI.Controllers
         {
             Product p = productsContext.Find(Id, true);
             SizeChart chart = sizeChartContext.Find(p.mSizeChart);
+            string[] imgIDs = p.mImageIDs != null
+                ? p.mImageIDs.Split(',')
+                : new string[] { };
 
             ProductOrderViewModel viewModel = new ProductOrderViewModel();
             viewModel.product = p;
             viewModel.productOrder.mProductID = Id;
             viewModel.sizeChart = chart;
+            viewModel.productImages = productImageContext.GetCollection()
+                .Where(productImg => imgIDs.Contains(productImg.mID)).ToList();
 
             if (!String.IsNullOrWhiteSpace(p.mCustomLists))
             {

@@ -2,20 +2,20 @@
 @{
     ViewBag.Title = "Home Page";
 
-    string jumboBG = (!String.IsNullOrWhiteSpace(Model.homePageData.mWelcomeImgUrl)
-        ? (Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl))
-        : "");
+    string greetingImg = Model.homePageData != null && Model.homePageData.mWelcomeImgID != null
+        ? Model.homePageData.mWelcomeImgType + Convert.ToBase64String(Model.homePageData.mWelcomeImgID)
+        : "";
 
-    string jumboLogo = (!String.IsNullOrWhiteSpace(Model.homePageData.mHomePageLogoUrl)
-        ? (Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl))
-        : "");
+    string websiteLogo = Model.homePageData.mWebsiteLogo != null
+        ? Model.homePageData.mWebsiteLogoImgType + Convert.ToBase64String(Model.homePageData.mWebsiteLogo)
+        : "";
 
-    string promoImg1 = (!String.IsNullOrWhiteSpace(Model.promo1.promoImg)
-        ? (Url.Content("~/Content" + Model.promo1.promoImg))
+    string promoImg1 = (!String.IsNullOrWhiteSpace(Model.homePageData.mPromo1)
+        ? Model.promo1.promoImg
         : "");
 
     string promoImg2 = (!String.IsNullOrWhiteSpace(Model.promo2.promoImg)
-        ? (Url.Content("~/Content" + Model.promo2.promoImg))
+        ? Model.promo2.promoImg
         : "");
 
     string promoClassNames = (!String.IsNullOrWhiteSpace(Model.promo1.promoLink)
@@ -23,7 +23,7 @@
         ? "col-lg-6 col-md-6 col-sm-6 col-xs-6 category-container"
         : "col-lg-12 col-md-12 col-sm-12 col-xs-12 category-container";
 
-    string greetingBoxClassName = !String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgs)
+    string greetingBoxClassName = !String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgIDs)
         ? "col-lg-4"
         : "col-lg-12";
 }
@@ -35,7 +35,7 @@
         @if (Model.homePageData.mEnableWelcomeImg)
         {
             <div class="@greetingBoxClassName col-md-12 col-sm-12 col-xs-12 hp-greeting-box">
-                <div class="hp-greeting" style="background-image:url(@Url.Content("~/Home/" + Model.homePageData.mWelcomeImgUrl));">
+                <div class="hp-greeting" style="background-image:url(@greetingImg);">
                     <div class="home-page-greeting-shade-cover" style="background-color: rgba(0,0,0,@Model.homePageData.welcomeGreetingImgShader); ">
                         @Html.Raw(Model.homePageData.mHomePageGreeting)
                         <p class="btn btn-primary redi-btn"><a style="text-decoration:none; color: white;" href="@Model.welcomePageUrl">View Products</a></p>
@@ -53,14 +53,14 @@
             </div>
         }
 
-        @if (!String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgs))
+        @if (!String.IsNullOrWhiteSpace(Model.homePageData.mCarouselImgIDs))
         {
             <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12 hp-carousel">
 
                 <div id="myCarousel" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <ol class="carousel-indicators">
-                        @for (int i = 0; i < Model.homePageData.mCarouselImgs.Split(',').Length; i++)
+                        @for (int i = 0; i < Model.carouselImages.Count; i++)
                         {
                             string liClassTag = i == 0 ? "active" : "";
 
@@ -74,11 +74,13 @@
                             int carouselImgIndex = 0;
                         }
 
-                        @foreach (string imgFileName in Model.homePageData.mCarouselImgs.Split(','))
+                        @foreach (var carouselImg in Model.carouselImages)
                         {
                             string itemClassTag = carouselImgIndex++ == 0 ? "item active" : "item";
+                            string imgSrc = carouselImg.mImageType + Convert.ToBase64String(carouselImg.mImage);
+
                             <div class="@itemClassTag img-test"
-                                 style="background-image: url(@Url.Content("~/Content/Home/" + imgFileName));">
+                                 style="background-image: url(@imgSrc);">
                             </div>
                         }
                     </div>
@@ -140,8 +142,8 @@
                     @for (int i = 0; i < Model.top3Products.Count; i++)
                     {
                         FiveWonders.core.ViewModels.ProductData product = Model.top3Products[i];
-                        string[] currentImageFiles = product.product.mImage.Split(',');
-                        string firstImage = currentImageFiles[0];
+                        var currentImageFiles = product.firstImage;
+                        string firstImage = currentImageFiles.mImageType + Convert.ToBase64String(currentImageFiles.mImage);
 
                         <div class="@classTags fw-card-container">
                             <a href="/products/item/@product.product.mID" class="fw-card-a">
@@ -157,7 +159,7 @@
                                             </div>
 
                                             <img alt="@product.product.mName"
-                                                    src="@Url.Content("~/Content/ProductImages/" + firstImage)"
+                                                    src="@firstImage"
                                                     class="fw-card-img"/>
 
                                             <h3 class="fw-card-title">@product.product.mName</h3>
@@ -179,7 +181,7 @@
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-services-container" style="margin-bottom: 4vh;">
         <a href="/Home/Contact/" style="text-decoration: none;">
-            <div class="home-services-data" style="background-image: url(@Url.Content("~/Content/Home/" + Model.homePageData.mHomePageLogoUrl));">
+            <div class="home-services-data" style="background-image: url(@websiteLogo);">
                 <div class="contact-img-cover" style="background-color: rgba(0,0,0,.74);">
                     <h1 style="color: lightgoldenrodyellow; text-align: center;">Customize with us!</h1>
                     <p class="btn btn-lg btn-default redi-btn">Contact</p>
@@ -190,26 +192,26 @@
 
     @if (Model.top3IGPosts.Count > 0)
     {
+        string img1 = Model.top3IGPosts[0].mImageType + Convert.ToBase64String(Model.top3IGPosts[0].mImage);
+
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-container" >
             <h1 class="col-lg-12 home-gallery-container-title">Gallery</h1>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 home-gallery-imgs-container">
                 <a href="/Gallery/" class="container home-gallery-imgs-anchor">
-
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 home-gallery-solo-img-container">
                         <div class="col-lg-12 home-gallery-img home-gallery-solo-img"
-                             style="
-                                background-image: url( @Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[0].mImageFile) )">
+                             style="background-image: url(@img1)">
                         </div>
                     </div>
 
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 home-gallery-four-group-container">
                         @for (int i = 1; i < Model.top3IGPosts.Count; i++)
                         {
+                            string x = Model.top3IGPosts[i].mImageType + Convert.ToBase64String(Model.top3IGPosts[i].mImage);
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 home-gallery-one-of-four-container">
                                 <div class="home-gallery-img home-gallery-group-img"
-                                     style="
-                                    background-image: url(@Url.Content("~/Content/GalleryImages/" + Model.top3IGPosts[i].mImageFile))">
+                                     style="background-image: url(@x)">
                                 </div>
                             </div>
                         }

@@ -15,7 +15,7 @@ namespace FiveWonders.core.ViewModels
         public Dictionary<string,List<string>> listOptions { get; set; }
         public List<string> customListNames { get; set; }
         public Dictionary<string, string> selectedCustomListOptions { get; set; }
-
+        public List<ProductImage> productImages { get; set; }
 
         public ProductOrderViewModel()
         {
@@ -23,6 +23,7 @@ namespace FiveWonders.core.ViewModels
             listOptions = new Dictionary<string, List<string>>();
             customListNames = new List<string>();
             selectedCustomListOptions = new Dictionary<string, string>();
+            productImages = new List<ProductImage>();
         }
     }
 }

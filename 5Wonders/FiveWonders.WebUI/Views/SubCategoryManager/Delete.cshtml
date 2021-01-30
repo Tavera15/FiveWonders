@@ -1,8 +1,8 @@
 ﻿@model FiveWonders.core.Models.SubCategory
 
 @{
-    string imgName = Model.isEventOrTheme && !String.IsNullOrWhiteSpace(Model.mImageUrl)
-        ? Url.Content("~/Content/SubcategoryImages/" + Model.mImageUrl)
+    string imgName = Model.isEventOrTheme && Model.mImage != null
+        ? Model.mImageType + Convert.ToBase64String(Model.mImage)
         : "";
 }
 

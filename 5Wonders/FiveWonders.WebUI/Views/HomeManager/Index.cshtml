@@ -1,16 +1,16 @@
 ﻿@model FiveWonders.core.ViewModels.HomePageManagerViewModel
 
 @{
-    string logo = !String.IsNullOrWhiteSpace(Model.homePagedata.mHomePageLogoUrl)
-        ? Url.Content("~/Content/Home/" + Model.homePagedata.mHomePageLogoUrl)
+    string logo = Model.homePagedata.mWebsiteLogo != null
+        ? Model.homePagedata.mWebsiteLogoImgType + Convert.ToBase64String(Model.homePagedata.mWebsiteLogo)
         : "";
 
-    string homeBg = !String.IsNullOrWhiteSpace(Model.homePagedata.mWelcomeImgUrl)
-        ? Url.Content("~/Content/Home/" + Model.homePagedata.mWelcomeImgUrl)
+    string homeBg = Model.homePagedata.mWelcomeImgID != null
+        ? Model.homePagedata.mWelcomeImgType + Convert.ToBase64String(Model.homePagedata.mWelcomeImgID)
         : "";
 
-    string catBg = !String.IsNullOrWhiteSpace(Model.homePagedata.mDefaultProductListImgUrl)
-        ? Url.Content("~/Content/Home/" + Model.homePagedata.mDefaultProductListImgUrl)
+    string defaultProductBanner = Model.homePagedata.mDefaultProductListImg != null
+        ? Model.homePagedata.mDefaultProductListImgType + Convert.ToBase64String(Model.homePagedata.mDefaultProductListImg)
         : "";
 }
 
@@ -43,15 +43,15 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.homePagedata.mHomePageLogoUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.homePagedata.mWebsiteLogo, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     <input type="file" name="homeLogo" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.homePagedata.mHomePageLogoUrl, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.homePagedata.mWebsiteLogo, "", new { @class = "text-danger" })
 
-                    @if (!String.IsNullOrWhiteSpace(Model.homePagedata.mHomePageLogoUrl))
+                    @if (!String.IsNullOrWhiteSpace(logo))
                     {
                         <div>
-                            <img alt="logo" src="~/Content/Home/@Model.homePagedata.mHomePageLogoUrl" style="height: 15rem; width: auto;"/>
+                            <img alt="logo" src="@logo" style="height: 15rem; width: auto;"/>
                         </div>
                     }
                 </div>
@@ -66,10 +66,10 @@
             </div>
 
             <div class="form-group" id="greeting-img-container">
-                @Html.LabelFor(model => model.homePagedata.mWelcomeImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.homePagedata.mWelcomeImgID, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-offset-2 col-md-10">
                     <input oninput="setGreetingImg()" type="file" id="greetingImg" name="homeImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.homePagedata.mWelcomeImgUrl, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.homePagedata.mWelcomeImgID, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -81,21 +81,23 @@
                 </div>
             </div>
 
-            @if (!String.IsNullOrWhiteSpace(Model.homePagedata.mCarouselImgs))
+            @if (!String.IsNullOrWhiteSpace(Model.homePagedata.mCarouselImgIDs))
             {
                 <div class="form-group">
                     <label class="control-label col-md-2" style="font-weight: bold;">Existing Carousel Images</label>
                     <div class="col-md-10">
-                        @foreach (string image in Model.homePagedata.mCarouselImgs.Split(','))
+                        @foreach (var carouselImg in Model.carouselImages)
                         {
+                            string imgSrc = carouselImg.mImageType + Convert.ToBase64String(carouselImg.mImage);
+
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox"
                                            name="checkedCarouselImgs"
                                            id="existingCarouselImgs"
-                                           value=@image
+                                           value=@carouselImg.mID
                                            @{ <text> checked </text>  } />
-                                    @image
+                                    <img alt="@carouselImg.mID" src="@imgSrc" style="height: 100px; width: auto;"/>
                                 </label>
                             </div>
                         }
@@ -104,10 +106,10 @@
             }
 
             <div class="form-group">
-                @Html.LabelFor(model => model.homePagedata.mCarouselImgs, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.homePagedata.mCarouselImgIDs, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-offset-2 col-md-10">
                     <input multiple type="file" id="file" name="newCarouselImgs" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.homePagedata.mCarouselImgs, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.homePagedata.mCarouselImgIDs, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -137,7 +139,7 @@
 
             <div id="products-page">
                 <div class="pp-title-container"
-                     style="background-image: url(@catBg);"
+                     style="background-image: url(@defaultProductBanner);"
                      id="bannerImg-input">
                     <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, @Model.homePagedata.defaultBannerImgShader);" class="pp-title-dark-layer">
                         <h2 style="color: @Model.homePagedata.mdefaultBannerTextColor" id="category-title-input" class="pp-title-text">@Model.homePagedata.mDefaultProductsBannerText</h2>
@@ -146,10 +148,10 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.homePagedata.mDefaultProductListImgUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.homePagedata.mDefaultProductListImg, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-offset-2 col-md-10">
                     <input type="file" oninput="setCategoryProps()" id="default_bannerImg" name="default_bannerImg" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.homePagedata.mDefaultProductListImgUrl, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.homePagedata.mDefaultProductListImg, "", new { @class = "text-danger" })
                 </div>
             </div>
 

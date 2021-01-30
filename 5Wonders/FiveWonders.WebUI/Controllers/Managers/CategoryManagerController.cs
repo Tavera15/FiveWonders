@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using FluentValidation.Results;
 
 namespace FiveWonders.WebUI.Controllers
@@ -29,7 +30,7 @@ namespace FiveWonders.WebUI.Controllers
         // GET: CategoryManager
         public ActionResult Index()
         {
-            List<Category> categories = categoryContext.GetCollection().OrderByDescending(x => x.mTimeEntered).ToList();
+            List<Category> categories = categoryContext.GetCollection().ToList();
 
             return View(categories);
         }
@@ -63,12 +64,11 @@ namespace FiveWonders.WebUI.Controllers
                 if (imageFile != null)
                 {
                     // Save img, and store its name to category obj.
-                    string newImgUrl;
-                    imageStorageService.AddImage(EFolderName.Category, Server, imageFile, cat.mID, out newImgUrl);
-                    cat.mImgUrL = newImgUrl;
+                    cat.mImage = ImageStorageService.GetImageBytes(imageFile);
+                    cat.mImageType = ImageStorageService.GetImageExtension(imageFile);
                 }
 
-                // Save to memory
+                // Save to database
                 categoryContext.Insert(cat);
                 categoryContext.Commit();
 
@@ -127,12 +127,8 @@ namespace FiveWonders.WebUI.Controllers
                 // Save any new image that was selected
                 if (imageFile != null)
                 {
-                    string newImgUrl;
-                    imageStorageService.DeleteImage(EFolderName.Category, categoryToEdit.mImgUrL, Server);
-                    imageStorageService.AddImage(EFolderName.Category, Server, imageFile, Id, out newImgUrl);
-
-                    // Save Url
-                    categoryToEdit.mImgUrL = newImgUrl;
+                    categoryToEdit.mImage = ImageStorageService.GetImageBytes(imageFile);
+                    categoryToEdit.mImageType = ImageStorageService.GetImageExtension(imageFile);
                 }
                 
                 // Save
@@ -190,8 +186,6 @@ namespace FiveWonders.WebUI.Controllers
                 {
                     throw new Exception("Products contain targeted category, and/or category is currently promoted on the Home Page.");
                 }
-
-                imageStorageService.DeleteImage(EFolderName.Category, categoryToDelete.mImgUrL, Server);
 
                 categoryContext.Delete(categoryToDelete);
                 categoryContext.Commit();

@@ -62,9 +62,6 @@
     flex-direction: column;
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
-    background-color: blanchedalmond;
-    background-color: rgba(240,248,255, .54);
-    background-color: aliceblue;
     background-color: white;
     text-align: center;
 }
@@ -99,10 +96,7 @@
 
 .category-display {
     background-color: inherit;
-    padding: 0 4rem;
-    padding: 0 3vw;
     padding: 0 ;
-    margin: 0 auto;
     margin: 4vh 0;
 }
 
@@ -116,7 +110,6 @@
 }
 
 .category-container {
-    padding: 0 4rem;
     padding: 0 2rem;
 }
 
@@ -178,7 +171,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 2vh 8vw 3vh;
     padding: 0vh 0 3vh;
     border-top: solid 1px lightgray;
 }
@@ -276,10 +268,6 @@
         padding: 0;
     }
 
-    .hp-greeting-box{
-    }
-
-
     .img-test{
         height:42rem;
     }
@@ -340,9 +328,6 @@
 
 @media (max-width: 768px) and (orientation:portrait) {
 
-    .top-three-products {
-    }
-
     .category-container {
         padding: 0 .5rem;
     }
@@ -384,5 +369,4 @@
         margin: 0;
         width: 100%;
     }
-
 }

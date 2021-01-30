@@ -1,6 +1,7 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -55,9 +56,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
                     throw new Exception(errMsg);
                 }
 
-                string newIconUrl;
-                imageStorageService.AddImage(EFolderName.Icons, Server, newIcon, newMedia.mID, out newIconUrl);
-                newMedia.m64x64Icon = newIconUrl;
+                newMedia.mIcon = ImageStorageService.GetImageBytes(newIcon);
+                newMedia.mIconType = ImageStorageService.GetImageExtension(newIcon);
 
                 socialMediaContext.Insert(newMedia);
                 socialMediaContext.Commit();
@@ -112,11 +112,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
 
                 if(newIcon != null)
                 {
-                    imageStorageService.DeleteImage(EFolderName.Icons, mediaToEdit.m64x64Icon, Server);
-
-                    string newIconUrl;
-                    imageStorageService.AddImage(EFolderName.Icons, Server, newIcon, Id, out newIconUrl);
-                    mediaToEdit.m64x64Icon = newIconUrl;
+                    mediaToEdit.mIcon = ImageStorageService.GetImageBytes(newIcon);
+                    mediaToEdit.mIconType = ImageStorageService.GetImageExtension(newIcon);
                 }
 
                 socialMediaContext.Commit();
@@ -153,7 +150,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
             {
                 SocialMedia sm = socialMediaContext.Find(Id, true);
 
-                imageStorageService.DeleteImage(EFolderName.Icons, sm.m64x64Icon, Server);
                 socialMediaContext.Delete(sm);
                 socialMediaContext.Commit();
 

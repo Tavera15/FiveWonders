@@ -1,5 +1,6 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
+using FiveWonders.DataAccess.InMemory;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace FiveWonders.WebUI.Controllers
     {
         const int IMGS_PER_PAGE = 12;
 
-        public IInstagramService InstagramService; 
+        IRepository<GalleryImg> galleryContext;
 
-        public GalleryController(IInstagramService service)
+        public GalleryController(IRepository<GalleryImg> galleryRepository)
         {
-            InstagramService = service;
+            galleryContext = galleryRepository;
         }
 
         [Route(Name = "/{page?}")]
@@ -31,7 +32,7 @@ namespace FiveWonders.WebUI.Controllers
 
             try
             {
-                GalleryImg[] allGalleryImgs = InstagramService.GetGalleryImgs();
+                GalleryImg[] allGalleryImgs = galleryContext.GetCollection().ToArray();
 
                 int pageNumber = page ?? 1;
                 pageNumber = pageNumber <= 1 ? 1 : pageNumber;
@@ -49,8 +50,7 @@ namespace FiveWonders.WebUI.Controllers
             catch(Exception e)
             {
                 _ = e;
-                GalleryImg[] galleryImgs = new GalleryImg[] 
-                    { new GalleryImg { mImageFile = "https://www.bargainballoons.com/products/Betallic-Balloons/Everyday-2015-Balloons/Large-Balloons/36029-18-inches-Sad-Smiley-balloons.jpg" } };
+                GalleryImg[] galleryImgs = new GalleryImg[] { }; 
                 
                 ViewBag.PageNumbers = 1;
                 return View(galleryImgs);

@@ -26,7 +26,7 @@
                     {
                         string itemClassTag = carouselImgIndex++ == 0 ? "item active" : "item";
                         <div class="@itemClassTag gallery-carousel-img"
-                             style="background-image: url(@Url.Content("~/Content/GalleryImages/" + imgFileName.mImageFile));">
+                             style="background-image: url();">
                         </div>
                     }
                 </div>-->
@@ -52,14 +52,14 @@
 
             @foreach (var item in Model)
             {
+                string x = item.mImageType + Convert.ToBase64String(item.mImage); 
 
                 <div class="@classTags pp-card-container">
                     <div class="fw-product-container">
                         <div class="fw-card" style="padding:1rem; background-color:rgba(253,253,253,1); border-radius: 10px; box-shadow: none; border: 2px solid #232425">
                             <div style="border: solid 1px lightgrey; background-color: white;">
-
                                 <img alt="@item.mID"
-                                        src="@Url.Content("~/Content/GalleryImages/" + item.mImageFile)"
+                                        src="@x"
                                         class="gallery-img"/>
                             </div>
                         </div>

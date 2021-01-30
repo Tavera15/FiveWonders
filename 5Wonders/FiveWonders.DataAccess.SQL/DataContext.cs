@@ -22,9 +22,11 @@ namespace FiveWonders.DataAccess.SQL
         public DbSet<FWonderOrder> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<HomePage> HomeData { get; set; }
-        public DbSet<GalleryImg> GalleryImgs { get; set; }
         public DbSet<ServicePage> ServiceData { get; set; }
         public DbSet<SocialMedia> SocialMedia { get; set; }
-        public DbSet<CustomOptionList> ColorSets { get; set; }
+        public DbSet<CustomOptionList> CustomLists { get; set; }
+        public DbSet<GalleryImg> GalleryImage { get; set; }
+        public DbSet<ProductImage> ProductImage { get; set; }
+        public DbSet<HomeCarouselImages> HomeCarouselImage { get; set; }
     }
 }

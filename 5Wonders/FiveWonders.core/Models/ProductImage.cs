@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class GalleryImg : BaseImage
+    public class ProductImage : BaseImage
     {
     }
 }

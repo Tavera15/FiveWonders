@@ -83,12 +83,14 @@
     <Compile Include="Models\CustomOptionList.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\GalleryImg.cs" />
+    <Compile Include="Models\HomeCarouselImages.cs" />
     <Compile Include="Models\HomePage.cs" />
-    <Compile Include="Models\InstagramPost.cs" />
+    <Compile Include="Models\BaseImage.cs" />
     <Compile Include="Models\FWonderOrder.cs" />
     <Compile Include="Models\OrderItem.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\BasketItem.cs" />
+    <Compile Include="Models\ProductImage.cs" />
     <Compile Include="Models\ServicePage.cs" />
     <Compile Include="Models\ServicesMessage.cs" />
     <Compile Include="Models\SizeChart.cs" />

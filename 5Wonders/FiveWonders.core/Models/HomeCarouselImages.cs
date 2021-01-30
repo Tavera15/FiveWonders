@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class InstagramPost
+    public class HomeCarouselImages : BaseImage
     {
-        public string mImageURL { get; set; }
-        public string mCaption { get; set; }
     }
 }

@@ -12,8 +12,8 @@ namespace FiveWonders.core.ViewModels
         public ProductData[] products { get; set; }
         public string pageTitle { get; set; }
         public string pageTitleColor { get; set; }
-        public string imgUrl { get; set; }
-        public string folderName { get; set; }
+        public byte[] image { get; set; }
+        public string imageType { get; set; }
         public float mImgShaderAmount { get; set; }
     }
 }

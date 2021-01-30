@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using FluentValidation.Results;
 
 namespace FiveWonders.WebUI.Controllers
@@ -62,13 +63,8 @@ namespace FiveWonders.WebUI.Controllers
                     throw new Exception(errMsg);
                 }
 
-                // Save image
-                if(imageFile != null)
-                {
-                    string newImageURL;
-                    imageStorageService.AddImage(EFolderName.SizeCharts, Server, imageFile, chart.mID, out newImageURL);
-                    chart.mImageChartUrl = newImageURL;
-                }
+                chart.mImage = ImageStorageService.GetImageBytes(imageFile);
+                chart.mImageType = ImageStorageService.GetImageExtension(imageFile);
             
                 sizeChartContext.Insert(chart);
                 sizeChartContext.Commit();
@@ -129,11 +125,8 @@ namespace FiveWonders.WebUI.Controllers
 
                 if(newImage != null)
                 {
-                    string newImageURL;
-
-                    imageStorageService.DeleteImage(EFolderName.SizeCharts, chartToEdit.mImageChartUrl, Server);
-                    imageStorageService.AddImage(EFolderName.SizeCharts, Server, newImage, Id, out newImageURL);
-                    chartToEdit.mImageChartUrl = newImageURL;
+                    chartToEdit.mImage = ImageStorageService.GetImageBytes(newImage);
+                    chartToEdit.mImageType = ImageStorageService.GetImageExtension(newImage);
                 }
 
                 sizeChartContext.Commit();
@@ -205,8 +198,6 @@ namespace FiveWonders.WebUI.Controllers
                 {
                     throw new Exception("Products contain targeted size chart");
                 }
-
-                imageStorageService.DeleteImage(EFolderName.SizeCharts, chartToDelete.mImageChartUrl, Server);
 
                 sizeChartContext.Delete(chartToDelete);
                 sizeChartContext.Commit();

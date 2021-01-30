@@ -2,6 +2,7 @@
 using FiveWonders.core.Models;
 using FiveWonders.core.ViewModels;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,15 @@ namespace FiveWonders.WebUI.Controllers.Managers
         public IRepository<HomePage> homeDataContext;
         public IRepository<Category> categoryContext;
         public IRepository<SubCategory> subcategoryContext;
+        public IRepository<HomeCarouselImages> homeCarouselImageContext;
         public IImageStorageService imageStorageSystem;
 
-        public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext, IImageStorageService imageStorageSystem)
+        public HomeManagerController(IRepository<HomePage> homePageRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subContext, IRepository<HomeCarouselImages> homeCarouselImageRepository, IImageStorageService imageStorageSystem)
         {
             homeDataContext = homePageRepository;
             categoryContext = categoryRepository;
             subcategoryContext = subContext;
+            homeCarouselImageContext = homeCarouselImageRepository;
             this.imageStorageSystem = imageStorageSystem;
         }
 
@@ -64,46 +67,79 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 existingData.welcomeGreetingImgShader = updatedDataViewModel.homePagedata.welcomeGreetingImgShader;
                 existingData.mEnableWelcomeImg = updatedDataViewModel.homePagedata.mEnableWelcomeImg;
                 
+                // Update Website Logo
                 if(homeLogo != null)
                 {
-                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mHomePageLogoUrl, Server);
-
-                    string newLogoUrl;
-                    imageStorageSystem.AddImage(EFolderName.Home, Server, homeLogo, existingData.mID, out newLogoUrl, "Logo");
-                    existingData.mHomePageLogoUrl = newLogoUrl;
+                    existingData.mWebsiteLogo = ImageStorageService.GetImageBytes(homeLogo);
+                    existingData.mWebsiteLogoImgType = ImageStorageService.GetImageExtension(homeLogo);
                 }
 
-                if (homeImg != null)
+                // Update Home Page Greeting Img
+                if(homeImg != null)
                 {
-                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mWelcomeImgUrl, Server);
-
-                    string newWelcomeImgUrl;
-                    imageStorageSystem.AddImage(EFolderName.Home, Server, homeImg, existingData.mID, out newWelcomeImgUrl, "DefaultHomeBanner");
-                    existingData.mWelcomeImgUrl = newWelcomeImgUrl;
+                    existingData.mWelcomeImgID = ImageStorageService.GetImageBytes(homeImg);
+                    existingData.mWelcomeImgType = ImageStorageService.GetImageExtension(homeImg);
                 }
 
-                if (default_bannerImg != null)
+                // Update Default Products List Page Banner Img
+                if(default_bannerImg != null)
                 {
-                    imageStorageSystem.DeleteImage(EFolderName.Home, existingData.mDefaultProductListImgUrl, Server);
-
-                    string newProductListImgUrl;
-                    imageStorageSystem.AddImage(EFolderName.Home, Server, default_bannerImg, existingData.mID, out newProductListImgUrl, "DefaultProductsBanner");
-                    existingData.mDefaultProductListImgUrl = newProductListImgUrl;
+                    existingData.mDefaultProductListImg = ImageStorageService.GetImageBytes(default_bannerImg);
+                    existingData.mDefaultProductListImgType = ImageStorageService.GetImageExtension(default_bannerImg);
                 }
 
-                // Check for new images
-                string[] savedCarouselImgs = !String.IsNullOrWhiteSpace(existingData.mCarouselImgs)
-                    ? existingData.mCarouselImgs.Split(',')
-                    : null;
-                
-                // Update Images if new ones are selected, or old ones were checked off
-                if((newCarouselImgs != null && newCarouselImgs[0] != null) 
-                    || (checkedCarouselImgs == null && savedCarouselImgs != null)
-                    || (savedCarouselImgs != null && savedCarouselImgs.Length != checkedCarouselImgs.Length))
+                // Update Home Page Carousel Imgs
+                if(checkedCarouselImgs == null 
+                    || checkedCarouselImgs.Length != existingData.mCarouselImgIDs.Split(',').Length
+                    || (newCarouselImgs != null && newCarouselImgs[0] != null))
                 {
-                    string newCarouselImgUrl;
-                    imageStorageSystem.UpdateImages(Server, EFolderName.Home, savedCarouselImgs, checkedCarouselImgs, newCarouselImgs, out newCarouselImgUrl, "carousel-");
-                    existingData.mCarouselImgs = newCarouselImgUrl;
+                    List<string> newCarouselIDs = new List<string>();
+
+                    // Keep existing images
+                    if(checkedCarouselImgs != null)
+                    {
+                        foreach(string img in checkedCarouselImgs)
+                        {
+                            newCarouselIDs.Add(img);
+                        }
+                    }
+
+                    // Delete images not selected to keep
+                    if(checkedCarouselImgs == null || 
+                        (!String.IsNullOrWhiteSpace(existingData.mCarouselImgIDs) && checkedCarouselImgs.Length != existingData.mCarouselImgIDs.Split(',').Length))
+                    {
+                        if(!String.IsNullOrWhiteSpace(existingData.mCarouselImgIDs))
+                        {
+                            foreach(string img in existingData.mCarouselImgIDs.Split(','))
+                            {
+                                if (newCarouselIDs.Contains(img)) { continue; }
+
+                                HomeCarouselImages carouselImage = homeCarouselImageContext.Find(img);
+
+                                if(carouselImage != null)
+                                {
+                                    homeCarouselImageContext.Delete(carouselImage);
+                                }
+                            }
+                        }
+                    }
+
+                    // Add new images that were uploaded
+                    if(newCarouselImgs != null && newCarouselImgs[0] != null)
+                    {
+                        foreach(HttpPostedFileBase newImg in newCarouselImgs)
+                        {
+                            HomeCarouselImages carouselImage = new HomeCarouselImages();
+                            carouselImage.mImage = ImageStorageService.GetImageBytes(newImg);
+                            carouselImage.mImageType = ImageStorageService.GetImageExtension(newImg);
+                            homeCarouselImageContext.Insert(carouselImage);
+
+                            newCarouselIDs.Add(carouselImage.mID);
+                        }
+                    }
+
+                    homeCarouselImageContext.Commit();
+                    existingData.mCarouselImgIDs = String.Join(",", newCarouselIDs);
                 }
 
                 if (existingData.mID == updatedDataViewModel.homePagedata.mID)
@@ -153,7 +189,8 @@ namespace FiveWonders.WebUI.Controllers.Managers
             HomePageManagerViewModel viewModel = new HomePageManagerViewModel()
             {
                 btnRediLinks = links,
-                promoLinks = promoLinks
+                promoLinks = promoLinks,
+                carouselImages = homeCarouselImageContext.GetCollection().ToList()
             };
 
             return viewModel;

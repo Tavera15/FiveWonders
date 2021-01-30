@@ -241,8 +241,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\FWondersStyles.css" />
-    <Content Include="Content\Home\5 Wonders Balloons  Logo_transparent-01.png" />
-    <Content Include="Content\Home\FWondersDefault.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

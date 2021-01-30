@@ -17,7 +17,9 @@ namespace FiveWonders.core.Models
         public string mChartName { get; set; }
 
         [Display(Name = "Image")]
-        public string mImageChartUrl { get; set; }
+        public byte[] mImage { get; set; }
+
+        public string mImageType { get; set; }
 
         [Display(Name = "Sizes to Display")]
         public string mSizesToDisplay { get; set; }
@@ -27,7 +29,6 @@ namespace FiveWonders.core.Models
         public SizeChart()
         {
             mChartName = "";
-            mImageChartUrl = "";
             mSizesToDisplay = "";
         }
     }
@@ -47,8 +48,8 @@ namespace FiveWonders.core.Models
                 .Must((chart, chartName) => isUniqueName(chartName, chart.mID))
                     .WithMessage("Size Chart Name must be unique");
 
-            RuleFor(sizeChart => sizeChart.mImageChartUrl)
-                .Must((chart, imgUrl) => willHaveImg(imgUrl, imgFile))
+            RuleFor(sizeChart => sizeChart.mImage)
+                .Must((chart, img) => willHaveImg(img, imgFile))
                     .WithMessage("Image is missing");
 
             RuleFor(sizeChart => sizeChart.mSizesToDisplay)
@@ -68,9 +69,9 @@ namespace FiveWonders.core.Models
             return !allCharts.Any(sc => sc.mChartName.ToLower() == chartName.ToLower() && sc.mID != Id);
         }
 
-        private bool willHaveImg(string imgUrl, HttpPostedFileBase imgFile)
+        private bool willHaveImg(byte[] img, HttpPostedFileBase imgFile)
         {
-            return !String.IsNullOrWhiteSpace(imgUrl) || imgFile != null;
+            return img != null || imgFile != null;
         }
     }
 }

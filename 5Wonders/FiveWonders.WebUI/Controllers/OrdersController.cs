@@ -18,13 +18,15 @@ namespace FiveWonders.WebUI.Controllers
         public IRepository<Customer> customerContext;
         public IRepository<OrderItem> orderItemContext;
         public IRepository<Product> productContext;
+        public IRepository<ProductImage> productImageContext;
 
-        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productRepository)
+        public OrdersController(IRepository<FWonderOrder> ordersRepository, IRepository<Customer> customerRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productRepository, IRepository<ProductImage> productImageRepository)
         {
             ordersContext = ordersRepository;
             customerContext = customerRepository;
             orderItemContext = orderItemRepository;
             productContext = productRepository;
+            productImageContext = productImageRepository;
         }
 
         // GET: Orders
@@ -135,15 +137,18 @@ namespace FiveWonders.WebUI.Controllers
                 }
 
                 Product product = productContext.Find(orderItem.mProductID);
+                string[] productImages = product != null && !String.IsNullOrWhiteSpace(product.mImageIDs)
+                    ? product.mImageIDs.Split(',')
+                    : new string[] { };
 
                 OrderItemViewModel OIviewModel = new OrderItemViewModel()
                 {
                     order = order,
                     orderItem = orderItem,
                     customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts),
-                    productImages = product != null && !String.IsNullOrWhiteSpace(product.mImage) 
-                        ? product.mImage.Split(',') 
-                        : new string[] { }
+                    productImages = product != null && !String.IsNullOrWhiteSpace(product.mImageIDs)
+                        ? productImageContext.GetCollection().Where(proImg => productImages.Contains(proImg.mID)).ToArray()
+                        : new ProductImage[] { }
                 };
 
                 return View(OIviewModel);

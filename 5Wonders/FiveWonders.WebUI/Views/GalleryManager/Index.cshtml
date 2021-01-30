@@ -21,9 +21,11 @@
     <div class="gallery-section">
         @foreach (FiveWonders.core.Models.GalleryImg item in Model)
         {
-            <a class="gallery-img-container col-lg-3" href="@Url.Action("Delete", "GalleryManager", new { Id = item.mID})">
+            <a class="gallery-img-container col-lg-3" href="@Url.Action("Delete", "GalleryManager", new { Id = item.mID })">
                 <div>
-                    <img class="gallery-img" src="@Url.Content("~/Content/GalleryImages/" + item.mImageFile)" alt="@item.mImageFile" />
+                    @{string x = item.mImageType + Convert.ToBase64String(item.mImage);}
+
+                    <img class="gallery-img" src="@x" alt="@item.mID" />
                     <p style="margin: 1vh 0; width: 100%;" class="btn btn-danger">Delete</p>
                 </div>
             </a>

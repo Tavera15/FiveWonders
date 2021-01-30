@@ -21,8 +21,10 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SubCategory> subcategoryContext;
         IRepository<ServicePage> servicePageContext;
         IRepository<SocialMedia> socialMediaContext;
+        IRepository<ProductImage> productImageContext;
+        IRepository<HomeCarouselImages> homeCarouselImageContext;
 
-        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository, IRepository<ServicePage> servicePageRepository, IRepository<SocialMedia> socialMediaRepository)
+        public HomeController(IInstagramService IGService, IRepository<HomePage> homeRepository, IRepository<Product> productsRepository, IRepository<Category> categoryRepository, IRepository<SubCategory> subcategoryRepository, IRepository<ServicePage> servicePageRepository, IRepository<SocialMedia> socialMediaRepository, IRepository<ProductImage> productImageRepository, IRepository<HomeCarouselImages> homeCarouselImageRepository)
         {
             InstagramService = IGService;
             homeContext = homeRepository;
@@ -31,6 +33,8 @@ namespace FiveWonders.WebUI.Controllers
             subcategoryContext = subcategoryRepository;
             servicePageContext = servicePageRepository;
             socialMediaContext = socialMediaRepository;
+            productImageContext = productImageRepository;
+            homeCarouselImageContext = homeCarouselImageRepository;
         }
 
         public ActionResult Index()
@@ -52,12 +56,7 @@ namespace FiveWonders.WebUI.Controllers
                     + subcategoryContext.Find(homeData.mWelcomeBtnUrl).mSubCategoryName;
             }
 
-            string pic = homeData.mWelcomeImgUrl ?? "";
-            homeData.mWelcomeImgUrl = !String.IsNullOrEmpty(pic) 
-                ? "../content/home/" + pic
-                : "";
-
-            Product[] allProductsSorted = productsContext.GetCollection().Where(p => p.isDisplayed).OrderByDescending(x => x.mTimeEntered).ToArray();
+            Product[] allProductsSorted = productsContext.GetCollection().ToArray();
             List<GalleryImg> top4GalleryImgs = InstagramService.GetGalleryImgs().Take(5).ToList();
             List<Product> top3Products = allProductsSorted.Take(3).ToList();
             List<ProductData> top3ProductsData = new List<ProductData>();
@@ -71,6 +70,7 @@ namespace FiveWonders.WebUI.Controllers
                     ProductData productData = new ProductData();
                     productData.product = p;
                     productData.productCategoryName = cat.mCategoryName;
+                    productData.firstImage = productImageContext.Find(p.mImageIDs.Split(',')[0]);
 
                     top3ProductsData.Add(productData);
                 }
@@ -79,7 +79,6 @@ namespace FiveWonders.WebUI.Controllers
                     top3ProductsData = new List<ProductData>();
                     break;
                 }
-                
             }
 
             Promo promo1 = new Promo();
@@ -92,7 +91,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 promo1.promoName = category.mCategoryName;
                 promo1.promoLink = "/Products/?Category=" + category.mCategoryName;
-                promo1.promoImg = "/CategoryImages/" + category.mImgUrL;
+                promo1.promoImg = category.mImageType + Convert.ToBase64String(category.mImage);
                 promo1.promoImgShader = category.mImgShaderAmount;
                 promo1.promoNameColor = category.bannerTextColor;
             }
@@ -102,7 +101,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 promo1.promoName = sub.mSubCategoryName;
                 promo1.promoLink = "/Products/?Subcategory=" + sub.mSubCategoryName;
-                promo1.promoImg = "/SubcategoryImages/" + sub.mImageUrl;
+                promo1.promoImg = sub.mImageType + Convert.ToBase64String(sub.mImage);
                 promo1.promoImgShader = sub.mImgShaderAmount;
                 promo1.promoNameColor = sub.bannerTextColor;
             }
@@ -114,7 +113,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 promo2.promoName = category.mCategoryName;
                 promo2.promoLink = "/Products/?Category=" + category.mCategoryName;
-                promo2.promoImg = "/CategoryImages/" + category.mImgUrL;
+                promo2.promoImg = category.mImageType + Convert.ToBase64String(category.mImage);
                 promo2.promoImgShader = category.mImgShaderAmount;
                 promo2.promoNameColor = category.bannerTextColor;
             }
@@ -124,12 +123,13 @@ namespace FiveWonders.WebUI.Controllers
 
                 promo2.promoName = sub.mSubCategoryName;
                 promo2.promoLink = "/Products/?Subcategory=" + sub.mSubCategoryName;
-                promo2.promoImg = "/SubcategoryImages/" + sub.mImageUrl;
+                promo2.promoImg = sub.mImageType + Convert.ToBase64String(sub.mImage);
                 promo2.promoImgShader = sub.mImgShaderAmount;
                 promo2.promoNameColor = sub.bannerTextColor;
             }
 
             homeViewModel.homePageData = homeData;
+            homeViewModel.carouselImages = homeCarouselImageContext.GetCollection().ToList();
             homeViewModel.top3Products = top3ProductsData;
             homeViewModel.top3IGPosts = top4GalleryImgs;
             homeViewModel.promo1 = promo1;
@@ -206,8 +206,10 @@ namespace FiveWonders.WebUI.Controllers
             {
                 servicePageData = servicePageData,
                 servicesMessage = new ServicesMessage(),
-                logo = String.IsNullOrEmpty(homePageData.mHomePageLogoUrl) ? "" : homePageData.mHomePageLogoUrl,
-                communicativeSocialMedias = socialMediaContext.GetCollection().Where(sm => sm.isCommunicative).ToArray()
+                communicativeSocialMedias = socialMediaContext.GetCollection().Where(sm => sm.isCommunicative).ToArray(),
+                logo = homePageData.mWebsiteLogo != null 
+                    ? homePageData.mWebsiteLogoImgType + Convert.ToBase64String(homePageData.mWebsiteLogo)
+                    : ""
             };
 
             return viewModel;

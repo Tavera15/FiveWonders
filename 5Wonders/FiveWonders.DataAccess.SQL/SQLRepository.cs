@@ -49,7 +49,7 @@ namespace FiveWonders.DataAccess.SQL
 
         public IQueryable<T> GetCollection()
         {
-            return dbSet;
+            return dbSet.OrderByDescending(x => x.mTimeEntered);
         }
 
         public void Insert(T newItem)

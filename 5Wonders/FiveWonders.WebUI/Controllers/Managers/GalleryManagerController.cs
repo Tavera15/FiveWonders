@@ -1,6 +1,7 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,11 +46,11 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 // Else add new images and store them to Db.
                 foreach (HttpPostedFileBase file in imageFiles)
                 {
-                    GalleryImg newImg = new GalleryImg();
-                    string newImgUrl;
-                    imageStorageService.AddImage(EFolderName.Gallery, Server, file, newImg.mID, out newImgUrl);
-
-                    newImg.mImageFile = newImgUrl;
+                    GalleryImg newImg = new GalleryImg
+                    {
+                        mImageType = ImageStorageService.GetImageExtension(file),
+                        mImage = ImageStorageService.GetImageBytes(file),
+                    };
 
                     galleryContext.Insert(newImg);
                 }
@@ -87,8 +88,6 @@ namespace FiveWonders.WebUI.Controllers.Managers
             try
             {
                 GalleryImg target = galleryContext.Find(Id, true);
-
-                imageStorageService.DeleteImage(EFolderName.Gallery, target.mImageFile, Server);
 
                 galleryContext.Delete(target);
                 galleryContext.Commit();

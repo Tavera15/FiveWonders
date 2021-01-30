@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace FiveWonders.core.Models
 {
-    public class GalleryImg : BaseImage
+    public abstract class BaseImage : BaseEntity
     {
+        public byte[] mImage { get; set; }
+        public string mImageType { get; set; }
     }
 }

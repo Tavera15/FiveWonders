@@ -12,6 +12,6 @@ namespace FiveWonders.core.ViewModels
         public HomePage homePagedata { get; set; }
         public Dictionary<string, string> btnRediLinks { get; set; }
         public Dictionary<string, string> promoLinks { get; set; }
-
+        public List<HomeCarouselImages> carouselImages { get; set; }
     }
 }

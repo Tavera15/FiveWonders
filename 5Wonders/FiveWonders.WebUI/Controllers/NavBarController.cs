@@ -59,10 +59,10 @@ namespace FiveWonders.WebUI.Controllers
             }
 
             HomePage homePageData = homePageContext.GetCollection().FirstOrDefault();
-            if(homePageData != null && !String.IsNullOrWhiteSpace(homePageData.mHomePageLogoUrl))
+            /*if(homePageData != null && !String.IsNullOrWhiteSpace(homePageData.mHomePageLogoUrl))
             {
                 ViewBag.homePageLogo = homePageData.mHomePageLogoUrl;
-            }
+            }*/
 
             string[] subsWithThemes = (from sub in subCategoryContext.GetCollection().OrderBy(x => x.mSubCategoryName).ToArray()
                                             where sub.isEventOrTheme

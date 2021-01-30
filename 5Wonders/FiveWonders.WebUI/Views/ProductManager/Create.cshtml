@@ -1,189 +1,159 @@
 ﻿@model FiveWonders.core.ViewModels.ProductManagerViewModel
 
 <div id="item-page">
-    @using (Html.BeginForm("Create", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>Product</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.isDisplayed, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.isDisplayed, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Product.isDisplayed, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mHtmlDesc, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Product.mHtmlDesc, new { @Id = "desc" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName"), new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        @if (Model.subCategories.Count() > 0)
+    <div class="col-lg-5 col-md-12 col-sm-12 col-xs-12 item-data-container">
+        @using (Html.BeginForm("Create", "ProductManager", FormMethod.Post, new { encType = "multipart/form-data" }))
         {
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @foreach (var item in Model.subCategories)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       name="selectedCategories"
-                                       value=@item.mID />
-                                @item.mSubCategoryName
-                            </label>
-                        </div>
-                    }
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>@Model.Product.mName</h4>
+                <hr />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mName, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.mName, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.mName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.isDisplayed, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.isDisplayed, new { htmlAttributes = new { @class = "form-control", @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.isDisplayed, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mHtmlDesc, htmlAttributes: new { @class = "" })
+                    @Html.TextAreaFor(model => model.Product.mHtmlDesc, new { @Id = "desc", @style = "margin: 0 auto; width: 100%;" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mCategory, htmlAttributes: new { @class = "" })
+                    @Html.DropDownListFor(model => model.Product.mCategory, new SelectList(Model.categories, "mID", "mCategoryName", Model.Product.mCategory), new { @style = "margin: 0 auto; width: 100%;" })
+                </div>
+
+                @if (Model.subCategories.Count() > 0)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.mSubCategories, htmlAttributes: new { @class = "" })
+
+                        @foreach (var item in Model.subCategories)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="selectedCategories"
+                                           value=@item.mID
+                                           @if (!String.IsNullOrWhiteSpace(Model.Product.mSubCategories) 
+                                               && Model.Product.mSubCategories.Split(',').Contains(item.mID)) 
+                                           { 
+                                               <text> checked </text> 
+                                           } 
+                                    />
+                                    @item.mSubCategoryName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (Model.customOptionLists.Count() > 0)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "" })
+
+                        @foreach (var item in Model.customOptionLists)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"
+                                           name="selectedCustomLists"
+                                           value=@item.mID
+                                           @if (!String.IsNullOrWhiteSpace(Model.Product.mCustomLists) && Model.Product.mCustomLists.Split(',').Contains(item.mID)) { <text> checked </text> } />
+                                    @item.mName
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "" })
+                    @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName", Model.Product.mSizeChart), new { @style = "margin: 0 auto; width: 100%;" })
+                </div>
+
+                <div class="form-group">
+                    <label>New Images</label>
+                    <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" style="margin: 0 auto; width: 100%;" />
+                    @Html.ValidationMessageFor(model => model.Product.mImageIDs, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.isDateCustomizable, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.isDateCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.isDateCustomizable, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.isTimeCustomizable, htmlAttributes: new { @class = "" })
+                    @Html.EditorFor(model => model.Product.isTimeCustomizable, new { htmlAttributes = new { @style = "margin: 0 auto; width: 100%;" } })
+                    @Html.ValidationMessageFor(model => model.Product.isTimeCustomizable, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
                 </div>
             </div>
         }
-
-        @if (Model.customOptionLists.Count() > 0)
-        {
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.mCustomLists, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @foreach (var item in Model.customOptionLists)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"
-                                       name="selectedCustomLists"
-                                       value=@item.mID />
-                                @item.mName
-                            </label>
-                        </div>
-                    }
-                </div>
-            </div>
-        }
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mSizeChart, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Product.mSizeChart, new SelectList(Model.sizeCharts, "mID", "mChartName"), new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mPrice, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.mPrice, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Product.mPrice, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-offset-2 col-md-10">
-                <input multiple type="file" id="file" name="imageFiles" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                @Html.ValidationMessageFor(model => model.Product.mImage, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.isTextCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.isTextCustomizable, new { htmlAttributes = new { } })
-                @Html.ValidationMessageFor(model => model.Product.isTextCustomizable, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.mCustomText, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.mCustomText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Product.mCustomText, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.isNumberCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.isNumberCustomizable, new { htmlAttributes = new { } })
-                @Html.ValidationMessageFor(model => model.Product.isNumberCustomizable, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.isDateCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.isDateCustomizable, new { htmlAttributes = new { } })
-                @Html.ValidationMessageFor(model => model.Product.isDateCustomizable, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Product.isTimeCustomizable, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Product.isTimeCustomizable, new { htmlAttributes = new { } })
-                @Html.ValidationMessageFor(model => model.Product.isTimeCustomizable, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
     </div>
 
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 item-data-container">
+        @if (ViewBag.errMessages != null && ViewBag.errMessages.Length > 0)
+        {
+            foreach (string errMsg in ViewBag.errMessages)
+            {
+                <p class="text-danger">@errMsg</p>
+            }
+        }
+    </div>
+</div>
 
-
+<div class="col-lg-12">
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/tinymce/tinymce.js"></script>
     <script src="~/Scripts/TinyMce_Client/WYSIWYG.js"></script>
-
-    <!-- Include jQuery -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-    <!-- Include Date Range Picker -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
-
-
-    <script>
-        $(document).ready(function () {
-            var date_input = $('input[name="date"]'); //our date input has the name "date"
-            var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-            var options = {
-                format: 'mm/dd/yyyy',
-                container: container,
-                todayHighlight: true,
-                autoclose: true,
-                todayBtn: true,
-            };
-            date_input.datepicker(options);
-        })
-    </script>
 }
 
 @section Pagecss

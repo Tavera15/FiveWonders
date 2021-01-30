@@ -1,8 +1,8 @@
 ﻿@model FiveWonders.core.Models.HomePage
 
 @{ 
-    string logoImg = (Model != null && !String.IsNullOrWhiteSpace(Model.mHomePageLogoUrl)) 
-        ? Model.mHomePageLogoUrl 
+    string logoImg = (Model != null && Model.mWebsiteLogo != null) 
+        ? Model.mWebsiteLogoImgType + Convert.ToBase64String(Model.mWebsiteLogo) 
         : "";
 }
 
@@ -11,7 +11,7 @@
         <div style="width: 100%; min-height: 75vh; color: white; height: 100%; justify-content: center; background-color: rgba(0,0,0,.2); display: flex; flex-direction: column; text-align: center;">
             <h1 style="font-size: 8rem;">Thank You</h1>
             <h2>An Email will be sent to you!</h2>
-            <img alt="logo" src="~/Content/Home/@logoImg" style="margin: 0 auto; height: 24rem; width: auto;"/>
+            <img alt="logo" src="@logoImg" style="margin: 0 auto; height: 24rem; width: auto;"/>
         </div>
     </div>
 </div>

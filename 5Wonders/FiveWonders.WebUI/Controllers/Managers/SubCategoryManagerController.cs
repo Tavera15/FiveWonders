@@ -1,6 +1,7 @@
 ﻿using FiveWonders.core.Contracts;
 using FiveWonders.core.Models;
 using FiveWonders.DataAccess.InMemory;
+using FiveWonders.Services;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,13 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SubCategory> subCategoryContext;
         IRepository<Product> productContext;
         IRepository<HomePage> homePageContext;
-        IImageStorageService imageStorageService;
 
         // GET: SubCategoryManager
-        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository, IRepository<HomePage> homePageRepository, IImageStorageService imageStorageService)
+        public SubCategoryManagerController(IRepository<SubCategory> subcategoryRepository, IRepository<Product> productRepository, IRepository<HomePage> homePageRepository)
         {
             subCategoryContext = subcategoryRepository;
             productContext = productRepository;
             homePageContext = homePageRepository;
-            this.imageStorageService = imageStorageService;
         }
 
         public ActionResult Index()
@@ -58,16 +57,14 @@ namespace FiveWonders.WebUI.Controllers
 
                     throw new Exception(errMsg);
                 }
-                
-                // Save image if subcategory is an event or theme
-                if(sub.isEventOrTheme && imageFile != null)
-                {
-                    string newImgUrl;
-                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, sub.mID, out newImgUrl);
 
-                    // Link img to sub
-                    sub.mImageUrl = newImgUrl;
-                }
+                sub.mImage = sub.isEventOrTheme && imageFile != null
+                    ? ImageStorageService.GetImageBytes(imageFile)
+                    : null;
+
+                sub.mImageType = sub.isEventOrTheme && imageFile != null
+                    ? ImageStorageService.GetImageExtension(imageFile)
+                    : null;
 
                 subCategoryContext.Insert(sub);
                 subCategoryContext.Commit();
@@ -124,23 +121,16 @@ namespace FiveWonders.WebUI.Controllers
                     return View(subToEdit);
                 }
 
-                // Delete img if sub is not event, and has a stored img
-                if (!subToEdit.isEventOrTheme && !String.IsNullOrWhiteSpace(subToEdit.mImageUrl))
-                {
-                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
-                    subToEdit.mImageUrl = "";
-                }
-
                 // Save img if sub is now an event or theme, and if a new one is being imported
                 if (subToEdit.isEventOrTheme && imageFile != null)
                 {
-                    // Will not do anything if img url is empty
-                    imageStorageService.DeleteImage(EFolderName.Subcategory, subToEdit.mImageUrl, Server);
-                    
-                    // Store new img
-                    string newImgUrl;
-                    imageStorageService.AddImage(EFolderName.Subcategory, Server, imageFile, Id, out newImgUrl);
-                    subToEdit.mImageUrl = newImgUrl;
+                    subToEdit.mImage = ImageStorageService.GetImageBytes(imageFile);
+                    subToEdit.mImageType = ImageStorageService.GetImageExtension(imageFile);
+                }
+                else if(!subToEdit.isEventOrTheme)
+                {
+                    subToEdit.mImage = null;
+                    subToEdit.mImageType = null;
                 }
 
                 subCategoryContext.Commit();
@@ -200,8 +190,6 @@ namespace FiveWonders.WebUI.Controllers
                 {
                     throw new Exception("Products contain target subcategory, and/or category is currently promoted on the Home Page.");
                 }
-
-                imageStorageService.DeleteImage(EFolderName.Subcategory, subToDelete.mImageUrl, Server);
 
                 subCategoryContext.Delete(subToDelete);
                 subCategoryContext.Commit();

@@ -11,85 +11,56 @@ namespace FiveWonders.Services
 {
     public class ImageStorageService : IImageStorageService
     {
-        public void AddImage(EFolderName folder, HttpServerUtilityBase Server, HttpPostedFileBase imageFile, string Id, out string newImageUrl, string manualFileName = "")
+        public static string GetImageExtension(HttpPostedFileBase imageFile)
         {
-            string folderName = GetFolderName(folder);
+            string extension = Path.GetExtension(imageFile.FileName).ToLower();
 
-            newImageUrl = String.IsNullOrWhiteSpace(manualFileName) 
-                ? Id + String.Concat(imageFile.FileName.Where(c => !Char.IsWhiteSpace(c)))      // Id + file name without spaces
-                : manualFileName + Path.GetExtension(imageFile.FileName);
-
-            imageFile.SaveAs(Server.MapPath("//Content//" + folderName + "//") + newImageUrl);
-        }
-
-        public void DeleteImage(EFolderName folder, string currentImageURL, HttpServerUtilityBase Server)
-        {
-            if(String.IsNullOrWhiteSpace(currentImageURL)) { return; }
-
-            string folderName = GetFolderName(folder);
-            string path = Server.MapPath("//Content//" + folderName + "//") + currentImageURL;
-
-            if (System.IO.File.Exists(path))
+            switch (extension)
             {
-                System.IO.File.Delete(path);
+                case ".png":
+                    return "data:image/png;base64,";
+                case ".gif":
+                    return "data:image/gif;base64,";
+                case ".svg":
+                    return "data:image/svg+xml;base64,";
+                case ".jpg":
+                    return "data:image/jpg;base64,";
+                default:
+                    return "data:image/jpeg;base64,";
             }
         }
 
-        public void AddMultipleImages(EFolderName folder, HttpServerUtilityBase Server, HttpPostedFileBase[] imageFiles, string Id, out string newImageUrl)
+        public static byte[] GetImageBytes(HttpPostedFileBase imageFile)
         {
-            var allFileNames = new List<string>();
+            byte[] imageBytes = new byte[imageFile.ContentLength];
+            imageFile.InputStream.Read(imageBytes, 0, imageFile.ContentLength);
 
-            foreach (HttpPostedFileBase file in imageFiles)
-            {
-                string singleImageUrl;
-                AddImage(folder, Server, file, Id, out singleImageUrl);
-                allFileNames.Add(singleImageUrl);
-            }
-
-            newImageUrl = String.Join(",", allFileNames);
+            return imageBytes;
         }
 
-        public void DeleteMultipleImages(EFolderName folder, string[] currentImageFiles, HttpServerUtilityBase Server)
+        public static byte[][] GetMultipleImageBytes(HttpPostedFileBase[] imageFiles, out string[] imageExtensions)
         {
-            if(currentImageFiles == null || currentImageFiles.Length <= 0) { return; }
-
-            foreach (string file in currentImageFiles)
+            if(imageFiles == null || imageFiles.Length == 0)
             {
-                DeleteImage(folder, file, Server);
-            }
-        }
-
-        public void UpdateImages(HttpServerUtilityBase Server, EFolderName folder, string[] savedCarouselImgs, string[] checkedImgs, HttpPostedFileBase[] newImageFiles, out string newImageURL, string fileNamePrefix)
-        {
-            string folderName = GetFolderName(folder);
-
-            string[] imgsToDelete = checkedImgs == null
-                ? savedCarouselImgs
-                : savedCarouselImgs.Where(img => !checkedImgs.Contains(img)).ToArray();
-
-            DeleteMultipleImages(folder, imgsToDelete, Server);
-
-            List<string> imgsToStore = checkedImgs != null
-                ? checkedImgs.ToList()
-                : new List<string>();
-
-            if (newImageFiles != null && newImageFiles[0] != null)
-            {
-                foreach (HttpPostedFileBase file in newImageFiles)
-                {
-                    string fileNameWithoutSpaces = String.Concat(file.FileName.Where(c => !Char.IsWhiteSpace(c)));
-
-                    string fileName = fileNamePrefix + fileNameWithoutSpaces;
-                    file.SaveAs(Server.MapPath("//Content//" + folderName + "//") + fileName);
-                    imgsToStore.Add(fileName);
-                }
+                imageExtensions = null;
+                return null;
             }
 
-            newImageURL = imgsToStore.Count > 0 
-                ? String.Join(",", imgsToStore)
-                : "";
+            List<byte[]> imagesToBytes = new List<byte[]>();
+            List<string> imageTypes = new List<string>();
+
+            foreach(var img in imageFiles)
+            {
+                imagesToBytes.Add(GetImageBytes(img));
+                imageTypes.Add(GetImageExtension(img));
+            }
+
+            imageExtensions = imageTypes.ToArray();
+            return imagesToBytes.ToArray();
         }
 
+        
+        
         private string GetFolderName(EFolderName folder)
         {
             switch(folder)

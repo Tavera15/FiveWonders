@@ -1,8 +1,5 @@
 ﻿
 #products-page {
-    background-color: antiquewhite;
-    background-color: white;
-    background-color: inherit;
     background-color: rgba(255,255,255,.4);
     padding: 2vh;
     margin: 0 auto;
@@ -61,9 +58,6 @@
 }
 
 @media (max-width: 1024px) and (orientation:portrait) {
-    .pp-fw-card-img {
-    }
-
     .fw-card {
         border: 1px solid black;
     }
@@ -106,4 +100,3 @@
         height: 30rem;
     }
 }
-

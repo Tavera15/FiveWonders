@@ -22,13 +22,15 @@ namespace FiveWonders.WebUI.Controllers
         IRepository<SizeChart> sizeChartContext;
         IRepository<BasketItem> basketItemContext;
         IRepository<CustomOptionList> customListContext;
+        IRepository<ProductImage> productImageContext;
 
-        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository, IRepository<CustomOptionList> customListRepository)
+        public BasketController(IBasketServices services, IRepository<Product> productsRepository, IRepository<SizeChart> sizeChartRepository, IRepository<BasketItem> basketItemRepository, IRepository<CustomOptionList> customListRepository, IRepository<ProductImage> productImageRepository)
         {
             basketService = services;
             productContext = productsRepository;
             sizeChartContext = sizeChartRepository;
             basketItemContext = basketItemRepository;
+            productImageContext = productImageRepository;
             customListContext = customListRepository;
         }
 
@@ -36,13 +38,6 @@ namespace FiveWonders.WebUI.Controllers
         public ActionResult Index()
         {
             List<BasketItemViewModel> allItems = basketService.GetBasketItems(HttpContext);
-
-            foreach(BasketItemViewModel model in allItems)
-            {
-                Product product = productContext.Find(model.productID);
-                model.productID = product.mID;
-                model.product = product;
-            }
 
             return View(allItems);
         }
@@ -151,7 +146,7 @@ namespace FiveWonders.WebUI.Controllers
 
                 SizeChart sizeChart = null;
 
-                if (product.mSizeChart != "0")
+                if (!String.IsNullOrWhiteSpace(product.mSizeChart))
                 {
                     sizeChart = sizeChartContext.Find(product.mSizeChart, true);
                 }
@@ -180,6 +175,10 @@ namespace FiveWonders.WebUI.Controllers
                     }
                 }
 
+                string[] productIds = !String.IsNullOrWhiteSpace(product.mImageIDs)
+                    ? product.mImageIDs.Split(',')
+                    : new string[] { };
+
                 viewModel = new BasketItemViewModel()
                 {
                     productID = product.mID,
@@ -189,7 +188,10 @@ namespace FiveWonders.WebUI.Controllers
                     sizeChart = sizeChart,
                     listOptions = productCustomLists,
                     customListNames = customListNames,
-                    selectedCustomListOptions = JsonConvert.DeserializeObject<Dictionary<string, string>>(basketItem.mCustomListOptions)
+                    productImages = productImageContext.GetCollection()
+                        .Where(proImg => productIds.Contains(proImg.mID)).ToList(),
+                    selectedCustomListOptions = 
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(basketItem.mCustomListOptions)
                 };
             }
 

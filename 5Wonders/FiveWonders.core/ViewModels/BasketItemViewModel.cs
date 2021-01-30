@@ -18,6 +18,7 @@ namespace FiveWonders.core.ViewModels
         public Dictionary<string, List<string>> listOptions { get; set; }
         public List<string> customListNames { get; set; }
         public Dictionary<string, string> selectedCustomListOptions { get; set; }
+        public List<ProductImage> productImages { get; set; }
 
         public BasketItemViewModel()
         {

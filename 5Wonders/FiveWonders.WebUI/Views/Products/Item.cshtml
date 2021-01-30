@@ -1,8 +1,6 @@
 ﻿@model FiveWonders.core.ViewModels.ProductOrderViewModel
 
 @{
-    string[] imageFiles = Model.product.mImage.Split(',');
-    string firstImage = imageFiles[0];
     string todaysDate = DateTime.Now.ToString("MM-dd-yyyy");
 }
 
@@ -11,7 +9,7 @@
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <!-- Indicators -->
             <ol class="carousel-indicators">
-                @for (int i = 0; i < imageFiles.Length; i++)
+                @for (int i = 0; i < Model.productImages.Count; i++)
                 {
                     string liClassTag = i == 0 ? "active" : "";
 
@@ -21,11 +19,12 @@
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner" role="listbox">
-                @for (int i = 0; i < imageFiles.Length; i++)
+                @for (int i = 0; i < Model.productImages.Count; i++)
                 {
                     string itemClassTag = i == 0 ? "item active" : "item";
+                    string currentImage = Model.productImages[i].mImageType + Convert.ToBase64String(Model.productImages[i].mImage);
 
-                    <div class="@itemClassTag img-test" style="background-image: url(@Url.Content("~/Content/ProductImages/" + @imageFiles[i]));"></div>
+                    <div class="@itemClassTag img-test" style="background-image: url(@currentImage);"></div>
                 }
             </div>
 

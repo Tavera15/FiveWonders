@@ -14,9 +14,6 @@
         <th>
             @Html.DisplayNameFor(model => model.mChartName)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mImageChartUrl)
-        </th>
         <th></th>
     </tr>
 
@@ -30,9 +27,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.mChartName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mImageChartUrl)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.mID }) |

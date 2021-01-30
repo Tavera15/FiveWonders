@@ -16,12 +16,14 @@ namespace FiveWonders.WebUI.Controllers.Managers
         IRepository<FWonderOrder> ordersContext;
         IRepository<OrderItem> orderItemContext;
         IRepository<Product> productsContext;
+        IRepository<ProductImage> productImageContext;
 
-        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productsRepository)
+        public OrdersManagerController(IRepository<FWonderOrder> ordersRepository, IRepository<OrderItem> orderItemRepository, IRepository<Product> productsRepository, IRepository<ProductImage> productImageRepository)
         {
             ordersContext = ordersRepository;
             orderItemContext = orderItemRepository;
             productsContext = productsRepository;
+            productImageContext = productImageRepository;
         }
 
         // GET: OrdersManager
@@ -96,13 +98,18 @@ namespace FiveWonders.WebUI.Controllers.Managers
                 }
 
                 Product product = productsContext.Find(orderItem.mProductID);
+                string[] productImages = product != null && !String.IsNullOrWhiteSpace(product.mImageIDs)
+                    ? product.mImageIDs.Split(',')
+                    : new string[] { };
 
                 OrderItemViewModel viewModel = new OrderItemViewModel()
                 {
                     order = order,
                     orderItem = orderItem,
-                    productImages = product.mImage.Split(','),
                     customLists = JsonConvert.DeserializeObject<Dictionary<string, string>>(orderItem.mCustomListOpts),
+                    productImages = product != null && !String.IsNullOrWhiteSpace(product.mImageIDs)
+                        ? productImageContext.GetCollection().Where(proImg => productImages.Contains(proImg.mID)).ToArray()
+                        : new ProductImage[] { }
                 };
 
                 return View(viewModel);

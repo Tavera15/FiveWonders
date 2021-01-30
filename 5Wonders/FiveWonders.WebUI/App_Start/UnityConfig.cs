@@ -58,6 +58,8 @@ namespace FiveWonders.WebUI
             container.RegisterType<IRepository<OrderItem>, SQLRepository<OrderItem>>();
             container.RegisterType<IRepository<HomePage>, SQLRepository<HomePage>>();
             container.RegisterType<IRepository<GalleryImg>, SQLRepository<GalleryImg>>();
+            container.RegisterType<IRepository<ProductImage>, SQLRepository<ProductImage>>();
+            container.RegisterType<IRepository<HomeCarouselImages>, SQLRepository<HomeCarouselImages>>();
             container.RegisterType<IRepository<ServicePage>, SQLRepository<ServicePage>>();
             container.RegisterType<IRepository<SocialMedia>, SQLRepository<SocialMedia>>();
             container.RegisterType<IRepository<CustomOptionList>, SQLRepository<CustomOptionList>>();

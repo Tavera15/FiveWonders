@@ -2,5 +2,6 @@
 
 @foreach(FiveWonders.core.Models.SocialMedia media in Model)
 {
-    <a rel="noopener noreferrer" target="_blank" href="@media.mUrl"><img style="height: @ViewBag.iconSize; width: auto;" src="~/Content/Icons/@media.m64x64Icon" alt="@media.mUrl" /></a>
+    string iconSrc = media.mIconType + Convert.ToBase64String(media.mIcon);
+    <a rel="noopener noreferrer" target="_blank" href="@media.mUrl"><img style="height: @ViewBag.iconSize; width: auto;" src="@iconSrc" alt="@media.mUrl" /></a>
 }

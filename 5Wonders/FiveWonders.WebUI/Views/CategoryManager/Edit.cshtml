@@ -1,5 +1,7 @@
 ﻿@model FiveWonders.core.Models.Category
 
+@{ string img = Model.mImageType + Convert.ToBase64String(Model.mImage); }
+
 <div id="products-page">
     @using (Html.BeginForm(Html.BeginForm("Edit", "CategoryManager", FormMethod.Post, new { encType = "multipart/form-data" })))
     {
@@ -7,7 +9,7 @@
 
         <div class="form-horizontal">
             <div class="pp-title-container"
-                 style="background-image: url(@Url.Content("~/Content/CategoryImages/" + Model.mImgUrL));"
+                 style="background-image: url(@img);"
                  id="bannerImg-input">
                 <div id="bannerImg-cover-input" style="background-color: rgba(0,0,0, 0);" class="pp-title-dark-layer">
                     <h2 id="category-title-input" class="pp-title-text">Category</h2>
@@ -40,10 +42,10 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.mImgUrL, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.mImage, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-offset-2 col-md-10">
                     <input type="file" oninput="setColor()" id="file" name="imageFile" class="form-control" accept="image/png,image/jpg,image/jpeg" />
-                    @Html.ValidationMessageFor(model => model.mImgUrL, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.mImage, "", new { @class = "text-danger" })
                 </div>
             </div>
 

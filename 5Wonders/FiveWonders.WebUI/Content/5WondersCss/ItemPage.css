@@ -240,9 +240,6 @@ label{
 }
 
 @media (max-width: 736px) {
-    .item-data-container {
-    }
-
     .carousel-inner {
         height: 35rem;
     }
@@ -252,9 +249,6 @@ label{
     display: flex;
     flex-direction: row;
     margin-top: 2vh;
-}
-
-.product-man-edit-carousel {
 }
 
 @media (max-width: 1024px) {

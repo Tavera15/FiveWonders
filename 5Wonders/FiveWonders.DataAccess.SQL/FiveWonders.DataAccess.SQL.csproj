@@ -73,6 +73,50 @@
     <Compile Include="Migrations\202011102346412_productsAreToggable.Designer.cs">
       <DependentUpon>202011102346412_productsAreToggable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101270014230_galleryImagesToBytes.cs" />
+    <Compile Include="Migrations\202101270014230_galleryImagesToBytes.Designer.cs">
+      <DependentUpon>202101270014230_galleryImagesToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101270303484_categoryImagesToBytes.cs" />
+    <Compile Include="Migrations\202101270303484_categoryImagesToBytes.Designer.cs">
+      <DependentUpon>202101270303484_categoryImagesToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101280032103_subcategoryImagesToBytes.cs" />
+    <Compile Include="Migrations\202101280032103_subcategoryImagesToBytes.Designer.cs">
+      <DependentUpon>202101280032103_subcategoryImagesToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101280518207_productsImagesToBytes.cs" />
+    <Compile Include="Migrations\202101280518207_productsImagesToBytes.Designer.cs">
+      <DependentUpon>202101280518207_productsImagesToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101280553527_productsSingleImageToBytes.cs" />
+    <Compile Include="Migrations\202101280553527_productsSingleImageToBytes.Designer.cs">
+      <DependentUpon>202101280553527_productsSingleImageToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101280802576_sizeChartImageToBytes.cs" />
+    <Compile Include="Migrations\202101280802576_sizeChartImageToBytes.Designer.cs">
+      <DependentUpon>202101280802576_sizeChartImageToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101290257543_imageTables.cs" />
+    <Compile Include="Migrations\202101290257543_imageTables.Designer.cs">
+      <DependentUpon>202101290257543_imageTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101290646301_productStringImgs.cs" />
+    <Compile Include="Migrations\202101290646301_productStringImgs.Designer.cs">
+      <DependentUpon>202101290646301_productStringImgs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101300019524_homePageImgsToBytes.cs" />
+    <Compile Include="Migrations\202101300019524_homePageImgsToBytes.Designer.cs">
+      <DependentUpon>202101300019524_homePageImgsToBytes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101300059035_homePageRemovedCarouselImgTypes.cs" />
+    <Compile Include="Migrations\202101300059035_homePageRemovedCarouselImgTypes.Designer.cs">
+      <DependentUpon>202101300059035_homePageRemovedCarouselImgTypes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101300335293_socialMediaIconNameChange.cs" />
+    <Compile Include="Migrations\202101300335293_socialMediaIconNameChange.Designer.cs">
+      <DependentUpon>202101300335293_socialMediaIconNameChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLRepository.cs" />
@@ -105,6 +149,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011102346412_productsAreToggable.resx">
       <DependentUpon>202011102346412_productsAreToggable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101270014230_galleryImagesToBytes.resx">
+      <DependentUpon>202101270014230_galleryImagesToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101270303484_categoryImagesToBytes.resx">
+      <DependentUpon>202101270303484_categoryImagesToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101280032103_subcategoryImagesToBytes.resx">
+      <DependentUpon>202101280032103_subcategoryImagesToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101280518207_productsImagesToBytes.resx">
+      <DependentUpon>202101280518207_productsImagesToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101280553527_productsSingleImageToBytes.resx">
+      <DependentUpon>202101280553527_productsSingleImageToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101280802576_sizeChartImageToBytes.resx">
+      <DependentUpon>202101280802576_sizeChartImageToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101290257543_imageTables.resx">
+      <DependentUpon>202101290257543_imageTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101290646301_productStringImgs.resx">
+      <DependentUpon>202101290646301_productStringImgs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101300019524_homePageImgsToBytes.resx">
+      <DependentUpon>202101300019524_homePageImgsToBytes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101300059035_homePageRemovedCarouselImgTypes.resx">
+      <DependentUpon>202101300059035_homePageRemovedCarouselImgTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101300335293_socialMediaIconNameChange.resx">
+      <DependentUpon>202101300335293_socialMediaIconNameChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
