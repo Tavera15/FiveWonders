@@ -304,9 +304,8 @@ namespace FiveWonders.WebUI.Controllers
                     throw new Exception("Home Page defaults null.");
                 }
 
-                string productsListbannerImgType = "";
-                //string productsListbannerImg = homePageDefaults.mDefaultProductListImgUrl;
-                byte[] productsListbannerImg = new byte[] { };
+                string productsListbannerImgType = homePageDefaults.mDefaultProductListImgType;
+                byte[] productsListbannerImg = homePageDefaults.mDefaultProductListImg;
                 float productListImgShaderAmount = homePageDefaults.defaultBannerImgShader;
                 string productListPageTitleColor = homePageDefaults.mdefaultBannerTextColor;
                 string productsListPageTitle = GetPageTitle(category, subCategories, homePageDefaults.mDefaultProductsBannerText);

@@ -19,17 +19,15 @@ namespace FiveWonders.WebUI.Controllers
         IBasketServices basketService;
         IRepository<FWonderOrder> orderContext;
         IRepository<Customer> customerContext;
-        IRepository<Product> productContext;
         IRepository<OrderItem> orderItemContext;
         IRepository<CustomOptionList> customListContext;
         IRepository<HomePage> homePageContext;
 
-        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<Product> productsRepository, IRepository<OrderItem> orderItemRepository, IRepository<CustomOptionList> customListRepository, IRepository<HomePage> homePageRepository)
+        public CheckoutController(IBasketServices services, IRepository<Customer> customerRepository, IRepository<FWonderOrder> orderRepository, IRepository<OrderItem> orderItemRepository, IRepository<CustomOptionList> customListRepository, IRepository<HomePage> homePageRepository)
         {
             basketService = services;
             orderContext = orderRepository;
             customerContext = customerRepository;
-            productContext = productsRepository;
             orderItemContext = orderItemRepository;
             customListContext = customListRepository;
             homePageContext = homePageRepository;
@@ -72,6 +70,8 @@ namespace FiveWonders.WebUI.Controllers
         [HttpPost]
         public ActionResult Index(FWonderOrder order)
         {
+            return RedirectToAction("ThankYou", "Checkout");
+
             try
             {
                 // Get user id, if any, from the customer during checkout
@@ -212,14 +212,14 @@ namespace FiveWonders.WebUI.Controllers
                 };
 
                 // Creates the Payment object - Ready to redirect to PayPal with data entered
-                APIContext apiContext = GetApiContext();
+                /*APIContext apiContext = GetApiContext();
                 Payment createdPayment = payment.Create(apiContext);
 
                 var approvalUrl =
                    createdPayment.links.FirstOrDefault(
                        x => x.rel.Equals("approval_url", StringComparison.OrdinalIgnoreCase));
 
-                return Redirect(approvalUrl.href);
+                return Redirect(approvalUrl.href);*/
             }
             catch (Exception e)
             {
@@ -242,7 +242,7 @@ namespace FiveWonders.WebUI.Controllers
                     throw new Exception("Order already completed.");
                 }
                 
-                APIContext apiContext = GetApiContext();
+                //APIContext apiContext = GetApiContext();
 
                 PaymentExecution paymentExecution = new PaymentExecution()
                 {
@@ -254,7 +254,7 @@ namespace FiveWonders.WebUI.Controllers
                     id = paymentId
                 };
 
-                Payment executedPayment = payment.Execute(apiContext, paymentExecution);
+                //Payment executedPayment = payment.Execute(apiContext, paymentExecution);
 
                 order.isCompleted = true;
                 order.mVerificationId = Guid.NewGuid().ToString();
@@ -267,34 +267,11 @@ namespace FiveWonders.WebUI.Controllers
                 return RedirectToAction("Cancel", "Checkout", new { orderId = orderId });
             }
 
-            try
-            {
-                basketService.ClearBasket(HttpContext);
-                string adminUrl = "https://localhost:44372/OrdersManager/Details/?Id=" + order.mID;
-                string customerUrl = "https://localhost:44372/Orders/Details/?Id=" + order.mID + "&VerificationId=" + order.mVerificationId;
-
-                System.Diagnostics.Debug.WriteLine("Admin: " + adminUrl);
-                System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
-
-                // TODO Send Confirmation to admin and customer...?
-                MailMessage adminMessage = GetFilledMailedMessage(order.mID, adminUrl, "admin email");
-                MailMessage customerMessage = GetFilledMailedMessage(order.mID, customerUrl, order.mCustomerEmail);
-
-                /*
-                //throw new Exception("stop");
-                 */
-
-                SmtpClient smtp = new SmtpClient();
-                smtp.Send(adminMessage);
-                smtp.Send(customerMessage);
-            }
-            catch(Exception e)
-            {
-                _ = e;
-            }
+            SendOrderEmails(order);
             
             return RedirectToAction("ThankYou", "Checkout");
         }
+
 
         public ActionResult ThankYou()
         {
@@ -399,13 +376,43 @@ namespace FiveWonders.WebUI.Controllers
             }
         }
 
-        private APIContext GetApiContext()
+        private void SendOrderEmails(FWonderOrder order)
+        {
+            try
+            {
+                basketService.ClearBasket(HttpContext);
+                string adminUrl = "https://localhost:44372/OrdersManager/Details/?Id=" + order.mID;
+                string customerUrl = "https://localhost:44372/Orders/Details/?Id=" + order.mID + "&VerificationId=" + order.mVerificationId;
+
+                System.Diagnostics.Debug.WriteLine("Admin: " + adminUrl);
+                System.Diagnostics.Debug.WriteLine("Customer: " + customerUrl);
+
+                // TODO Send Confirmation to admin and customer...?
+                MailMessage adminMessage = GetFilledMailedMessage(order.mID, adminUrl, "admin email");
+                MailMessage customerMessage = GetFilledMailedMessage(order.mID, customerUrl, order.mCustomerEmail);
+
+                /*
+                //throw new Exception("stop");
+                 */
+
+                //SmtpClient smtp = new SmtpClient();
+                //smtp.Send(adminMessage);
+                //smtp.Send(customerMessage);
+            }
+            catch (Exception e)
+            {
+                _ = e;
+            }
+        }
+
+
+        /*private APIContext GetApiContext()
         {
             // Authenticate with PayPal
             var config = ConfigManager.Instance.GetProperties();
             var accessToken = new OAuthTokenCredential(config).GetAccessToken();
             var apiContext = new APIContext(accessToken);
             return apiContext;
-        }
+        }*/
     }
 }
